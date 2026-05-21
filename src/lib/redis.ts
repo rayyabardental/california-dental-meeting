@@ -1,0 +1,64 @@
+import { env } from "@/lib/env";
+
+/**
+ * Minimal Upstash Redis client built on the Upstash REST API.
+ *
+ * Uses `fetch` directly so the project needs no extra dependency. When the
+ * Upstash environment variables are absent every operation degrades to a
+ * no-op, allowing dependent features (Constant Contact sync) to fail soft
+ * instead of throwing.
+ */
+
+const REST_URL = env.UPSTASH_REDIS_REST_URL;
+const REST_TOKEN = env.UPSTASH_REDIS_REST_TOKEN;
+
+export function isRedisConfigured(): boolean {
+  return Boolean(REST_URL && REST_TOKEN);
+}
+
+async function command<T>(args: (string | number)[]): Promise<T | null> {
+  if (!REST_URL || !REST_TOKEN) return null;
+  try {
+    const res = await fetch(REST_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${REST_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(args),
+      cache: "no-store",
+    });
+    if (!res.ok) {
+      console.error("[redis] command failed", res.status);
+      return null;
+    }
+    const json = (await res.json()) as { result?: T; error?: string };
+    if (json.error) {
+      console.error("[redis] command error", json.error);
+      return null;
+    }
+    return json.result ?? null;
+  } catch (err) {
+    console.error("[redis] request error", err);
+    return null;
+  }
+}
+
+export async function redisGet(key: string): Promise<string | null> {
+  return command<string>(["GET", key]);
+}
+
+export async function redisSet(
+  key: string,
+  value: string,
+  ttlSeconds?: number,
+): Promise<boolean> {
+  const args: (string | number)[] = ["SET", key, value];
+  if (ttlSeconds && ttlSeconds > 0) args.push("EX", ttlSeconds);
+  const result = await command<string>(args);
+  return result === "OK";
+}
+
+export async function redisDel(key: string): Promise<void> {
+  await command(["DEL", key]);
+}

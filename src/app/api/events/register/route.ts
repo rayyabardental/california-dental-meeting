@@ -1,4 +1,5 @@
 import { ok, fail } from "@/lib/api-response";
+import { addContactToList } from "@/lib/constant-contact";
 import { findEvent } from "@/lib/events-data";
 import { RegistrationSchema } from "@/lib/validations/event";
 
@@ -20,6 +21,14 @@ export async function POST(req: Request): Promise<Response> {
   if (event.spotsRemaining <= 0) {
     return fail("Event is full — join the waitlist", 409);
   }
+
+  // Sync the applicant to the Constant Contact mailing list. Fails soft —
+  // a sync error must never block a successful registration.
+  await addContactToList({
+    email: parsed.data.email,
+    firstName: parsed.data.firstName,
+    lastName: parsed.data.lastName,
+  });
 
   // Persistence stub — wire to Prisma + Resend confirmation when DB is configured.
   const id = `reg_${crypto.randomUUID()}`;
