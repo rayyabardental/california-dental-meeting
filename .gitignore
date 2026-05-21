@@ -40,4 +40,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.vercel
+# claude code (machine-local settings — should not be tracked)
+.claude/settings.local.json
