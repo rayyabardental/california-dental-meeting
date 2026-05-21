@@ -1,0 +1,192 @@
+@import "tailwindcss";
+
+@theme {
+  /* Navy Blue — California Dental Meeting primary */
+  --color-primary: #0d2340;
+  --color-primary-50: #e7ecf3;
+  --color-primary-100: #c4cfdf;
+  --color-primary-200: #92a4bf;
+  --color-primary-300: #5f789f;
+  --color-primary-400: #314f7a;
+  --color-primary-500: #0d2340;
+  --color-primary-600: #0a1c33;
+  --color-primary-700: #081627;
+  --color-primary-800: #050f1b;
+  --color-primary-900: #02080e;
+
+  /* Coastal Teal — accent */
+  --color-accent: #6faeb5;
+  --color-accent-50: #eef7f8;
+  --color-accent-100: #d5ebed;
+  --color-accent-200: #aed7dc;
+  --color-accent-300: #88c2c9;
+  --color-accent-400: #6faeb5;
+  --color-accent-500: #4f9098;
+  --color-accent-600: #3c6f76;
+  --color-accent-700: #294e53;
+  --color-accent-800: #182f33;
+
+  /* Sunset Gold */
+  --color-gold: #d7a14a;
+  --color-gold-50: #fbf3e3;
+  --color-gold-100: #f4e1ba;
+  --color-gold-200: #ecca84;
+  --color-gold-300: #e0b463;
+  --color-gold-400: #d7a14a;
+  --color-gold-500: #b48036;
+  --color-gold-600: #8a6128;
+  --color-gold-700: #5f421b;
+  --color-gold-800: #35240e;
+
+  /* Ocean Blue — secondary accent */
+  --color-ocean: #5a8da8;
+  --color-ocean-400: #5a8da8;
+  --color-ocean-500: #486f86;
+
+  /* Sand Beige — warm surface */
+  --color-sand: #f3ebdd;
+  --color-sand-100: #faf5ea;
+  --color-sand-200: #f3ebdd;
+  --color-sand-300: #e6d8be;
+
+  --color-surface: #faf7f0;
+  --color-surface-alt: #f3ebdd;
+  --color-surface-dark: #0d2340;
+  --color-ink: #0d2340;
+  --color-ink-muted: #5a6a82;
+
+  --font-display:
+    var(--font-cinzel), "Trajan Pro", "Cormorant Garamond", "Iowan Old Style",
+    "Apple Garamond", Baskerville, "Times New Roman", serif;
+  --font-sans:
+    var(--font-montserrat), "Lato", "Open Sans", ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --radius-pill: 9999px;
+  --shadow-glow: 0 0 0 1px rgba(111, 174, 181, 0.25),
+    0 12px 32px -8px rgba(13, 35, 64, 0.35);
+  --shadow-elev: 0 1px 2px rgba(13, 35, 64, 0.05),
+    0 14px 28px -14px rgba(13, 35, 64, 0.22);
+}
+
+:root {
+  --background: var(--color-surface);
+  --foreground: var(--color-ink);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+@layer base {
+  html {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-gold) 45%, transparent);
+    color: var(--color-primary);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: 0.01em;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  .glass {
+    background: color-mix(in oklab, white 78%, transparent);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 8%, transparent);
+  }
+  .glass-dark {
+    background: color-mix(in oklab, var(--color-surface-dark) 60%, transparent);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid color-mix(in oklab, white 10%, transparent);
+  }
+
+  .gradient-mesh {
+    background-color: var(--color-surface);
+    background-image:
+      radial-gradient(at 6% 0%, color-mix(in oklab, var(--color-accent) 26%, transparent) 0px, transparent 55%),
+      radial-gradient(at 96% 4%, color-mix(in oklab, var(--color-gold) 22%, transparent) 0px, transparent 50%),
+      radial-gradient(at 50% 100%, color-mix(in oklab, var(--color-primary) 22%, transparent) 0px, transparent 60%);
+  }
+  .gradient-mesh-dark {
+    background-color: var(--color-surface-dark);
+    background-image:
+      radial-gradient(at 8% 8%, color-mix(in oklab, var(--color-accent) 28%, transparent) 0px, transparent 55%),
+      radial-gradient(at 92% 12%, color-mix(in oklab, var(--color-gold) 22%, transparent) 0px, transparent 55%),
+      radial-gradient(at 50% 92%, color-mix(in oklab, var(--color-ocean) 22%, transparent) 0px, transparent 60%);
+  }
+  .sunset-gradient {
+    background: linear-gradient(
+      180deg,
+      #0d2340 0%,
+      #314f7a 35%,
+      #b88a4c 75%,
+      #d7a14a 100%
+    );
+  }
+  .gradient-text {
+    background: linear-gradient(120deg, #0d2340 0%, #5a8da8 55%, #d7a14a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  @keyframes pulseRing {
+    0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-accent) 60%, transparent); }
+    70% { box-shadow: 0 0 0 18px color-mix(in oklab, var(--color-accent) 0%, transparent); }
+    100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-accent) 0%, transparent); }
+  }
+  .pulse-ring {
+    animation: pulseRing 2.4s cubic-bezier(0.66, 0, 0, 1) infinite;
+  }
+  @keyframes shimmer {
+    from { background-position: -200% 0; }
+    to { background-position: 200% 0; }
+  }
+  .shimmer {
+    background-image: linear-gradient(
+      110deg,
+      transparent 30%,
+      color-mix(in oklab, white 20%, transparent) 50%,
+      transparent 70%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2.2s linear infinite;
+  }
+}

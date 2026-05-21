@@ -1,0 +1,77 @@
+// Meridian Dental Society — Prisma schema
+// Run: npx prisma generate && npx prisma migrate dev --name init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum EventType {
+  CALIFORNIA
+  NATIONAL
+  INTERNATIONAL
+}
+
+model Event {
+  id            String         @id @default(cuid())
+  title         String
+  slug          String         @unique
+  description   String         @db.Text
+  date          DateTime
+  endDate       DateTime?
+  location      String
+  city          String
+  country       String
+  lat           Float
+  lng           Float
+  type          EventType
+  capacity      Int
+  ceCredits     Int            @default(0)
+  imageUrl      String?
+  speakerId     String?
+  speaker       Speaker?       @relation(fields: [speakerId], references: [id])
+  registrations Registration[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@index([type, date])
+  @@index([date])
+}
+
+model Speaker {
+  id        String   @id @default(cuid())
+  name      String
+  bio       String   @db.Text
+  photoUrl  String?
+  specialty String
+  org       String?
+  events    Event[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Registration {
+  id        String   @id @default(cuid())
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  firstName String
+  lastName  String
+  email     String
+  license   String?
+  createdAt DateTime @default(now())
+
+  @@index([eventId])
+  @@index([email])
+}
+
+model NewsletterSignup {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  consent   Boolean  @default(true)
+  source    String?
+  createdAt DateTime @default(now())
+}
