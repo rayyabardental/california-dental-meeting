@@ -2,23 +2,27 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, Phone, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { CdmLogo } from "@/components/ui/cdm-logo";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+/**
+ * Primary navigation. Each item opens its own dedicated page — no anchor
+ * scroll jumping. The logo links back to home.
+ */
 const NAV_ITEMS = [
-  { label: "Veracruz 2026", href: "#flagship" },
-  { label: "Courses", href: "#courses" },
-  { label: "Curriculum", href: "#curriculum" },
-  { label: "Faculty", href: "#about" },
-  { label: "Contact", href: "#contact" },
+  { label: "Veracruz 2026", href: "/flagship" },
+  { label: "Courses", href: "/courses" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ] as const;
 
 export function Navbar(): React.ReactElement {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = (): void => setScrolled(window.scrollY > 24);
@@ -34,6 +38,14 @@ export function Navbar(): React.ReactElement {
     };
   }, [mobileOpen]);
 
+  // Close mobile menu on route change.
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  const isActive = (href: string): boolean =>
+    pathname === href || (href !== "/" && pathname?.startsWith(href + "/"));
+
   return (
     <>
       <header
@@ -44,18 +56,22 @@ export function Navbar(): React.ReactElement {
             : "bg-transparent",
         )}
       >
-        <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between gap-6 px-6 lg:px-10">
+        <div className="mx-auto flex h-24 w-full max-w-7xl items-center justify-between gap-6 px-6 lg:h-28 lg:px-10">
           <Link
             href="/"
-            className="group flex items-center gap-3 text-primary"
+            className="group flex items-center gap-4 text-primary"
             aria-label="California Dental Meeting — home"
           >
-            <CdmLogo size={48} priority className="transition-transform group-hover:scale-105" />
+            <CdmLogo
+              size={72}
+              priority
+              className="transition-transform group-hover:scale-105 ring-2 ring-primary/15 shadow-[0_10px_30px_-12px_rgba(13,35,64,0.35)]"
+            />
             <span className="hidden flex-col leading-none sm:flex">
-              <span className="font-display text-base font-semibold tracking-wider text-primary">
+              <span className="font-display text-lg font-semibold tracking-wider text-primary sm:text-xl">
                 CALIFORNIA DENTAL MEETING
               </span>
-              <span className="mt-1 text-[10px] font-medium uppercase tracking-[0.28em] text-ink-muted">
+              <span className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.28em] text-ink-muted">
                 International Education · Clinical Excellence
               </span>
             </span>
@@ -66,42 +82,31 @@ export function Navbar(): React.ReactElement {
             aria-label="Primary"
           >
             {NAV_ITEMS.map((item) => (
-              <a
+              <Link
                 key={item.href}
                 href={item.href}
-                className="rounded-full px-3.5 py-2 text-sm font-medium text-ink/80 transition-colors hover:bg-primary/5 hover:text-primary"
+                aria-current={isActive(item.href) ? "page" : undefined}
+                className={cn(
+                  "rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                  isActive(item.href)
+                    ? "bg-primary/8 text-primary"
+                    : "text-ink/80 hover:bg-primary/5 hover:text-primary",
+                )}
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
-          <div className="flex items-center gap-2">
-            <a
-              href="tel:+19514639732"
-              className="hidden items-center gap-2 rounded-full border border-primary/15 px-4 py-2 text-sm font-medium text-primary transition-colors hover:border-primary/40 md:inline-flex"
-            >
-              <Phone className="h-3.5 w-3.5 text-accent" />
-              +1 (951) 463-9732
-            </a>
-            <Button
-              variant="gold"
-              size="md"
-              href="#flagship"
-              className="hidden md:inline-flex"
-            >
-              Reserve a spot
-            </Button>
-            <button
-              type="button"
-              onClick={() => setMobileOpen(true)}
-              aria-label="Open menu"
-              aria-expanded={mobileOpen}
-              className="grid h-11 w-11 place-items-center rounded-full border border-primary/15 text-primary lg:hidden"
-            >
-              <Menu className="h-5 w-5" />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setMobileOpen(true)}
+            aria-label="Open menu"
+            aria-expanded={mobileOpen}
+            className="grid h-12 w-12 place-items-center rounded-full border border-primary/15 text-primary lg:hidden"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
         </div>
       </header>
 
@@ -122,8 +127,8 @@ export function Navbar(): React.ReactElement {
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center gap-3 text-white"
                 >
-                  <CdmLogo size={44} />
-                  <span className="font-display text-sm font-semibold tracking-wider">
+                  <CdmLogo size={56} />
+                  <span className="font-display text-base font-semibold tracking-wider">
                     CDM
                   </span>
                 </Link>
@@ -138,7 +143,7 @@ export function Navbar(): React.ReactElement {
               </div>
               <motion.nav
                 aria-label="Mobile primary"
-                className="flex flex-1 flex-col gap-2 px-6 pt-8"
+                className="flex flex-1 flex-col gap-2 px-6 pt-12"
                 initial="hidden"
                 animate="show"
                 variants={{
@@ -147,42 +152,26 @@ export function Navbar(): React.ReactElement {
                 }}
               >
                 {NAV_ITEMS.map((item) => (
-                  <motion.a
+                  <motion.div
                     key={item.href}
-                    href={item.href}
-                    onClick={() => setMobileOpen(false)}
                     variants={{
                       hidden: { opacity: 0, y: 12 },
                       show: { opacity: 1, y: 0 },
                     }}
-                    className="font-display text-3xl text-white"
                   >
-                    {item.label}
-                  </motion.a>
+                    <Link
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      aria-current={isActive(item.href) ? "page" : undefined}
+                      className={cn(
+                        "block font-display text-3xl transition-colors",
+                        isActive(item.href) ? "text-gold" : "text-white",
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  </motion.div>
                 ))}
-                <motion.div
-                  variants={{
-                    hidden: { opacity: 0, y: 12 },
-                    show: { opacity: 1, y: 0 },
-                  }}
-                  className="mt-8 space-y-3"
-                >
-                  <Button
-                    variant="gold"
-                    size="lg"
-                    href="#flagship"
-                    className="w-full"
-                  >
-                    Reserve a spot
-                  </Button>
-                  <a
-                    href="tel:+19514639732"
-                    className="flex items-center justify-center gap-2 rounded-full border border-white/20 px-5 py-3 text-sm font-medium text-white"
-                  >
-                    <Phone className="h-4 w-4 text-gold" />
-                    +1 (951) 463-9732
-                  </a>
-                </motion.div>
               </motion.nav>
             </div>
           </motion.div>

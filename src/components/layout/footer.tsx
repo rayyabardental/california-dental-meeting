@@ -14,28 +14,28 @@ const FOOTER_LINKS: ReadonlyArray<{
   {
     title: "Programmes",
     links: [
-      { label: "Veracruz 2026 (flagship)", href: "#flagship" },
-      { label: "All courses", href: "#courses" },
-      { label: "Curriculum & schedule", href: "#curriculum" },
-      { label: "What's included", href: "#included" },
+      { label: "Veracruz 2026 (flagship)", href: "/flagship" },
+      { label: "Curriculum & schedule", href: "/flagship#curriculum" },
+      { label: "What's included", href: "/flagship#included" },
+      { label: "All courses", href: "/courses" },
     ],
   },
   {
     title: "Organisation",
     links: [
-      { label: "About CDM", href: "#about" },
-      { label: "Faculty & partners", href: "#about" },
-      { label: "Sponsors", href: "#sponsors" },
-      { label: "Contact", href: "#contact" },
+      { label: "About CDM", href: "/about" },
+      { label: "Team", href: "/about#team" },
+      { label: "Credentials", href: "/about#credentials" },
+      { label: "International partnerships", href: "/about#partnerships" },
     ],
   },
   {
     title: "Resources",
     links: [
-      { label: "Brochure (PDF)", href: "#contact" },
-      { label: "Enrollment", href: "#contact" },
-      { label: "Continuing Education", href: "#flagship" },
-      { label: "Press", href: "#contact" },
+      { label: "Enrollment", href: "/contact" },
+      { label: "Continuing Education", href: "/flagship" },
+      { label: "Sponsors", href: "/about#sponsors" },
+      { label: "Contact", href: "/contact" },
     ],
   },
 ];

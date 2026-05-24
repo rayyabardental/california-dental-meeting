@@ -105,9 +105,25 @@ export function FlagshipCourse(): React.ReactElement {
                   <Tag className="h-3.5 w-3.5" />
                   Tuition
                 </p>
-                <p className="mt-1 font-display text-2xl text-primary">
-                  {c.price}
-                </p>
+                {c.earlyRegistrationActive && c.earlyPrice && c.regularPrice ? (
+                  <>
+                    <p className="mt-1 flex items-baseline gap-2">
+                      <span className="font-display text-3xl text-primary">
+                        {c.earlyPrice}
+                      </span>
+                      <span className="text-sm text-ink-muted line-through decoration-ink-muted/60">
+                        {c.regularPrice}
+                      </span>
+                    </p>
+                    <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+                      Early registration · Limited time
+                    </p>
+                  </>
+                ) : (
+                  <p className="mt-1 font-display text-2xl text-primary">
+                    {c.price}
+                  </p>
+                )}
                 <p className="mt-1 text-xs text-ink-muted">
                   Includes hotel, ground transport, scrubs, materials, lunch
                   daily, and graduation dinner.

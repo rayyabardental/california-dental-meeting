@@ -152,10 +152,10 @@ function EventDetailPanel({ event }: { event: Event }): React.ReactElement {
         </dl>
 
         <div className="mt-6 flex gap-2">
-          <Button variant="primary" size="sm" href="#flagship" className="flex-1">
+          <Button variant="primary" size="sm" href="/flagship" className="flex-1">
             View course
           </Button>
-          <Button variant="ghost" size="sm" href="#contact">
+          <Button variant="ghost" size="sm" href="/contact">
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Button>
         </div>

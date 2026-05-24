@@ -1,13 +1,5 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/sections/hero";
-import { FlagshipCourse } from "@/components/sections/flagship-course";
-import { Courses } from "@/components/sections/courses";
-import { Curriculum } from "@/components/sections/curriculum";
-import { Included } from "@/components/sections/included";
-import { EventsMap } from "@/components/sections/events-map";
-import { About } from "@/components/sections/about";
-import { Testimonials } from "@/components/sections/testimonials";
-import { Contact } from "@/components/sections/contact";
 
 export const metadata: Metadata = {
   title:
@@ -18,17 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage(): React.ReactElement {
-  return (
-    <>
-      <Hero />
-      <FlagshipCourse />
-      <Courses />
-      <Curriculum />
-      <Included />
-      <EventsMap />
-      <About />
-      <Testimonials />
-      <Contact />
-    </>
-  );
+  return <Hero />;
 }

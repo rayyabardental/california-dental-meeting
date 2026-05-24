@@ -24,6 +24,12 @@ export type Course = {
   ceCredits: number;
   topic: string;
   price: string;
+  /** Regular tuition price (for early-registration callouts). Optional. */
+  regularPrice?: string;
+  /** Early-registration price. Optional. */
+  earlyPrice?: string;
+  /** When true, surface the early-registration callout banner & strikethrough. */
+  earlyRegistrationActive?: boolean;
   status: "OPEN" | "WAITLIST" | "ANNOUNCING_SOON";
   highlights: ReadonlyArray<string>;
   whatsIncluded: ReadonlyArray<string>;
@@ -69,7 +75,10 @@ export const EVENTS: readonly Course[] = [
     spotsRemaining: 9,
     ceCredits: 35,
     topic: "Implantology · Live Surgery",
-    price: "Contact for tuition",
+    price: "$9,990",
+    regularPrice: "$10,500",
+    earlyPrice: "$9,990",
+    earlyRegistrationActive: true,
     status: "OPEN",
     highlights: [
       "15–20 implants placed per participant",
