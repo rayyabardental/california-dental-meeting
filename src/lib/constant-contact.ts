@@ -77,6 +77,10 @@ export function buildAuthorizeUrl(redirectUri: string, state: string): string {
     response_type: "code",
     state,
     scope: SCOPE,
+    // Force a fresh sign-in rather than silently reusing an existing browser
+    // session — guarantees the issued token reflects the current marketing
+    // account, not a stale Okta session created before the account was set up.
+    prompt: "login",
   });
   return `${AUTH_BASE}/authorize?${params.toString()}`;
 }
