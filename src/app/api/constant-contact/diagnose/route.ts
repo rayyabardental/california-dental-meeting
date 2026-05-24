@@ -71,8 +71,12 @@ export async function GET(req: Request): Promise<Response> {
   if (!access) return ok({ stage: "empty-access-token" });
 
   const jwt = decodeJwtPayload(access);
-  const accountSummary = await probe(
+  const apiCcEmail = await probe(
     "https://api.cc.email/v3/account/summary",
+    access,
+  );
+  const apiConstantContact = await probe(
+    "https://api.constantcontact.com/v3/account/summary",
     access,
   );
   const contactLists = await probe(
@@ -80,18 +84,26 @@ export async function GET(req: Request): Promise<Response> {
     access,
   );
 
+  // Scrub anything that looks personal/identifying before returning.
+  const safeJwt = jwt
+    ? Object.fromEntries(
+        Object.entries(jwt).map(([k, v]) => {
+          if (k === "sub" && typeof v === "string") {
+            return [k, `${v.slice(0, 6)}…`];
+          }
+          return [k, v];
+        }),
+      )
+    : null;
+
   return ok({
     tokenPreview: `${access.slice(0, 16)}…${access.slice(-8)}`,
     tokenLength: access.length,
-    jwt: jwt
-      ? {
-          scp: jwt.scp,
-          aud: jwt.aud,
-          iss: jwt.iss,
-          exp: jwt.exp,
-          sub: typeof jwt.sub === "string" ? `${jwt.sub.slice(0, 6)}…` : jwt.sub,
-        }
-      : null,
-    probes: { accountSummary, contactLists },
+    jwt: safeJwt,
+    probes: {
+      apiCcEmail,
+      apiConstantContact,
+      contactLists,
+    },
   });
 }
