@@ -1,176 +1,90 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Clock, Plane, BookOpen, Activity, Award, Sun } from "lucide-react";
+import {
+  Clock,
+  Plane,
+  BookOpen,
+  Activity,
+  Award,
+  Sun,
+  CalendarClock,
+} from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { SectionEyebrow } from "@/components/ui/section-eyebrow";
-import { FLAGSHIP_COURSE } from "@/lib/events-data";
+import type { Course, ScheduleDay, ScheduleIconKey } from "@/lib/events-data";
 
-type ScheduleDay = {
-  date: string;
-  weekday: string;
-  title: string;
-  icon: React.ReactNode;
-  blocks: ReadonlyArray<{ time: string; activity: string; note?: string }>;
+const ICON_MAP: Record<ScheduleIconKey, React.ReactNode> = {
+  plane: <Plane className="h-4 w-4" />,
+  book: <BookOpen className="h-4 w-4" />,
+  activity: <Activity className="h-4 w-4" />,
+  award: <Award className="h-4 w-4" />,
+  sun: <Sun className="h-4 w-4" />,
+  clock: <Clock className="h-4 w-4" />,
 };
 
-const SCHEDULE: ReadonlyArray<ScheduleDay> = [
-  {
-    date: "Sun, Aug 30",
-    weekday: "Sunday",
-    title: "Arrival Day",
-    icon: <Plane className="h-4 w-4" />,
-    blocks: [
-      {
-        time: "Upon arrival",
-        activity: "Airport transfer to hotel",
-        note: "Transportation included",
-      },
-      {
-        time: "Evening",
-        activity:
-          "Welcome meeting — introductions, materials distribution (backpacks, scrubs, caps), programme overview, clinical team organization",
-        note: "All participants",
-      },
-    ],
-  },
-  {
-    date: "Mon, Aug 31",
-    weekday: "Monday",
-    title: "Theory & First Surgeries",
-    icon: <BookOpen className="h-4 w-4" />,
-    blocks: [
-      {
-        time: "8:00 – 10:00 am",
-        activity:
-          "Theory lecture: diagnosis & treatment planning · surgical anatomy review · anesthesia & drilling protocols · implant motor management",
-      },
-      { time: "10:00 – 10:30 am", activity: "Coffee break" },
-      {
-        time: "10:30 am – 12:30 pm",
-        activity: "Hands-on workshop with anatomical models",
-      },
-      { time: "12:30 – 1:30 pm", activity: "Lunch", note: "Included daily" },
-      {
-        time: "1:30 – 2:00 pm",
-        activity:
-          "Clinical discussion: afternoon case review · team organization · surgical planning",
-      },
-      {
-        time: "2:00 – 6:00 pm",
-        activity: "Live patient surgery",
-        note: "Supervised, team-based",
-      },
-    ],
-  },
-  {
-    date: "Tue–Thu, Sep 1–3",
-    weekday: "Tuesday – Thursday",
-    title: "Full Surgical Days",
-    icon: <Activity className="h-4 w-4" />,
-    blocks: [
-      {
-        time: "8:00 am",
-        activity:
-          "Clinical discussion: diagnosis & treatment planning · morning case review",
-      },
-      {
-        time: "9:00 am – 12:30 pm",
-        activity: "Morning surgical session",
-        note: "Live patient cases",
-      },
-      { time: "12:30 – 1:30 pm", activity: "Lunch" },
-      {
-        time: "1:30 – 2:00 pm",
-        activity: "Clinical discussion: afternoon case review · surgical planning",
-      },
-      {
-        time: "2:00 – 6:00 pm",
-        activity: "Afternoon surgical session",
-        note: "Live patient cases",
-      },
-    ],
-  },
-  {
-    date: "Fri, Sep 4",
-    weekday: "Friday",
-    title: "Final Day & Graduation",
-    icon: <Award className="h-4 w-4" />,
-    blocks: [
-      {
-        time: "8:00 am",
-        activity:
-          "Clinical discussion: diagnosis & treatment planning · review of morning surgical cases",
-      },
-      {
-        time: "9:00 am",
-        activity:
-          "Final surgical session — participants completing surgical requirements may assist fellow participants during remaining procedures",
-        note: "Peer-assist option",
-      },
-      {
-        time: "7:00 pm",
-        activity:
-          "Graduation ceremony & closing dinner: certificate presentation · group recognition · celebration dinner",
-        note: "Formal event",
-      },
-    ],
-  },
-  {
-    date: "Sat, Sep 5",
-    weekday: "Saturday",
-    title: "Optional Tour Day",
-    icon: <Sun className="h-4 w-4" />,
-    blocks: [
-      {
-        time: "All day",
-        activity:
-          "One-day Veracruz city tour — explore one of Mexico's most historic and beautiful coastal cities",
-        note: "Optional · included",
-      },
-    ],
-  },
-];
+/**
+ * Per-course schedule + learning objectives + ideal participant. Reusable
+ * across every course detail page; gracefully degrades to a "to be
+ * announced" panel when a course has no published schedule yet.
+ */
+export function Curriculum({ course }: { course: Course }): React.ReactElement {
+  const schedule = course.schedule;
 
-export function Curriculum(): React.ReactElement {
   return (
     <section
       id="curriculum"
-      aria-label="Course curriculum and schedule"
+      aria-label={`${course.title} — curriculum and schedule`}
       className="relative bg-surface py-24 lg:py-32"
     >
       <Container size="wide">
         <div className="mx-auto max-w-3xl text-center">
           <SectionEyebrow tone="primary" className="justify-center">
-            Daily Schedule
+            {schedule && schedule.length > 0 ? "Daily Schedule" : "Curriculum"}
           </SectionEyebrow>
           <h2 className="mt-4 font-display text-4xl font-medium tracking-tight text-primary md:text-5xl text-balance">
-            Seven days. Six clinical sessions. One transformative week.
+            {schedule && schedule.length > 0
+              ? `${schedule.length} days. ${course.ceCredits} CE credits.`
+              : "Curriculum being finalised."}
           </h2>
           <p className="mt-5 text-lg text-ink-muted text-pretty">
-            The full agenda for the {FLAGSHIP_COURSE.title} at{" "}
-            {FLAGSHIP_COURSE.venue}, {FLAGSHIP_COURSE.city}.
+            {schedule && schedule.length > 0
+              ? `The full agenda for the ${course.title} at ${course.venue}, ${course.city}.`
+              : `Detailed agenda for ${course.title} will be published as the cohort approaches. Join the waitlist to receive the full curriculum once confirmed.`}
           </p>
         </div>
 
-        <ol className="mx-auto mt-14 max-w-4xl space-y-4">
-          {SCHEDULE.map((day, idx) => (
-            <ScheduleDayCard key={day.date} day={day} index={idx} />
-          ))}
-        </ol>
+        {schedule && schedule.length > 0 ? (
+          <ol className="mx-auto mt-14 max-w-4xl space-y-4">
+            {schedule.map((day, idx) => (
+              <ScheduleDayCard key={day.date} day={day} index={idx} />
+            ))}
+          </ol>
+        ) : (
+          <div className="mx-auto mt-14 max-w-2xl rounded-3xl border border-primary/10 bg-white p-8 text-center shadow-[0_1px_2px_rgba(13,35,64,0.04)]">
+            <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-accent/10 text-accent">
+              <CalendarClock className="h-5 w-5" />
+            </span>
+            <h3 className="mt-4 font-display text-xl font-medium text-primary">
+              Detailed agenda to be announced
+            </h3>
+            <p className="mt-2 text-sm text-ink-muted text-pretty">
+              {course.description}
+            </p>
+          </div>
+        )}
 
-        {/* Learning objectives + ideal participant */}
         <div className="mx-auto mt-20 grid max-w-5xl gap-8 lg:grid-cols-2">
           <ListPanel
             eyebrow="Learning Objectives"
             heading="What you'll walk away knowing how to do."
-            items={FLAGSHIP_COURSE.learningObjectives}
+            items={course.learningObjectives}
             tone="accent"
           />
           <ListPanel
             eyebrow="Ideal Participant"
             heading="Designed for these clinicians."
-            items={FLAGSHIP_COURSE.idealParticipant}
+            items={course.idealParticipant}
             tone="gold"
           />
         </div>
@@ -197,7 +111,7 @@ function ScheduleDayCard({
       <div className="grid gap-0 lg:grid-cols-[14rem_1fr]">
         <div className="border-b border-primary/8 bg-sand-100 p-6 lg:border-b-0 lg:border-r">
           <span className="inline-flex items-center gap-2 rounded-full bg-primary/8 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
-            {day.icon}
+            {ICON_MAP[day.icon]}
             Day {index + 1}
           </span>
           <p className="mt-3 font-display text-2xl font-medium text-primary">

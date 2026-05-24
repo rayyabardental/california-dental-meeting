@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   ArrowUpRight,
@@ -35,7 +36,8 @@ export function Courses(): React.ReactElement {
             </h2>
             <p className="mt-5 text-lg text-ink-muted text-pretty">
               The 2026 flagship in Veracruz plus follow-on programmes
-              currently being scheduled with our academic partners.
+              currently being scheduled with our academic partners. Open any
+              card to view that course&apos;s full curriculum and logistics.
             </p>
           </div>
         </div>
@@ -60,6 +62,18 @@ export function Courses(): React.ReactElement {
   );
 }
 
+/**
+ * Course summary card.
+ *
+ * Uses the "stretched-link" pattern: the title's <Link> projects an
+ * absolutely-positioned `::before` pseudo-element across the entire card,
+ * making the whole card body clickable. The Register button sits above
+ * the overlay (`relative z-10`) so it remains independently clickable.
+ *
+ * Result: no nested interactive elements, the link is reachable by Tab,
+ * the button is reachable by Tab, hover/focus states are obvious — and
+ * the underlying HTML is `<article><h3><a>...<button>` which is valid.
+ */
 function CourseCard({
   course,
   index,
@@ -71,6 +85,7 @@ function CourseCard({
 }): React.ReactElement {
   const isOpen = course.status === "OPEN";
   const isFlagship = course.id === "cdm_veracruz_2026";
+  const href = `/courses/${course.slug}`;
 
   return (
     <motion.article
@@ -79,12 +94,15 @@ function CourseCard({
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.4, delay: Math.min(index * 0.06, 0.18) }}
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-3xl border bg-white shadow-[0_1px_2px_rgba(13,35,64,0.04)] transition-shadow hover:shadow-[0_24px_48px_-24px_rgba(13,35,64,0.25)]",
+        "group relative flex flex-col overflow-hidden rounded-3xl border bg-white shadow-[0_1px_2px_rgba(13,35,64,0.04)]",
+        "transition-all duration-300",
+        "hover:-translate-y-1 hover:shadow-[0_24px_48px_-24px_rgba(13,35,64,0.28)] hover:border-accent/40",
+        "focus-within:-translate-y-1 focus-within:shadow-[0_24px_48px_-24px_rgba(13,35,64,0.28)] focus-within:border-accent",
         isFlagship ? "border-gold/60 ring-2 ring-gold/30" : "border-primary/8",
       )}
     >
       {isFlagship && (
-        <div className="absolute right-4 top-4 z-10 rounded-full bg-gold px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-primary">
+        <div className="absolute right-4 top-4 z-20 rounded-full bg-gold px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-primary">
           Flagship
         </div>
       )}
@@ -96,7 +114,23 @@ function CourseCard({
           {course.topic}
         </p>
         <h3 className="mt-2 font-display text-xl font-medium leading-snug text-primary text-balance">
-          {course.title}
+          {/*
+            Stretched-link: the ::before pseudo extends across the whole
+            card so the body is clickable. Native focus-visible ring is
+            preserved on the <a> itself for keyboard users.
+          */}
+          <Link
+            href={href}
+            aria-label={`${course.title} — view course details`}
+            className={cn(
+              "outline-none transition-colors",
+              "before:absolute before:inset-0 before:z-0 before:rounded-3xl before:content-['']",
+              "hover:text-accent-700",
+              "focus-visible:before:ring-2 focus-visible:before:ring-accent focus-visible:before:ring-offset-2 focus-visible:before:ring-offset-white",
+            )}
+          >
+            {course.title}
+          </Link>
         </h3>
         <p className="mt-3 line-clamp-2 text-sm text-ink-muted text-pretty">
           {course.summary}
@@ -139,11 +173,34 @@ function CourseCard({
             </span>
           )}
 
-          <Button variant="primary" size="sm" onClick={onRegister}>
+          {/*
+            Register button is layered above the stretched-link overlay
+            (`relative z-10`). Clicking it triggers onRegister(); the link
+            click is suppressed because the button is on top.
+          */}
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={onRegister}
+            className="relative z-10"
+          >
             {isOpen ? "Register" : "Join waitlist"}
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Button>
         </div>
+
+        {/*
+          Subtle "View details" affordance — purely visual indication that
+          the card body is interactive. Hidden from assistive tech because
+          the Link already announces the destination via aria-label.
+        */}
+        <p
+          aria-hidden="true"
+          className="mt-4 inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+        >
+          View course details
+          <ArrowUpRight className="h-3 w-3" />
+        </p>
       </div>
     </motion.article>
   );

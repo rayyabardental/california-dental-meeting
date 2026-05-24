@@ -4,23 +4,26 @@ import { motion } from "framer-motion";
 import { Sparkles, TimerReset } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
-import { FLAGSHIP_COURSE } from "@/lib/events-data";
+import type { Course } from "@/lib/events-data";
 
 /**
- * Prominent early-registration callout shown above the flagship course
- * detail. Active while `FLAGSHIP_COURSE.earlyRegistrationActive` is true.
- *
- * Renders nothing when early pricing is inactive, so removing the offer in
- * the future is a single boolean flip in events-data.ts.
+ * Prominent early-registration callout shown above a course detail.
+ * Renders `null` unless the course has `earlyRegistrationActive` set, so
+ * dropping a flag in events-data.ts hides the banner everywhere.
  */
-export function EarlyRegistrationBanner(): React.ReactElement | null {
-  const c = FLAGSHIP_COURSE;
-  if (!c.earlyRegistrationActive || !c.earlyPrice || !c.regularPrice) {
+export function EarlyRegistrationBanner({
+  course,
+  onRegister,
+}: {
+  course: Course;
+  onRegister?: () => void;
+}): React.ReactElement | null {
+  if (!course.earlyRegistrationActive || !course.earlyPrice || !course.regularPrice) {
     return null;
   }
 
-  const regularNumeric = Number(c.regularPrice.replace(/[^0-9.]/g, ""));
-  const earlyNumeric = Number(c.earlyPrice.replace(/[^0-9.]/g, ""));
+  const regularNumeric = Number(course.regularPrice.replace(/[^0-9.]/g, ""));
+  const earlyNumeric = Number(course.earlyPrice.replace(/[^0-9.]/g, ""));
   const savings = Number.isFinite(regularNumeric - earlyNumeric)
     ? regularNumeric - earlyNumeric
     : null;
@@ -54,9 +57,9 @@ export function EarlyRegistrationBanner(): React.ReactElement | null {
               Reserve your seat at the early-registration rate.
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/70">
-              Live patient surgery · 35 CE credits · 15–20 implants placed per
-              participant · Veracruz, Mexico. Early-registration pricing is
-              available for a limited time while seats remain.
+              Live patient surgery · {course.ceCredits} CE credits · Veracruz,
+              Mexico. Early-registration pricing is available for a limited
+              time while seats remain.
             </p>
           </div>
 
@@ -64,21 +67,27 @@ export function EarlyRegistrationBanner(): React.ReactElement | null {
             <div className="text-left lg:text-right">
               <p className="flex items-baseline gap-3 leading-none">
                 <span className="font-display text-4xl font-medium text-gold sm:text-5xl">
-                  {c.earlyPrice}
+                  {course.earlyPrice}
                 </span>
                 <span className="text-base text-white/55 line-through decoration-white/40">
-                  {c.regularPrice}
+                  {course.regularPrice}
                 </span>
               </p>
               <p className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-gold/90">
                 <TimerReset className="h-3.5 w-3.5" />
-                {savingsLabel ?? "Early rate"} · {c.spotsRemaining} of{" "}
-                {c.capacity} seats remain
+                {savingsLabel ?? "Early rate"} · {course.spotsRemaining} of{" "}
+                {course.capacity} seats remain
               </p>
             </div>
-            <Button variant="gold" size="lg" href="#flagship">
-              Reserve at $9,990
-            </Button>
+            {onRegister ? (
+              <Button variant="gold" size="lg" onClick={onRegister}>
+                Reserve at {course.earlyPrice}
+              </Button>
+            ) : (
+              <Button variant="gold" size="lg" href="#flagship">
+                Reserve at {course.earlyPrice}
+              </Button>
+            )}
           </div>
         </motion.div>
       </Container>

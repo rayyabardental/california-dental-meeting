@@ -14,9 +14,18 @@ const FOOTER_LINKS: ReadonlyArray<{
   {
     title: "Programmes",
     links: [
-      { label: "Veracruz 2026 (flagship)", href: "/flagship" },
-      { label: "Curriculum & schedule", href: "/flagship#curriculum" },
-      { label: "What's included", href: "/flagship#included" },
+      {
+        label: "Veracruz 2026 (flagship)",
+        href: "/courses/basic-dental-implant-course-veracruz-2026",
+      },
+      {
+        label: "Curriculum & schedule",
+        href: "/courses/basic-dental-implant-course-veracruz-2026#curriculum",
+      },
+      {
+        label: "What's included",
+        href: "/courses/basic-dental-implant-course-veracruz-2026#included",
+      },
       { label: "All courses", href: "/courses" },
     ],
   },
@@ -33,7 +42,10 @@ const FOOTER_LINKS: ReadonlyArray<{
     title: "Resources",
     links: [
       { label: "Enrollment", href: "/contact" },
-      { label: "Continuing Education", href: "/flagship" },
+      {
+        label: "Continuing Education",
+        href: "/courses/basic-dental-implant-course-veracruz-2026",
+      },
       { label: "Sponsors", href: "/about#sponsors" },
       { label: "Contact", href: "/contact" },
     ],

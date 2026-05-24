@@ -2,6 +2,30 @@ import type { EventTypeValue } from "./validations/event";
 
 export type Sponsor = { name: string; note?: string };
 
+/** Icon identifiers used by curriculum schedule rendering. Kept as plain
+ * strings so course data stays serializable (no React components in data). */
+export type ScheduleIconKey =
+  | "plane"
+  | "book"
+  | "activity"
+  | "award"
+  | "sun"
+  | "clock";
+
+export type ScheduleBlock = {
+  time: string;
+  activity: string;
+  note?: string;
+};
+
+export type ScheduleDay = {
+  date: string;
+  weekday: string;
+  title: string;
+  icon: ScheduleIconKey;
+  blocks: ReadonlyArray<ScheduleBlock>;
+};
+
 export type Course = {
   id: string;
   slug: string;
@@ -38,6 +62,10 @@ export type Course = {
   clinicalTeam?: ReadonlyArray<{ role: string; description: string }>;
   sponsors?: ReadonlyArray<Sponsor>;
   universityPartner?: string;
+  /** Full day-by-day schedule. Optional — courses without a published agenda
+   * yet (ANNOUNCING_SOON) leave this undefined and the detail page shows a
+   * "to be announced" placeholder instead. */
+  schedule?: ReadonlyArray<ScheduleDay>;
   speaker: {
     name: string;
     title: string;
@@ -151,6 +179,124 @@ export const EVENTS: readonly Course[] = [
       org: "California Dental Meeting",
       bio: "Program Director of California Dental Meeting, leading the live-patient surgical curriculum in partnership with Universidad CEYESOV. Dr. Franco directs all clinical sessions, oversees treatment planning, and supervises every implant placement performed during the programme.",
     },
+    schedule: [
+      {
+        date: "Sun, Aug 30",
+        weekday: "Sunday",
+        title: "Arrival Day",
+        icon: "plane",
+        blocks: [
+          {
+            time: "Upon arrival",
+            activity: "Airport transfer to hotel",
+            note: "Transportation included",
+          },
+          {
+            time: "Evening",
+            activity:
+              "Welcome meeting — introductions, materials distribution (backpacks, scrubs, caps), programme overview, clinical team organization",
+            note: "All participants",
+          },
+        ],
+      },
+      {
+        date: "Mon, Aug 31",
+        weekday: "Monday",
+        title: "Theory & First Surgeries",
+        icon: "book",
+        blocks: [
+          {
+            time: "8:00 – 10:00 am",
+            activity:
+              "Theory lecture: diagnosis & treatment planning · surgical anatomy review · anesthesia & drilling protocols · implant motor management",
+          },
+          { time: "10:00 – 10:30 am", activity: "Coffee break" },
+          {
+            time: "10:30 am – 12:30 pm",
+            activity: "Hands-on workshop with anatomical models",
+          },
+          { time: "12:30 – 1:30 pm", activity: "Lunch", note: "Included daily" },
+          {
+            time: "1:30 – 2:00 pm",
+            activity:
+              "Clinical discussion: afternoon case review · team organization · surgical planning",
+          },
+          {
+            time: "2:00 – 6:00 pm",
+            activity: "Live patient surgery",
+            note: "Supervised, team-based",
+          },
+        ],
+      },
+      {
+        date: "Tue–Thu, Sep 1–3",
+        weekday: "Tuesday – Thursday",
+        title: "Full Surgical Days",
+        icon: "activity",
+        blocks: [
+          {
+            time: "8:00 am",
+            activity:
+              "Clinical discussion: diagnosis & treatment planning · morning case review",
+          },
+          {
+            time: "9:00 am – 12:30 pm",
+            activity: "Morning surgical session",
+            note: "Live patient cases",
+          },
+          { time: "12:30 – 1:30 pm", activity: "Lunch" },
+          {
+            time: "1:30 – 2:00 pm",
+            activity:
+              "Clinical discussion: afternoon case review · surgical planning",
+          },
+          {
+            time: "2:00 – 6:00 pm",
+            activity: "Afternoon surgical session",
+            note: "Live patient cases",
+          },
+        ],
+      },
+      {
+        date: "Fri, Sep 4",
+        weekday: "Friday",
+        title: "Final Day & Graduation",
+        icon: "award",
+        blocks: [
+          {
+            time: "8:00 am",
+            activity:
+              "Clinical discussion: diagnosis & treatment planning · review of morning surgical cases",
+          },
+          {
+            time: "9:00 am",
+            activity:
+              "Final surgical session — participants completing surgical requirements may assist fellow participants during remaining procedures",
+            note: "Peer-assist option",
+          },
+          {
+            time: "7:00 pm",
+            activity:
+              "Graduation ceremony & closing dinner: certificate presentation · group recognition · celebration dinner",
+            note: "Formal event",
+          },
+        ],
+      },
+      {
+        date: "Sat, Sep 5",
+        weekday: "Saturday",
+        title: "Optional Tour Day",
+        icon: "sun",
+        blocks: [
+          {
+            time: "All day",
+            activity:
+              "One-day Veracruz city tour — explore one of Mexico's most historic and beautiful coastal cities",
+            note: "Optional · included",
+          },
+        ],
+      },
+    ],
   },
   {
     id: "cdm_advanced_spring_2027",

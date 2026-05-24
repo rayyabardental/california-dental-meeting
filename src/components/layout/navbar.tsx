@@ -13,7 +13,10 @@ import { cn } from "@/lib/utils";
  * scroll jumping. The logo links back to home.
  */
 const NAV_ITEMS = [
-  { label: "Veracruz 2026", href: "/flagship" },
+  {
+    label: "Veracruz 2026",
+    href: "/courses/basic-dental-implant-course-veracruz-2026",
+  },
   { label: "Courses", href: "/courses" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },

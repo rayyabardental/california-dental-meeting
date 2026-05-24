@@ -75,11 +75,19 @@ export function Hero(): React.ReactElement {
               variants={fadeUp}
               className="mt-9 flex flex-wrap items-center gap-3"
             >
-              <Button variant="primary" size="lg" href="/flagship">
+              <Button
+                variant="primary"
+                size="lg"
+                href={`/courses/${FLAGSHIP_COURSE.slug}`}
+              >
                 Reserve your spot
                 <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="lg" href="/flagship#curriculum">
+              <Button
+                variant="ghost"
+                size="lg"
+                href={`/courses/${FLAGSHIP_COURSE.slug}#curriculum`}
+              >
                 See the curriculum
                 <ChevronRight className="h-4 w-4" />
               </Button>
