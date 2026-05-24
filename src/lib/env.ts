@@ -11,6 +11,10 @@ export const env = createEnv({
     CONTACT_TO_EMAIL: z.string().email().optional(),
     UPSTASH_REDIS_REST_URL: z.string().url().optional(),
     UPSTASH_REDIS_REST_TOKEN: z.string().min(1).optional(),
+    // Vercel's Marketplace Upstash integration ships these under the legacy
+    // KV_* prefix. Either pair works — redis.ts prefers UPSTASH_*, falls back.
+    KV_REST_API_URL: z.string().url().optional(),
+    KV_REST_API_TOKEN: z.string().min(1).optional(),
     // Constant Contact API v3 (OAuth2). The API key is the OAuth client id;
     // the client secret is required for the token + refresh exchanges.
     CONSTANT_CONTACT_API_KEY: z.string().min(1).optional(),
@@ -33,6 +37,8 @@ export const env = createEnv({
     CONTACT_TO_EMAIL: process.env.CONTACT_TO_EMAIL,
     UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
     UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
+    KV_REST_API_URL: process.env.KV_REST_API_URL,
+    KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
     CONSTANT_CONTACT_API_KEY: process.env.CONSTANT_CONTACT_API_KEY,
     CONSTANT_CONTACT_CLIENT_SECRET: process.env.CONSTANT_CONTACT_CLIENT_SECRET,
     CONSTANT_CONTACT_LIST_NAME: process.env.CONSTANT_CONTACT_LIST_NAME,

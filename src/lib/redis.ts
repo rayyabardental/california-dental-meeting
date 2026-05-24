@@ -9,8 +9,11 @@ import { env } from "@/lib/env";
  * instead of throwing.
  */
 
-const REST_URL = env.UPSTASH_REDIS_REST_URL;
-const REST_TOKEN = env.UPSTASH_REDIS_REST_TOKEN;
+// Vercel's Marketplace Upstash integration uses the KV_* names, while a
+// direct Upstash setup uses UPSTASH_*. Accept either — the two pairs map to
+// the same Upstash REST credentials.
+const REST_URL = env.UPSTASH_REDIS_REST_URL ?? env.KV_REST_API_URL;
+const REST_TOKEN = env.UPSTASH_REDIS_REST_TOKEN ?? env.KV_REST_API_TOKEN;
 
 export function isRedisConfigured(): boolean {
   return Boolean(REST_URL && REST_TOKEN);
