@@ -51,13 +51,10 @@ export function About(): React.ReactElement {
             </h2>
             <p className="mt-5 text-lg text-ink-muted text-pretty">
               California Dental Meeting is an international continuing-
-              education organisation founded and directed by{" "}
-              <strong className="font-semibold text-primary">
-                Dr. Jaime Franco
-              </strong>
-              . CDM partners with leading academic institutions to deliver
-              structured, immersive programmes built around supervised live-
-              patient surgery — not lectures, not models alone.
+              education organisation. CDM partners with leading academic
+              institutions to deliver structured, immersive programmes built
+              around supervised live-patient surgery — not lectures, not
+              models alone.
             </p>
 
             <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 border-y border-primary/10 py-8">

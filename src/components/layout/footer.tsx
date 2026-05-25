@@ -74,8 +74,7 @@ export function Footer(): React.ReactElement {
             <p className="mt-6 max-w-md text-pretty text-white/70">
               An international continuing-education organisation delivering
               live-patient surgical training in partnership with academic
-              institutions across the Americas. Founded and directed by
-              Dr. Jaime Franco.
+              institutions across the Americas.
             </p>
 
             <div className="mt-7 space-y-2 text-sm text-white/80">
