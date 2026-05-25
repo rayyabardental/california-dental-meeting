@@ -46,8 +46,23 @@ export function Navbar(): React.ReactElement {
     setMobileOpen(false);
   }, [pathname]);
 
-  const isActive = (href: string): boolean =>
-    pathname === href || (href !== "/" && pathname?.startsWith(href + "/"));
+  // Pick the *most specific* matching nav item so a deep route like
+  // /courses/basic-dental-implant-course-veracruz-2026 highlights only the
+  // "Veracruz 2026" link, not also "Courses".
+  const activeHref = ((): string | null => {
+    if (!pathname) return null;
+    const matches = NAV_ITEMS.filter(
+      (item) =>
+        pathname === item.href ||
+        (item.href !== "/" && pathname.startsWith(item.href + "/")),
+    );
+    if (matches.length === 0) return null;
+    return matches.reduce((best, item) =>
+      item.href.length > best.href.length ? item : best,
+    ).href;
+  })();
+
+  const isActive = (href: string): boolean => href === activeHref;
 
   return (
     <>

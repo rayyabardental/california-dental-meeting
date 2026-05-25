@@ -139,7 +139,12 @@ function BottomRegisterCta({
               {ctaLabel}
               <ArrowRight className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="lg" href="/contact">
+            <Button
+              variant="ghost"
+              size="lg"
+              href="/contact"
+              className="border-white/30 bg-white/5 text-white hover:bg-white/10 hover:border-white/50"
+            >
               Talk to enrollment
             </Button>
           </div>
