@@ -1,12 +1,37 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { GraduationCap, Globe2, HeartPulse, ShieldCheck } from "lucide-react";
+import {
+  BookOpen,
+  Check,
+  GraduationCap,
+  Globe2,
+  HeartPulse,
+  ShieldCheck,
+  Target,
+} from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { SectionEyebrow } from "@/components/ui/section-eyebrow";
 import { CountUp } from "@/components/ui/count-up";
 import { CdmLogo } from "@/components/ui/cdm-logo";
 import { FLAGSHIP_COURSE } from "@/lib/events-data";
+
+const ORGANISATIONAL_GOALS: ReadonlyArray<string> = [
+  "Deliver accessible continuing dental education to practitioners worldwide.",
+  "Advance evidence-based dentistry and uphold scientific integrity.",
+  "Support lifelong learning and ongoing professional development.",
+  "Maintain full compliance with AGD PACE Standards and Criteria.",
+  "Build educational partnerships with recognised academic institutions and organisations.",
+  "Champion safe, ethical patient care across every programme.",
+];
+
+const EDUCATIONAL_GOALS: ReadonlyArray<string> = [
+  "Strengthen clinical knowledge and procedural skills of dental professionals.",
+  "Provide hands-on training in modern, evidence-led dental procedures.",
+  "Deepen understanding of current scientific literature and treatment protocols.",
+  "Encourage the adoption of evidence-based techniques in daily practice.",
+  "Foster interdisciplinary collaboration and meaningful professional networking.",
+];
 
 const PILLARS: ReadonlyArray<{
   icon: React.ReactNode;
@@ -179,10 +204,86 @@ export function About(): React.ReactElement {
                 </ul>
               </div>
             </div>
+
+            {/* Mission statement + organisational & educational goals */}
+            <div id="mission" className="space-y-6">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5 }}
+                className="overflow-hidden rounded-3xl border border-primary/10 bg-gradient-to-br from-primary to-primary-700 p-8 text-white shadow-[0_20px_50px_-30px_rgba(13,35,64,0.55)]"
+              >
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-gold">
+                  Mission Statement
+                </p>
+                <p className="mt-4 font-display text-xl leading-snug text-white text-balance sm:text-2xl">
+                  California Dental Meeting Inc. delivers high-quality,
+                  evidence-based continuing dental education that advances
+                  professional growth, scientific rigour, clinical excellence,
+                  patient safety, and ethical practice.
+                </p>
+              </motion.div>
+
+              <div className="grid gap-6 sm:grid-cols-2">
+                <GoalCard
+                  eyebrow="Organisational Goals"
+                  icon={<Target className="h-5 w-5" />}
+                  items={ORGANISATIONAL_GOALS}
+                />
+                <GoalCard
+                  eyebrow="Educational Goals"
+                  icon={<BookOpen className="h-5 w-5" />}
+                  items={EDUCATIONAL_GOALS}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </Container>
     </section>
+  );
+}
+
+function GoalCard({
+  eyebrow,
+  icon,
+  items,
+}: {
+  eyebrow: string;
+  icon: React.ReactNode;
+  items: ReadonlyArray<string>;
+}): React.ReactElement {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.4 }}
+      className="rounded-3xl border border-primary/10 bg-white p-7 shadow-[0_1px_2px_rgba(13,35,64,0.04)]"
+    >
+      <div className="flex items-center gap-3">
+        <span className="grid h-10 w-10 place-items-center rounded-xl bg-accent/10 text-accent">
+          {icon}
+        </span>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
+          {eyebrow}
+        </p>
+      </div>
+      <ul className="mt-5 space-y-3">
+        {items.map((item) => (
+          <li
+            key={item}
+            className="flex items-start gap-3 text-sm leading-relaxed text-ink-muted text-pretty"
+          >
+            <span className="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-accent/15 text-accent">
+              <Check className="h-2.5 w-2.5" strokeWidth={3} />
+            </span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </motion.div>
   );
 }
 
