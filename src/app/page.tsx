@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Hero } from "@/components/sections/hero";
+import { HeroSplit } from "@/components/sections/hero-split";
+import { HERO_MASCOT, HERO_MISSION, HERO_SLIDES } from "@/lib/hero-data";
 
 export const metadata: Metadata = {
   title:
@@ -10,5 +11,11 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage(): React.ReactElement {
-  return <Hero />;
+  return (
+    <HeroSplit
+      mascot={HERO_MASCOT}
+      mission={HERO_MISSION}
+      slides={HERO_SLIDES}
+    />
+  );
 }
