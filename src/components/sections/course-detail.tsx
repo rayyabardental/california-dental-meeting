@@ -17,7 +17,7 @@ import { FlagshipCourse } from "@/components/sections/flagship-course";
 import { Curriculum } from "@/components/sections/curriculum";
 import { Included } from "@/components/sections/included";
 import { RegistrationModal } from "@/components/shared/registration-modal";
-import type { Course } from "@/lib/events-data";
+import { ceLabel, type Course } from "@/lib/events-data";
 
 /**
  * Course detail page — single template used by every course's
@@ -116,7 +116,7 @@ function BottomRegisterCta({
             <CtaMeta
               icon={<GraduationCap className="h-4 w-4" />}
               label="CE Credits"
-              value={`${course.ceCredits} credits`}
+              value={ceLabel(course, "value")}
             />
             <CtaMeta
               icon={<Tag className="h-4 w-4" />}

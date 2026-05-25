@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title:
     "California Dental Meeting — International Education · Clinical Excellence",
   description:
-    "Live-patient implant surgery training in Veracruz, Mexico. 35 CE credits, 15–20 implants placed per participant, directed by Dr. Jaime Franco in partnership with Universidad CEYESOV.",
+    "California Dental Meeting — founded and directed by Dr. Wilmer Yabar. Flagship Veracruz 2026 live-patient implant programme (Course Director Dr. Jaime Franco), plus international summits in Kerala (IDES 2026) and Shenzhen (SIDHE 2026).",
   alternates: { canonical: "/" },
 };
 

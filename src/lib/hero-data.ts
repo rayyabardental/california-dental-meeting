@@ -1,4 +1,4 @@
-import { FLAGSHIP_COURSE } from "@/lib/events-data";
+import { FLAGSHIP_COURSE, findEvent, ceLabel } from "@/lib/events-data";
 
 /**
  * Data model for the split-column homepage hero.
@@ -67,9 +67,12 @@ export const HERO_MISSION: HeroMission = {
 const flagshipHref = `/courses/${FLAGSHIP_COURSE.slug}`;
 const flagshipCourseType = FLAGSHIP_COURSE.type;
 const flagshipDates = FLAGSHIP_COURSE.dateLabel;
-const flagshipCE = `${FLAGSHIP_COURSE.ceCredits} CE credits`;
+const flagshipCE = ceLabel(FLAGSHIP_COURSE);
 const flagshipInstructor = `${FLAGSHIP_COURSE.speaker.name} · ${FLAGSHIP_COURSE.speaker.title}`;
 const flagshipStatus = FLAGSHIP_COURSE.status;
+
+const IDES = findEvent("ides_kerala_2026")!;
+const SIDHE = findEvent("sidhe_shenzhen_2026")!;
 
 export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
   {
@@ -124,5 +127,43 @@ export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
     ctaHref: flagshipHref,
     instructor: flagshipInstructor,
     status: flagshipStatus,
+  },
+  {
+    id: "ides-kerala-2026",
+    image: "/carousel/ides-2026.jpg",
+    alt: "IDES 2026 save-the-date — Intercontinental Dental Excellence Summit, 23–25 October 2026, Lemongrass Hill, Kerala, India. Hosted by Indian Dentist Research & Review and ISADe (International Society of Advanced Dentistry).",
+    headline: "Kerala, India.",
+    courseTitle: IDES.title,
+    courseType: IDES.type,
+    location: `${IDES.city}, ${IDES.country}`,
+    dates: IDES.dateLabel,
+    ceCredits: ceLabel(IDES),
+    description:
+      "Three days of intercontinental dental education at Lemongrass Hill, Kerala — hosted by ISADe and Indian Dentist Research & Review. Full programme details at IDESsummit.com.",
+    ctaText: "IDES 2026 details",
+    ctaHref: `/courses/${IDES.slug}`,
+    instructor: IDES.speaker.name,
+    status: IDES.status,
+    // Save-the-date poster has text near the edges — contain keeps it readable.
+    imageFit: "contain",
+  },
+  {
+    id: "sidhe-shenzhen-2026",
+    image: "/carousel/sidhe-2026.jpg",
+    alt: "SIDHE 2026 save-the-date — Shenzhen International Dental High-Tech, December 9–11, 2026, Shenzhen, China. Co-hosted by SIDHE, ISADe, and FDILA.",
+    headline: "Shenzhen, China.",
+    courseTitle: SIDHE.title,
+    courseType: SIDHE.type,
+    location: `${SIDHE.city}, ${SIDHE.country}`,
+    dates: SIDHE.dateLabel,
+    ceCredits: ceLabel(SIDHE),
+    description:
+      "Dental innovation meets the Pearl River Delta — co-presented by SIDHE, ISADe, and the Federación Dental Ibero Latino Americana (FDILA). More details coming soon.",
+    ctaText: "SIDHE 2026 details",
+    ctaHref: `/courses/${SIDHE.slug}`,
+    instructor: SIDHE.speaker.name,
+    status: SIDHE.status,
+    // Save-the-date poster — contain preserves the full layout & logos.
+    imageFit: "contain",
   },
 ];

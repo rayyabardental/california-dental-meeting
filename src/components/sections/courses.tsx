@@ -13,7 +13,7 @@ import {
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { SectionEyebrow } from "@/components/ui/section-eyebrow";
-import { EVENTS, type Course } from "@/lib/events-data";
+import { EVENTS, ceLabel, type Course } from "@/lib/events-data";
 import { RegistrationModal } from "@/components/shared/registration-modal";
 import { cn } from "@/lib/utils";
 
@@ -34,9 +34,10 @@ export function Courses(): React.ReactElement {
               All California Dental Meeting programmes.
             </h2>
             <p className="mt-5 text-lg text-ink-muted text-pretty">
-              The 2026 flagship in Veracruz plus follow-on programmes
-              currently being scheduled with our academic partners. Open any
-              card to view that course&apos;s full curriculum and logistics.
+              Our 2026 flagship live-patient programme in Veracruz, plus two
+              international summits in partnership with ISADe — IDES 2026 in
+              Kerala and SIDHE 2026 in Shenzhen. Open any card to view that
+              course&apos;s full curriculum and logistics.
             </p>
           </div>
         </div>
@@ -143,7 +144,7 @@ function CourseCard({
           />
           <Row
             icon={<GraduationCap className="h-3.5 w-3.5" />}
-            label={`${course.ceCredits} CE credits`}
+            label={ceLabel(course)}
           />
           <Row icon={<Tag className="h-3.5 w-3.5" />} label={course.price} />
         </dl>
@@ -251,7 +252,7 @@ function CourseCardHeader({ course }: { course: Course }): React.ReactElement {
           </p>
         </div>
         <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/80">
-          {course.ceCredits} CE
+          {ceLabel(course, "short")}
         </p>
       </div>
     </div>

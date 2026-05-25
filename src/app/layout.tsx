@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     template: "%s · California Dental Meeting",
   },
   description:
-    "California Dental Meeting (CDM) is an international continuing-education organization led by Dr. Jaime Franco, delivering live-patient surgical training and clinical excellence programs in partnership with Universidad CEYESOV, Veracruz.",
+    "California Dental Meeting (CDM) is an international continuing-education organization founded and directed by Dr. Wilmer Yabar, delivering live-patient surgical training and clinical excellence programs in partnership with academic institutions across the Americas, Asia, and Europe.",
   keywords: [
     "California Dental Meeting",
     "CDM",
@@ -39,7 +39,12 @@ export const metadata: Metadata = {
     "live patient surgery",
     "Veracruz dental course",
     "Universidad CEYESOV",
+    "Dr. Wilmer Yabar",
     "Dr. Jaime Franco",
+    "IDES Kerala",
+    "SIDHE Shenzhen",
+    "ISADe",
+    "FDILA",
     "continuing dental education",
     "implantology training",
   ],

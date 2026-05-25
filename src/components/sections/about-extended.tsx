@@ -19,10 +19,17 @@ const TEAM: ReadonlyArray<{
   initials: string;
 }> = [
   {
-    name: "Dr. Jaime Franco",
-    role: "Founder & Programme Director",
+    name: "Dr. Wilmer Yabar",
+    role: "Founder & Director",
     detail:
-      "International implantology educator. Founder of California Dental Meeting and lead surgical mentor for the Veracruz cohort.",
+      "Founder and Director of California Dental Meeting. Oversees the organisation's international programme strategy, academic partnerships, and continuing-education accreditation.",
+    initials: "WY",
+  },
+  {
+    name: "Dr. Jaime Franco",
+    role: "Course Director — Veracruz Programme",
+    detail:
+      "International implantology educator. Course Director for the flagship Veracruz live-patient surgical programme, leading all clinical sessions and supervising every implant placement.",
     initials: "JF",
   },
   {
@@ -38,13 +45,6 @@ const TEAM: ReadonlyArray<{
     detail:
       "First point of contact for prospective participants. Handles registration, documentation, and pre-course communication.",
     initials: "JS",
-  },
-  {
-    name: "Clinical Faculty",
-    role: "Universidad CEYESOV",
-    detail:
-      "Resident surgical faculty providing chairside supervision throughout the live-patient clinical days.",
-    initials: "CF",
   },
 ];
 
@@ -87,16 +87,28 @@ const PARTNERSHIPS: ReadonlyArray<{
       "Academic host of the flagship Veracruz programme. Provides clinical facilities, resident faculty, and patient cases.",
   },
   {
-    name: "ISADe USA",
-    region: "United States",
+    name: "ISADe — International Society of Advanced Dentistry",
+    region: "International",
     description:
-      "Industry sponsor — surgical materials and implant systems supplied across the live-patient clinical days.",
+      "Co-host of IDES 2026 (Kerala) and SIDHE 2026 (Shenzhen). Shared faculty and continuing-education infrastructure across the CDM international summit calendar.",
   },
   {
-    name: "FDILA",
-    region: "Latin America",
+    name: "Indian Dentist Research & Review",
+    region: "Kerala, India",
     description:
-      "Latin-American dental implant association partner — supports cross-border continuing education and clinical exchange.",
+      "Co-host of the Intercontinental Dental Excellence Summit (IDES 2026) at Lemongrass Hill, Kerala — the Indo-Pacific anchor of the CDM international calendar.",
+  },
+  {
+    name: "SIDHE — Shenzhen International Dental High-Tech",
+    region: "Shenzhen, China",
+    description:
+      "Host organisation for SIDHE 2026. Convening clinicians and innovators in the Pearl River Delta around dental technology and high-tech practice.",
+  },
+  {
+    name: "FDILA — Federación Dental Ibero Latino Americana",
+    region: "Ibero-Latin America",
+    description:
+      "Ibero-Latin American dental federation. Co-host of SIDHE 2026 and ongoing partner across the CDM live-patient and international summit programmes.",
   },
   {
     name: "IDII",

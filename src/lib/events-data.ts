@@ -174,10 +174,10 @@ export const EVENTS: readonly Course[] = [
     universityPartner: "Universidad CEYESOV — Veracruz",
     speaker: {
       name: "Dr. Jaime Franco",
-      title: "Program Director",
+      title: "Course Director — Veracruz Programme",
       specialty: "Implantology",
       org: "California Dental Meeting",
-      bio: "Program Director of California Dental Meeting, leading the live-patient surgical curriculum in partnership with Universidad CEYESOV. Dr. Franco directs all clinical sessions, oversees treatment planning, and supervises every implant placement performed during the programme.",
+      bio: "Course Director for the Veracruz programme, leading the live-patient surgical curriculum in partnership with Universidad CEYESOV. Dr. Franco directs all clinical sessions, oversees treatment planning, and supervises every implant placement performed during the programme.",
     },
     schedule: [
       {
@@ -299,88 +299,110 @@ export const EVENTS: readonly Course[] = [
     ],
   },
   {
-    id: "cdm_advanced_spring_2027",
-    slug: "advanced-implant-prosthodontics-spring-2027",
-    title: "Advanced Implant Prosthodontics",
-    subtitle: "Full-Arch Restoration · Digital Workflows",
+    id: "ides_kerala_2026",
+    slug: "intercontinental-dental-excellence-summit-2026",
+    title: "Intercontinental Dental Excellence Summit",
+    subtitle: "IDES 2026 · Kerala, India",
     summary:
-      "Continuation programme for graduates of the basic course: prosthetic phase, occlusion, and digital workflows.",
+      "Three-day intercontinental dental summit hosted by ISADe and Indian Dentist Research & Review at Lemongrass Hill, Kerala.",
     description:
-      "Next-step continuing-education programme building on the foundations of the Veracruz basic course. Curriculum and dates are being finalised with the academic partner — join the waitlist to receive details first.",
-    date: "2027-04-12T00:00:00.000Z",
-    dateLabel: "Spring 2027 · Dates TBA",
-    city: "Veracruz",
-    country: "Mexico",
-    venue: "Universidad CEYESOV",
+      "An intercontinental gathering of clinicians, researchers, and educators convened by the International Society of Advanced Dentistry (ISADe) and Indian Dentist Research & Review. Full programme, faculty, and continuing-education accreditation will be released ahead of the summit. Visit IDESsummit.com for the latest updates.",
+    date: "2026-10-23T00:00:00.000Z",
+    endDate: "2026-10-25T00:00:00.000Z",
+    dateLabel: "Oct 23–25, 2026",
+    city: "Lemongrass Hill, Kerala",
+    country: "India",
+    venue: "Lemongrass Hill",
     venueDetail:
-      "Curriculum partner Universidad CEYESOV. Specific facility and full agenda to be confirmed.",
-    lat: 19.1738,
-    lng: -96.1342,
+      "Hill-station venue in Kerala, India. Full venue and travel details to be confirmed via IDESsummit.com.",
+    lat: 10.0889,
+    lng: 77.0595,
     type: "INTERNATIONAL",
-    capacity: 20,
-    spotsRemaining: 20,
-    ceCredits: 30,
-    topic: "Prosthodontics · Digital Workflows",
-    price: "Announcing soon",
+    capacity: 200,
+    spotsRemaining: 200,
+    ceCredits: 0,
+    topic: "International Summit",
+    price: "Coming soon",
     status: "ANNOUNCING_SOON",
     highlights: [
-      "Full-arch restoration protocols",
-      "Digital workflow integration",
-      "Restorative phase of CDM implant cases",
+      "Intercontinental faculty programme",
+      "Hosted by ISADe & Indian Dentist Research & Review",
+      "Hill-station setting in Kerala, India",
     ],
-    whatsIncluded: ["Programme details to be announced"],
+    whatsIncluded: [
+      "Programme details to be announced — visit IDESsummit.com for full agenda updates.",
+    ],
     idealParticipant: [
-      "Graduates of the CDM Basic Dental Implant Course",
-      "Clinicians experienced in implant placement",
+      "Dental clinicians, researchers, and educators worldwide",
+      "Members of ISADe and partner organisations",
+      "Practitioners across the Indo-Pacific dental community",
     ],
-    learningObjectives: ["Curriculum being finalised — join the waitlist"],
+    learningObjectives: [
+      "Curriculum being finalised — full agenda to be released ahead of the summit.",
+    ],
+    sponsors: [
+      { name: "ISADe", note: "International Society of Advanced Dentistry" },
+      { name: "Indian Dentist Research & Review" },
+    ],
     speaker: {
-      name: "Dr. Jaime Franco",
-      title: "Program Director",
-      specialty: "Implantology",
-      org: "California Dental Meeting",
+      name: "ISADe × Indian Dentist Research & Review",
+      title: "Joint Host Organisations",
+      specialty: "International Dental Education",
+      org: "Faculty to be announced",
     },
   },
   {
-    id: "cdm_california_symposium_2027",
-    slug: "california-clinical-symposium-2027",
-    title: "California Clinical Symposium",
-    subtitle: "CDM Members & Alumni Gathering",
+    id: "sidhe_shenzhen_2026",
+    slug: "shenzhen-international-dental-high-tech-2026",
+    title: "Shenzhen International Dental High-Tech",
+    subtitle: "SIDHE 2026 · Shenzhen, China",
     summary:
-      "Inaugural California-hosted symposium for CDM alumni and members — clinical case review, faculty roundtables, and continuing education.",
+      "Three-day international dental high-tech summit co-hosted by SIDHE, ISADe, and FDILA in Shenzhen, China.",
     description:
-      "California-hosted symposium for CDM alumni, members, and visiting international faculty. Venue and full agenda to be announced.",
-    date: "2027-06-15T00:00:00.000Z",
-    dateLabel: "Summer 2027 · Dates TBA",
-    city: "Southern California",
-    country: "United States",
-    venue: "Venue to be announced",
-    venueDetail: "Southern California venue in finalisation.",
-    lat: 33.9806,
-    lng: -117.3755,
-    type: "CALIFORNIA",
-    capacity: 120,
-    spotsRemaining: 120,
-    ceCredits: 12,
-    topic: "Clinical Symposium",
-    price: "Announcing soon",
+      "A high-tech international dental summit convening clinicians and innovators in Shenzhen. Co-presented by Shenzhen International Dental High-Tech (SIDHE), the International Society of Advanced Dentistry (ISADe), and the Federación Dental Ibero Latino Americana (FDILA). More details coming soon.",
+    date: "2026-12-09T00:00:00.000Z",
+    endDate: "2026-12-11T00:00:00.000Z",
+    dateLabel: "Dec 9–11, 2026",
+    city: "Shenzhen",
+    country: "China",
+    venue: "Shenzhen — venue announcing soon",
+    venueDetail:
+      "Convention venue in Shenzhen, China. Specific facility and full agenda to be confirmed.",
+    lat: 22.5431,
+    lng: 114.0579,
+    type: "INTERNATIONAL",
+    capacity: 300,
+    spotsRemaining: 300,
+    ceCredits: 0,
+    topic: "International Summit",
+    price: "Coming soon",
     status: "ANNOUNCING_SOON",
     highlights: [
-      "CDM alumni & member gathering",
-      "Visiting international faculty",
-      "Clinical case review tracks",
+      "Tri-organisational hosting: SIDHE × ISADe × FDILA",
+      "Dental innovation & high-tech focus",
+      "Three days in Shenzhen, China",
     ],
-    whatsIncluded: ["Details to be announced"],
+    whatsIncluded: [
+      "Programme details to be announced — more information coming soon.",
+    ],
     idealParticipant: [
-      "CDM members and alumni",
-      "California dental community",
+      "Clinicians focused on dental technology and innovation",
+      "Members of SIDHE, ISADe, and FDILA",
+      "International continuing-education participants",
     ],
-    learningObjectives: ["Curriculum being finalised"],
+    learningObjectives: [
+      "Curriculum being finalised — more details coming soon.",
+    ],
+    sponsors: [
+      { name: "SIDHE", note: "Shenzhen International Dental High-Tech" },
+      { name: "ISADe", note: "International Society of Advanced Dentistry" },
+      { name: "FDILA", note: "Federación Dental Ibero Latino Americana" },
+    ],
     speaker: {
-      name: "Dr. Jaime Franco",
-      title: "Program Director",
-      specialty: "Implantology",
-      org: "California Dental Meeting",
+      name: "SIDHE × ISADe × FDILA",
+      title: "Joint Host Organisations",
+      specialty: "International Dental Education",
+      org: "Faculty to be announced",
     },
   },
 ] as const;
@@ -394,4 +416,22 @@ export function findEvent(idOrSlug: string): Course | undefined {
 export function eventsByRegion(region?: EventTypeValue): readonly Course[] {
   if (!region) return EVENTS;
   return EVENTS.filter((e) => e.type === region);
+}
+
+/**
+ * Render-ready CE-credits label. Courses with a published credit count
+ * (e.g. flagship Veracruz: 35) render as "35 CE credits". Courses where the
+ * accreditation is still being finalised (ceCredits === 0) render as
+ * "CE TBA" so we never display "0 CE credits" anywhere.
+ */
+export function ceLabel(
+  course: Pick<Course, "ceCredits">,
+  format: "full" | "short" | "value" = "full",
+): string {
+  if (course.ceCredits <= 0) {
+    return format === "value" ? "TBA" : "CE TBA";
+  }
+  if (format === "short") return `${course.ceCredits} CE`;
+  if (format === "value") return `${course.ceCredits} credits`;
+  return `${course.ceCredits} CE credits`;
 }

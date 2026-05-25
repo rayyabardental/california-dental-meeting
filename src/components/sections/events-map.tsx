@@ -14,7 +14,7 @@ import {
 import { Container } from "@/components/ui/container";
 import { SectionEyebrow } from "@/components/ui/section-eyebrow";
 import { Button } from "@/components/ui/button";
-import { EVENTS, type Event } from "@/lib/events-data";
+import { EVENTS, ceLabel, type Event } from "@/lib/events-data";
 import { cn } from "@/lib/utils";
 
 const MapboxView = dynamic(
@@ -139,7 +139,7 @@ function EventDetailPanel({ event }: { event: Event }): React.ReactElement {
           <PanelRow icon={<MapPin className="h-3.5 w-3.5" />} text={`${event.venue} — ${event.city}, ${event.country}`} />
           <PanelRow
             icon={<GraduationCap className="h-3.5 w-3.5" />}
-            text={`${event.ceCredits} CE credits · ${event.speaker.name}`}
+            text={`${ceLabel(event)} · ${event.speaker.name}`}
           />
           <PanelRow
             icon={<Users className="h-3.5 w-3.5" />}

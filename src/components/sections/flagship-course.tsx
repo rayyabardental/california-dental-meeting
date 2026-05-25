@@ -12,7 +12,7 @@ import {
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { SectionEyebrow } from "@/components/ui/section-eyebrow";
-import type { Course } from "@/lib/events-data";
+import { ceLabel, type Course } from "@/lib/events-data";
 
 /**
  * Course hero — title, description, key metadata, highlights, plus a sticky
@@ -67,7 +67,7 @@ export function FlagshipCourse({
               <Meta
                 icon={<GraduationCap className="h-4 w-4" />}
                 label="CE Credits"
-                value={`${course.ceCredits} credits`}
+                value={ceLabel(course, "value")}
               />
             </dl>
 

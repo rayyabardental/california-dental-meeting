@@ -53,8 +53,7 @@ export function Navbar(): React.ReactElement {
     if (!pathname) return null;
     const matches = NAV_ITEMS.filter(
       (item) =>
-        pathname === item.href ||
-        (item.href !== "/" && pathname.startsWith(item.href + "/")),
+        pathname === item.href || pathname.startsWith(item.href + "/"),
     );
     if (matches.length === 0) return null;
     return matches.reduce((best, item) =>

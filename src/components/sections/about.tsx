@@ -51,7 +51,7 @@ const PILLARS: ReadonlyArray<{
   {
     icon: <Globe2 className="h-5 w-5" />,
     title: "International faculty",
-    body: "Course director Dr. Jaime Franco leads an international faculty in partnership with Universidad CEYESOV, Veracruz.",
+    body: "Founded and directed by Dr. Wilmer Yabar. Course Director Dr. Jaime Franco leads the Veracruz programme in partnership with Universidad CEYESOV.",
   },
   {
     icon: <ShieldCheck className="h-5 w-5" />,
