@@ -9,7 +9,6 @@ import {
   GraduationCap,
   MapPin,
   Tag,
-  Users,
 } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
@@ -160,18 +159,26 @@ function CourseCard({
         </div>
 
         <div className="mt-6 flex items-center justify-between gap-2">
-          {isOpen ? (
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-accent-600">
-              <Users className="h-3.5 w-3.5" />
-              {course.spotsRemaining} of {course.capacity} seats left
-            </span>
-          ) : (
-            <span className="text-xs font-medium text-ink-muted">
-              {course.status === "ANNOUNCING_SOON"
+          <span
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em]",
+              isOpen
+                ? "bg-accent/10 text-accent-700"
+                : "bg-primary/8 text-ink-muted",
+            )}
+          >
+            <span
+              className={cn(
+                "h-1.5 w-1.5 rounded-full",
+                isOpen ? "bg-accent" : "bg-ink-muted/60",
+              )}
+            />
+            {isOpen
+              ? "Enrolling now"
+              : course.status === "ANNOUNCING_SOON"
                 ? "Announcing soon"
                 : "Waitlist open"}
-            </span>
-          )}
+          </span>
 
           {/*
             Register button is layered above the stretched-link overlay

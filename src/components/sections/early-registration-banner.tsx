@@ -75,8 +75,7 @@ export function EarlyRegistrationBanner({
               </p>
               <p className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-gold/90">
                 <TimerReset className="h-3.5 w-3.5" />
-                {savingsLabel ?? "Early rate"} · {course.spotsRemaining} of{" "}
-                {course.capacity} seats remain
+                {savingsLabel ?? "Early rate"} · Enrolling now
               </p>
             </div>
             {onRegister ? (

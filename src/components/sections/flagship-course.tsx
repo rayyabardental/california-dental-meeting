@@ -8,7 +8,6 @@ import {
   MapPin,
   Sparkles,
   Tag,
-  Users,
 } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
@@ -54,7 +53,7 @@ export function FlagshipCourse({
               {course.description}
             </p>
 
-            <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-7 sm:grid-cols-4">
+            <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-7 sm:grid-cols-3">
               <Meta
                 icon={<Calendar className="h-4 w-4" />}
                 label="Dates"
@@ -69,11 +68,6 @@ export function FlagshipCourse({
                 icon={<GraduationCap className="h-4 w-4" />}
                 label="CE Credits"
                 value={`${course.ceCredits} credits`}
-              />
-              <Meta
-                icon={<Users className="h-4 w-4" />}
-                label="Capacity"
-                value={`${course.capacity} seats`}
               />
             </dl>
 
@@ -106,21 +100,17 @@ export function FlagshipCourse({
                   <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/80">
                     Enrollment
                   </p>
-                  <p className="font-display text-2xl font-medium">
-                    {isOpen ? (
-                      <>
-                        {course.spotsRemaining}{" "}
-                        <span className="text-base font-normal text-white/80">
-                          / {course.capacity} seats left
-                        </span>
-                      </>
-                    ) : (
-                      <span className="text-base font-normal text-white/85">
-                        {course.status === "ANNOUNCING_SOON"
-                          ? "Announcing soon"
-                          : "Waitlist open"}
-                      </span>
-                    )}
+                  <p className="mt-1 inline-flex items-center gap-2 font-display text-xl font-medium">
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${
+                        isOpen ? "bg-gold pulse-ring" : "bg-white/60"
+                      }`}
+                    />
+                    {isOpen
+                      ? "Open for enrollment"
+                      : course.status === "ANNOUNCING_SOON"
+                        ? "Announcing soon"
+                        : "Waitlist open"}
                   </p>
                 </div>
               </div>

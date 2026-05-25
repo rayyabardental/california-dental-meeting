@@ -99,7 +99,7 @@ function BottomRegisterCta({
           <p className="mt-5 text-lg text-white/70 text-pretty">
             {isAnnouncingSoon
               ? "Curriculum and dates are being finalised. Join the waitlist and you'll be contacted directly as soon as the cohort opens for enrollment."
-              : `${course.spotsRemaining} of ${course.capacity} seats remain. Our enrollment coordinators will follow up within one business day with the full registration packet.`}
+              : "Our enrollment coordinators will follow up within one business day with the full registration packet."}
           </p>
 
           <dl className="mt-10 grid gap-x-6 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">

@@ -51,7 +51,7 @@ export function EventsMap(): React.ReactElement {
             <p className="mt-5 max-w-xl text-lg text-white/70 text-pretty">
               The 2026 flagship programme convenes in Veracruz at
               Universidad CEYESOV. Click any marker to see the course,
-              schedule, and remaining seats.
+              schedule, and CE credits.
             </p>
 
             <div className="mt-8 overflow-hidden rounded-3xl border border-white/10 bg-surface-dark/30 backdrop-blur-md">
@@ -145,8 +145,10 @@ function EventDetailPanel({ event }: { event: Event }): React.ReactElement {
             icon={<Users className="h-3.5 w-3.5" />}
             text={
               event.status === "OPEN"
-                ? `${event.spotsRemaining} of ${event.capacity} seats remaining`
-                : "Announcing soon"
+                ? "Enrolling now"
+                : event.status === "ANNOUNCING_SOON"
+                  ? "Announcing soon"
+                  : "Waitlist open"
             }
           />
         </dl>
