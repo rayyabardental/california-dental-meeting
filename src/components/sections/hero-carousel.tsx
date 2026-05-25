@@ -194,7 +194,9 @@ function SlideView({
           fill
           sizes="(max-width: 1024px) 100vw, 50vw"
           priority={priority}
-          className="object-cover"
+          className={cn(
+            slide.imageFit === "contain" ? "object-contain" : "object-cover",
+          )}
         />
         {/* Subtle bottom scrim so overlays stay legible */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-primary/35 to-transparent" />

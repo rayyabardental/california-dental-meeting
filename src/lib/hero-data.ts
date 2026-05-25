@@ -34,6 +34,14 @@ export type CarouselSlide = {
   ctaHref: string;
   instructor: string;
   status: "OPEN" | "WAITLIST" | "ANNOUNCING_SOON";
+  /**
+   * How the image fills the slide frame.
+   *  - "cover" (default): fills the frame, may crop edges.
+   *  - "contain": shows the entire image, may letterbox top/bottom.
+   * Use "contain" when the image has overlay text or important content
+   * near the edges that must stay visible.
+   */
+  imageFit?: "cover" | "contain";
 };
 
 /* -------------------------------------------------------------------------- */
@@ -67,7 +75,7 @@ export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
   {
     id: "veracruz-aerial",
     image: "/carousel/VERACRUZINICIOMOVIL.png",
-    alt: "Aerial photograph of Veracruz, Mexico — historic Gulf-coast city seen from above.",
+    alt: "Aerial photograph of Veracruz, Mexico — historic Gulf-coast city seen from above, with 'VERACRUZ' overlay text on the left.",
     headline: "Veracruz, Mexico.",
     courseTitle: FLAGSHIP_COURSE.title,
     courseType: flagshipCourseType,
@@ -80,6 +88,8 @@ export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
     ctaHref: flagshipHref,
     instructor: flagshipInstructor,
     status: flagshipStatus,
+    // Image has overlay text near the left edge — contain keeps it visible.
+    imageFit: "contain",
   },
   {
     id: "veracruz-universidad",
