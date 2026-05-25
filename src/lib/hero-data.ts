@@ -130,7 +130,7 @@ export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
   },
   {
     id: "ides-kerala-2026",
-    image: "/carousel/ides-2026.jpg",
+    image: "/carousel/ides-2026.png",
     alt: "IDES 2026 save-the-date — Intercontinental Dental Excellence Summit, 23–25 October 2026, Lemongrass Hill, Kerala, India. Hosted by Indian Dentist Research & Review and ISADe (International Society of Advanced Dentistry).",
     headline: "Kerala, India.",
     courseTitle: IDES.title,
@@ -149,7 +149,7 @@ export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
   },
   {
     id: "sidhe-shenzhen-2026",
-    image: "/carousel/sidhe-2026.jpg",
+    image: "/carousel/sidhe-2026.png",
     alt: "SIDHE 2026 save-the-date — Shenzhen International Dental High-Tech, December 9–11, 2026, Shenzhen, China. Co-hosted by SIDHE, ISADe, and FDILA.",
     headline: "Shenzhen, China.",
     courseTitle: SIDHE.title,
