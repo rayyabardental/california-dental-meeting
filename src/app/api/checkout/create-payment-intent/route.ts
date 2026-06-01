@@ -84,7 +84,11 @@ export async function POST(req: Request): Promise<Response> {
       },
       201,
     );
-  } catch {
+  } catch (err) {
+    // Log the underlying Stripe error server-side for diagnosis; return a
+    // generic message to the client (never leak internal error detail).
+    const detail = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
+    console.error("[create-payment-intent] Stripe error:", detail);
     return fail("Could not start payment. Please try again.", 502);
   }
 }
