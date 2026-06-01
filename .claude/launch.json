@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "streamlined",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "serve", "C:/Users/Datra/Streamlined", "-l", "8080"],
+      "port": 8080
+    },
+    {
+      "name": "dist",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "serve", "C:/Users/Datra/Streamlined/dist", "-l", "8090"],
+      "port": 8090
+    }
+  ]
+}

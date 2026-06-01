@@ -49,6 +49,15 @@ export async function POST(req: Request): Promise<Response> {
   const amount = amountDueTodayCents(course, payMode);
   const balance = balanceDueCents(course, payMode);
 
+  // TEMP PROBE: can this function reach Stripe's API host at all?
+  let probe = "";
+  try {
+    const r = await fetch("https://api.stripe.com/v1", { method: "GET" });
+    probe = `probe stripe.com HTTP ${r.status}; `;
+  } catch (e) {
+    probe = `probe FAILED: ${e instanceof Error ? `${e.name}: ${e.message}` : String(e)}; `;
+  }
+
   try {
     const intent = await stripe.paymentIntents.create({
       amount,
@@ -96,6 +105,6 @@ export async function POST(req: Request): Promise<Response> {
           }`
         : String(err);
     console.error("[create-payment-intent] Stripe error:", detail);
-    return fail(`DIAG2: ${detail}`, 502);
+    return fail(`DIAG3: ${probe}${detail}`, 502);
   }
 }
