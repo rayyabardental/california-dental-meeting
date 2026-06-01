@@ -49,27 +49,6 @@ export async function POST(req: Request): Promise<Response> {
   const amount = amountDueTodayCents(course, payMode);
   const balance = balanceDueCents(course, payMode);
 
-  // TEMP PROBE: replicate the SDK's authenticated POST via raw fetch.
-  let probe = "";
-  try {
-    const sk = process.env.STRIPE_SECRET_KEY ?? "";
-    const r = await fetch("https://api.stripe.com/v1/payment_intents", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${sk}`,
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        amount: String(amount),
-        currency: course.purchase.currency,
-        "automatic_payment_methods[enabled]": "true",
-      }),
-    });
-    probe = `rawPOST HTTP ${r.status}; `;
-  } catch (e) {
-    probe = `rawPOST FAILED: ${e instanceof Error ? `${e.name}: ${e.message}` : String(e)}; `;
-  }
-
   try {
     const intent = await stripe.paymentIntents.create({
       amount,
@@ -108,15 +87,8 @@ export async function POST(req: Request): Promise<Response> {
   } catch (err) {
     // Log the underlying Stripe error server-side for diagnosis; return a
     // generic message to the client (never leak internal error detail).
-    const detail =
-      err instanceof Error
-        ? `${err.name}: ${err.message}${
-            (err as { cause?: { message?: string } }).cause
-              ? ` | cause: ${(err as { cause?: { message?: string } }).cause?.message}`
-              : ""
-          }`
-        : String(err);
+    const detail = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
     console.error("[create-payment-intent] Stripe error:", detail);
-    return fail(`DIAG3: ${probe}${detail}`, 502);
+    return fail("Could not start payment. Please try again.", 502);
   }
 }
