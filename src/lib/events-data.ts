@@ -54,6 +54,23 @@ export type Course = {
   earlyPrice?: string;
   /** When true, surface the early-registration callout banner & strikethrough. */
   earlyRegistrationActive?: boolean;
+  /**
+   * Structured pricing for the online checkout flow, in integer cents (USD).
+   * Present ONLY on courses that can be purchased online — gate every
+   * checkout code path behind `isPurchasable()` so "Coming soon" courses
+   * can never reach the payment screen. The display `price` strings above
+   * remain the source of truth for marketing copy; these cents values are
+   * the authoritative amounts charged server-side.
+   */
+  purchase?: {
+    currency: string;
+    /** Standard tuition. */
+    regularCents: number;
+    /** Discounted tuition while `earlyRegistrationActive` is true. */
+    earlyCents: number;
+    /** Reservation deposit to hold a seat; balance collected later. */
+    depositCents: number;
+  };
   status: "OPEN" | "WAITLIST" | "ANNOUNCING_SOON";
   highlights: ReadonlyArray<string>;
   whatsIncluded: ReadonlyArray<string>;
@@ -107,6 +124,12 @@ export const EVENTS: readonly Course[] = [
     regularPrice: "$10,500",
     earlyPrice: "$9,990",
     earlyRegistrationActive: true,
+    purchase: {
+      currency: "usd",
+      regularCents: 1_050_000,
+      earlyCents: 999_000,
+      depositCents: 100_000,
+    },
     status: "OPEN",
     highlights: [
       "15–20 implants placed per participant",
@@ -119,7 +142,7 @@ export const EVENTS: readonly Course[] = [
     whatsIncluded: [
       "7 nights hotel accommodation",
       "Daily transportation hotel ↔ university",
-      "Surgical scrubs & caps (2 sets)",
+      "Surgical scrubs & caps",
       "Hands-on surgical training with models",
       "Live patient surgical experience",
       "Daily lunch throughout the course",

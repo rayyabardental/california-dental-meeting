@@ -18,6 +18,8 @@ import { Curriculum } from "@/components/sections/curriculum";
 import { Included } from "@/components/sections/included";
 import { RegistrationModal } from "@/components/shared/registration-modal";
 import { ceLabel, type Course } from "@/lib/events-data";
+import { isPurchasable } from "@/lib/checkout";
+import { useEnroll } from "@/lib/cart-store";
 
 /**
  * Course detail page — single template used by every course's
@@ -63,14 +65,18 @@ function BottomRegisterCta({
 }): React.ReactElement {
   const isOpen = course.status === "OPEN";
   const isAnnouncingSoon = course.status === "ANNOUNCING_SOON";
+  const purchasable = isPurchasable(course);
+  const enroll = useEnroll();
   const earlyActive =
     course.earlyRegistrationActive && course.earlyPrice && course.regularPrice;
 
-  const ctaLabel = isOpen
-    ? "Reserve your spot"
-    : isAnnouncingSoon
-      ? "Notify me when announced"
-      : "Join the waitlist";
+  const ctaLabel = purchasable
+    ? "Enroll now"
+    : isOpen
+      ? "Reserve your spot"
+      : isAnnouncingSoon
+        ? "Notify me when announced"
+        : "Join the waitlist";
 
   return (
     <section
@@ -133,7 +139,7 @@ function BottomRegisterCta({
             <Button
               variant="gold"
               size="lg"
-              onClick={onRegister}
+              onClick={purchasable ? () => enroll(course) : onRegister}
               disabled={isAnnouncingSoon}
             >
               {ctaLabel}

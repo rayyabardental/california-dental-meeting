@@ -5,6 +5,8 @@ import { Sparkles, TimerReset } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import type { Course } from "@/lib/events-data";
+import { isPurchasable } from "@/lib/checkout";
+import { useEnroll } from "@/lib/cart-store";
 
 /**
  * Prominent early-registration callout shown above a course detail.
@@ -18,6 +20,9 @@ export function EarlyRegistrationBanner({
   course: Course;
   onRegister?: () => void;
 }): React.ReactElement | null {
+  const enroll = useEnroll();
+  const purchasable = isPurchasable(course);
+
   if (!course.earlyRegistrationActive || !course.earlyPrice || !course.regularPrice) {
     return null;
   }
@@ -78,7 +83,15 @@ export function EarlyRegistrationBanner({
                 {savingsLabel ?? "Early rate"} · Enrolling now
               </p>
             </div>
-            {onRegister ? (
+            {purchasable ? (
+              <Button
+                variant="gold"
+                size="lg"
+                onClick={() => enroll(course)}
+              >
+                Enroll at {course.earlyPrice}
+              </Button>
+            ) : onRegister ? (
               <Button variant="gold" size="lg" onClick={onRegister}>
                 Reserve at {course.earlyPrice}
               </Button>

@@ -13,6 +13,8 @@ import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { SectionEyebrow } from "@/components/ui/section-eyebrow";
 import { ceLabel, type Course } from "@/lib/events-data";
+import { isPurchasable } from "@/lib/checkout";
+import { useEnroll } from "@/lib/cart-store";
 
 /**
  * Course hero — title, description, key metadata, highlights, plus a sticky
@@ -20,7 +22,7 @@ import { ceLabel, type Course } from "@/lib/events-data";
  *
  * `onRegister` is hoisted so the parent owns the registration modal; the
  * sidebar's Reserve button and the page's bottom CTA share that single
- * modal instance.
+ * modal instance. Purchasable courses route to the cart instead.
  */
 export function FlagshipCourse({
   course,
@@ -30,6 +32,8 @@ export function FlagshipCourse({
   onRegister: () => void;
 }): React.ReactElement {
   const isOpen = course.status === "OPEN";
+  const purchasable = isPurchasable(course);
+  const enroll = useEnroll();
   const earlyActive =
     course.earlyRegistrationActive && course.earlyPrice && course.regularPrice;
 
@@ -171,11 +175,11 @@ export function FlagshipCourse({
                   <Button
                     variant="primary"
                     size="lg"
-                    onClick={onRegister}
+                    onClick={purchasable ? () => enroll(course) : onRegister}
                     disabled={course.status === "ANNOUNCING_SOON"}
                   >
-                    {isOpen
-                      ? "Reserve your spot"
+                    {purchasable
+                      ? "Enroll now"
                       : course.status === "ANNOUNCING_SOON"
                         ? "Announcing soon"
                         : "Join waitlist"}

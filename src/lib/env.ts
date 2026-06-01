@@ -23,8 +23,23 @@ export const env = createEnv({
       .string()
       .min(1)
       .default("CDM Event Announcements"),
+    // Stripe (server side). Secret key signs PaymentIntent creation; the
+    // webhook secret verifies inbound event signatures. Both optional so the
+    // app builds and runs without payments configured — checkout degrades to
+    // a "coming soon" state until these are set.
+    STRIPE_SECRET_KEY: z.string().min(1).optional(),
+    STRIPE_WEBHOOK_SECRET: z.string().min(1).optional(),
+    // From-address for the registration confirmation email (must be a
+    // Resend-verified domain in production). Falls back to Resend's sandbox.
+    REGISTRATION_FROM_EMAIL: z
+      .string()
+      .min(1)
+      .default("California Dental Meeting <onboarding@resend.dev>"),
   },
   client: {
+    // Stripe publishable key — safe to expose; used by Stripe.js in the
+    // browser to tokenize card data directly to Stripe (never our server).
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
     // Optional explicit override. When unset, the app derives its URL from
     // Vercel's injected domain via getSiteUrl() in src/lib/site-url.ts.
     NEXT_PUBLIC_SITE_URL: z.string().url().optional(),
@@ -42,8 +57,13 @@ export const env = createEnv({
     CONSTANT_CONTACT_API_KEY: process.env.CONSTANT_CONTACT_API_KEY,
     CONSTANT_CONTACT_CLIENT_SECRET: process.env.CONSTANT_CONTACT_CLIENT_SECRET,
     CONSTANT_CONTACT_LIST_NAME: process.env.CONSTANT_CONTACT_LIST_NAME,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+    REGISTRATION_FROM_EMAIL: process.env.REGISTRATION_FROM_EMAIL,
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     NEXT_PUBLIC_MAPBOX_TOKEN: process.env.NEXT_PUBLIC_MAPBOX_TOKEN,
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
   },
   emptyStringAsUndefined: true,
   skipValidation: process.env.SKIP_ENV_VALIDATION === "1",

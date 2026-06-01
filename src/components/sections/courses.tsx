@@ -14,6 +14,8 @@ import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { SectionEyebrow } from "@/components/ui/section-eyebrow";
 import { EVENTS, ceLabel, type Course } from "@/lib/events-data";
+import { isPurchasable } from "@/lib/checkout";
+import { useEnroll } from "@/lib/cart-store";
 import { RegistrationModal } from "@/components/shared/registration-modal";
 import { cn } from "@/lib/utils";
 
@@ -85,6 +87,8 @@ function CourseCard({
 }): React.ReactElement {
   const isOpen = course.status === "OPEN";
   const isFlagship = course.id === "cdm_veracruz_2026";
+  const purchasable = isPurchasable(course);
+  const enroll = useEnroll();
   const href = `/courses/${course.slug}`;
 
   return (
@@ -189,10 +193,10 @@ function CourseCard({
           <Button
             variant="primary"
             size="sm"
-            onClick={onRegister}
+            onClick={purchasable ? () => enroll(course) : onRegister}
             className="relative z-10"
           >
-            {isOpen ? "Register" : "Join waitlist"}
+            {purchasable ? "Enroll" : isOpen ? "Register" : "Join waitlist"}
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Button>
         </div>
