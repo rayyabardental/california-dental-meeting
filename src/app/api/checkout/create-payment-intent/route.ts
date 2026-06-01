@@ -49,13 +49,25 @@ export async function POST(req: Request): Promise<Response> {
   const amount = amountDueTodayCents(course, payMode);
   const balance = balanceDueCents(course, payMode);
 
-  // TEMP PROBE: can this function reach Stripe's API host at all?
+  // TEMP PROBE: replicate the SDK's authenticated POST via raw fetch.
   let probe = "";
   try {
-    const r = await fetch("https://api.stripe.com/v1", { method: "GET" });
-    probe = `probe stripe.com HTTP ${r.status}; `;
+    const sk = process.env.STRIPE_SECRET_KEY ?? "";
+    const r = await fetch("https://api.stripe.com/v1/payment_intents", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${sk}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        amount: String(amount),
+        currency: course.purchase.currency,
+        "automatic_payment_methods[enabled]": "true",
+      }),
+    });
+    probe = `rawPOST HTTP ${r.status}; `;
   } catch (e) {
-    probe = `probe FAILED: ${e instanceof Error ? `${e.name}: ${e.message}` : String(e)}; `;
+    probe = `rawPOST FAILED: ${e instanceof Error ? `${e.name}: ${e.message}` : String(e)}; `;
   }
 
   try {
