@@ -89,6 +89,8 @@ export async function POST(req: Request): Promise<Response> {
     // generic message to the client (never leak internal error detail).
     const detail = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
     console.error("[create-payment-intent] Stripe error:", detail);
-    return fail("Could not start payment. Please try again.", 502);
+    // TEMP DIAGNOSTIC (test mode) — surface the Stripe error class to debug a
+    // prod-only failure. Revert once root cause is found.
+    return fail(`DIAG: ${detail}`, 502);
   }
 }
