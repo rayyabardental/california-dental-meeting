@@ -2,6 +2,7 @@ import type Stripe from "stripe";
 import { env } from "@/lib/env";
 import { getStripe } from "@/lib/stripe";
 import { sendRegistrationConfirmation } from "@/lib/resend";
+import { addContactToList } from "@/lib/constant-contact";
 import type { PayMode } from "@/lib/checkout";
 
 export const runtime = "nodejs";
@@ -40,6 +41,13 @@ export async function POST(req: Request): Promise<Response> {
     const pi = event.data.object;
     const m = pi.metadata ?? {};
     if (m.email && m.courseTitle) {
+      // Add the paying registrant to the Constant Contact announcements list,
+      // and send the (optional) branded confirmation email. Both fail soft.
+      await addContactToList({
+        email: m.email,
+        firstName: m.firstName ?? "",
+        lastName: m.lastName ?? "",
+      });
       await sendRegistrationConfirmation({
         email: m.email,
         firstName: m.firstName ?? "",

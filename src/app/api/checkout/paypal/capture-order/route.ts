@@ -5,6 +5,7 @@ import { isPurchasable, balanceDueCents } from "@/lib/checkout";
 import { capturePayPalOrder, isPayPalConfigured } from "@/lib/paypal";
 import { CheckoutSchema } from "@/lib/validations/checkout";
 import { sendRegistrationConfirmation } from "@/lib/resend";
+import { addContactToList } from "@/lib/constant-contact";
 
 export const runtime = "nodejs";
 
@@ -43,7 +44,9 @@ export async function POST(req: Request): Promise<Response> {
       return fail(`Payment not completed (status: ${capture.status}).`, 402);
     }
 
-    // Confirmation email + internal notification. Fails soft.
+    // Add to the Constant Contact announcements list + send the (optional)
+    // branded confirmation email. Both fail soft.
+    await addContactToList({ email, firstName, lastName });
     await sendRegistrationConfirmation({
       email,
       firstName,
