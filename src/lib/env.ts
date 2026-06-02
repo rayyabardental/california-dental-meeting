@@ -35,11 +35,18 @@ export const env = createEnv({
       .string()
       .min(1)
       .default("California Dental Meeting <onboarding@resend.dev>"),
+    // PayPal (server side). Client secret signs the OAuth token exchange used
+    // to create/capture orders. Environment toggles sandbox vs live hosts.
+    PAYPAL_CLIENT_SECRET: z.string().min(1).optional(),
+    PAYPAL_ENVIRONMENT: z.enum(["sandbox", "live"]).default("sandbox"),
   },
   client: {
     // Stripe publishable key — safe to expose; used by Stripe.js in the
     // browser to tokenize card data directly to Stripe (never our server).
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
+    // PayPal client id — public; used by the PayPal JS SDK in the browser
+    // and as the server-side OAuth basic-auth username.
+    NEXT_PUBLIC_PAYPAL_CLIENT_ID: z.string().optional(),
     // Optional explicit override. When unset, the app derives its URL from
     // Vercel's injected domain via getSiteUrl() in src/lib/site-url.ts.
     NEXT_PUBLIC_SITE_URL: z.string().url().optional(),
@@ -60,10 +67,13 @@ export const env = createEnv({
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
     REGISTRATION_FROM_EMAIL: process.env.REGISTRATION_FROM_EMAIL,
+    PAYPAL_CLIENT_SECRET: process.env.PAYPAL_CLIENT_SECRET,
+    PAYPAL_ENVIRONMENT: process.env.PAYPAL_ENVIRONMENT,
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     NEXT_PUBLIC_MAPBOX_TOKEN: process.env.NEXT_PUBLIC_MAPBOX_TOKEN,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+    NEXT_PUBLIC_PAYPAL_CLIENT_ID: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
   },
   emptyStringAsUndefined: true,
   skipValidation: process.env.SKIP_ENV_VALIDATION === "1",

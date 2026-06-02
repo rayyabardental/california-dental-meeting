@@ -5,7 +5,14 @@ import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { ClearCart } from "@/components/sections/clear-cart";
 import { getStripe } from "@/lib/stripe";
-import { formatMoney, type PayMode } from "@/lib/checkout";
+import { getPayPalOrder } from "@/lib/paypal";
+import { findEvent } from "@/lib/events-data";
+import {
+  formatMoney,
+  isPurchasable,
+  balanceDueCents,
+  type PayMode,
+} from "@/lib/checkout";
 
 export const metadata: Metadata = {
   title: "Registration confirmed",
@@ -29,9 +36,10 @@ export default async function CheckoutSuccessPage({
   searchParams: Promise<{
     payment_intent?: string;
     redirect_status?: string;
+    paypal_order?: string;
   }>;
 }): Promise<React.ReactElement> {
-  const { payment_intent, redirect_status } = await searchParams;
+  const { payment_intent, redirect_status, paypal_order } = await searchParams;
 
   const stripe = getStripe();
   let summary: Summary | null = null;
@@ -48,6 +56,30 @@ export default async function CheckoutSuccessPage({
         balanceCents: Number(m.balanceDueCents ?? "0"),
         email: m.email ?? "",
         status: pi.status,
+      };
+    } catch {
+      summary = null;
+    }
+  } else if (paypal_order) {
+    // PayPal path — reconstruct the summary from the captured order. The
+    // custom_id we set at create time is "<courseId>:<payMode>".
+    try {
+      const order = await getPayPalOrder(paypal_order);
+      const [courseId, pm] = (order.customId ?? ":").split(":");
+      const payMode = (pm as PayMode) || "full";
+      const course = courseId ? findEvent(courseId) : undefined;
+      summary = {
+        title: course?.title ?? "Your course",
+        dates: course?.dateLabel ?? "",
+        amountCents: order.amountCents,
+        currency: order.currency,
+        payMode,
+        balanceCents:
+          course && isPurchasable(course)
+            ? balanceDueCents(course, payMode)
+            : 0,
+        email: "",
+        status: order.status === "COMPLETED" ? "succeeded" : order.status,
       };
     } catch {
       summary = null;

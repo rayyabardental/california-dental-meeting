@@ -29,6 +29,7 @@ import {
 import { CheckoutSchema } from "@/lib/validations/checkout";
 import { useCartStore, useCartHydrated } from "@/lib/cart-store";
 import { getStripePromise } from "@/lib/stripe-client";
+import { PayPalSection } from "@/components/sections/paypal-section";
 import { cn } from "@/lib/utils";
 
 const APPEARANCE: Appearance = {
@@ -95,29 +96,34 @@ function Inner({
   stripePromise: NonNullable<ReturnType<typeof getStripePromise>>;
 }): React.ReactElement {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [registrant, setRegistrant] = useState<DetailsInput | null>(null);
   const dueToday = amountDueTodayCents(course, payMode);
   const balance = balanceDueCents(course, payMode);
   const currency = course.purchase.currency;
 
+  const onReady = (cs: string, values: DetailsInput): void => {
+    setRegistrant(values);
+    setClientSecret(cs);
+  };
+
   return (
     <div className="mt-10 grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-start">
       <div className="rounded-3xl border border-primary/10 bg-white p-6 shadow-[0_1px_2px_rgba(13,35,64,0.04)] sm:p-8">
-        {clientSecret ? (
+        {clientSecret && registrant ? (
           <Elements
             stripe={stripePromise}
             options={{ clientSecret, appearance: APPEARANCE }}
           >
             <PaymentStage
+              course={course}
+              payMode={payMode}
+              registrant={registrant}
               amountLabel={formatMoney(dueToday, currency)}
               onBack={() => setClientSecret(null)}
             />
           </Elements>
         ) : (
-          <DetailsStage
-            course={course}
-            payMode={payMode}
-            onReady={setClientSecret}
-          />
+          <DetailsStage course={course} payMode={payMode} onReady={onReady} />
         )}
       </div>
 
@@ -143,7 +149,7 @@ function DetailsStage({
 }: {
   course: PurchasableCourse;
   payMode: PayMode;
-  onReady: (clientSecret: string) => void;
+  onReady: (clientSecret: string, registrant: DetailsInput) => void;
 }): React.ReactElement {
   const [serverError, setServerError] = useState<string | null>(null);
   const {
@@ -168,7 +174,7 @@ function DetailsStage({
         setServerError(json.error ?? "Could not start payment. Please try again.");
         return;
       }
-      onReady(json.data.clientSecret);
+      onReady(json.data.clientSecret, values);
     } catch {
       setServerError("Network error. Please try again.");
     }
@@ -231,9 +237,15 @@ function DetailsStage({
 /* -------------------------------------------------------------------------- */
 
 function PaymentStage({
+  course,
+  payMode,
+  registrant,
   amountLabel,
   onBack,
 }: {
+  course: PurchasableCourse;
+  payMode: PayMode;
+  registrant: DetailsInput;
   amountLabel: string;
   onBack: () => void;
 }): React.ReactElement {
@@ -320,6 +332,12 @@ function PaymentStage({
         <ShieldCheck className="h-3.5 w-3.5 text-accent" />
         Payments are encrypted and processed by Stripe. We never store your card.
       </p>
+
+      <PayPalSection
+        course={course}
+        payMode={payMode}
+        registrant={registrant}
+      />
     </form>
   );
 }
