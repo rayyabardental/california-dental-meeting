@@ -105,9 +105,9 @@ export const EVENTS: readonly Course[] = [
       "Seven-day immersive implantology program with live patient surgery under direct faculty supervision at Universidad CEYESOV, Veracruz.",
     description:
       "An intensive, immersive implantology program offering live patient surgery under direct faculty supervision at Universidad CEYESOV, Veracruz, Mexico. Participants complete real surgical cases alongside peers, building confidence and clinical mastery in modern implant dentistry within a structured, team-based educational environment.",
-    date: "2027-08-30T00:00:00.000Z",
-    endDate: "2027-09-05T00:00:00.000Z",
-    dateLabel: "Aug 30 – Sep 5, 2027",
+    date: "2027-08-29T00:00:00.000Z",
+    endDate: "2027-09-04T00:00:00.000Z",
+    dateLabel: "Aug 29 – Sep 4, 2027",
     city: "Veracruz",
     country: "Mexico",
     venue: "Universidad CEYESOV",
@@ -150,7 +150,7 @@ export const EVENTS: readonly Course[] = [
       "Technical manuals & support materials",
       "Graduation ceremony & dinner",
       "Certificate of completion · 35 CE Credits",
-      "Optional one-day Veracruz city tour (Sep 5)",
+      "Optional one-day Veracruz city tour (Sep 4)",
     ],
     idealParticipant: [
       "General dentists entering implantology",
@@ -204,7 +204,7 @@ export const EVENTS: readonly Course[] = [
     },
     schedule: [
       {
-        date: "Sun, Aug 30",
+        date: "Sun, Aug 29",
         weekday: "Sunday",
         title: "Arrival Day",
         icon: "plane",
@@ -223,7 +223,7 @@ export const EVENTS: readonly Course[] = [
         ],
       },
       {
-        date: "Mon, Aug 31",
+        date: "Mon, Aug 30",
         weekday: "Monday",
         title: "Theory & First Surgeries",
         icon: "book",
@@ -252,7 +252,7 @@ export const EVENTS: readonly Course[] = [
         ],
       },
       {
-        date: "Tue–Thu, Sep 1–3",
+        date: "Tue–Thu, Aug 31–Sep 2",
         weekday: "Tuesday – Thursday",
         title: "Full Surgical Days",
         icon: "activity",
@@ -281,7 +281,7 @@ export const EVENTS: readonly Course[] = [
         ],
       },
       {
-        date: "Fri, Sep 4",
+        date: "Fri, Sep 3",
         weekday: "Friday",
         title: "Final Day & Graduation",
         icon: "award",
@@ -306,7 +306,7 @@ export const EVENTS: readonly Course[] = [
         ],
       },
       {
-        date: "Sat, Sep 5",
+        date: "Sat, Sep 4",
         weekday: "Saturday",
         title: "Optional Tour Day",
         icon: "sun",
