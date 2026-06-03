@@ -72,7 +72,7 @@ function EmptyCart(): React.ReactElement {
         Your cart is empty
       </h2>
       <p className="mt-2 max-w-md text-ink-muted text-pretty">
-        Browse our programmes and reserve your seat at an upcoming California
+        Browse our programs and reserve your seat at an upcoming California
         Dental Meeting course.
       </p>
       <Button href="/courses" variant="primary" size="lg" className="mt-8">

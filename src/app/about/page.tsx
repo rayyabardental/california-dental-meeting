@@ -6,12 +6,12 @@ import { Testimonials } from "@/components/sections/testimonials";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "California Dental Meeting is an international continuing-education organisation founded and directed by Dr. Wilmer Yabar. Mission, team, credentials, and international partnerships behind our live-patient implant programmes.",
+    "California Dental Meeting is an international continuing-education organization founded and directed by Dr. Wilmer Yabar. Mission, team, credentials, and international partnerships behind our live-patient implant programs.",
   alternates: { canonical: "/about" },
   openGraph: {
     title: "About · California Dental Meeting",
     description:
-      "International continuing-education organisation delivering live-patient surgical training in partnership with academic institutions across the Americas.",
+      "International continuing-education organization delivering live-patient surgical training in partnership with academic institutions across the Americas.",
     url: "/about",
   },
 };

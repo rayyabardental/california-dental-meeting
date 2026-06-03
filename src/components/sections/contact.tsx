@@ -88,7 +88,7 @@ export function Contact(): React.ReactElement {
             </h2>
             <p className="mt-5 max-w-lg text-lg text-white/75 text-pretty">
               Contact our enrollment team to confirm your seat for the
-              Veracruz 2026 cohort. We&apos;ll follow up with registration
+              Veracruz 2027 cohort. We&apos;ll follow up with registration
               materials and the tuition schedule.
             </p>
 
@@ -177,7 +177,7 @@ export function Contact(): React.ReactElement {
 
             <Field
               className="mt-4"
-              label="Practice / organisation (optional)"
+              label="Practice / organization (optional)"
               error={errors.organization?.message}
               inputProps={{
                 autoComplete: "organization",
@@ -193,7 +193,7 @@ export function Contact(): React.ReactElement {
                 rows={4}
                 aria-invalid={Boolean(errors.message)}
                 {...register("message")}
-                placeholder="I'd like to reserve a seat for the Veracruz 2026 cohort…"
+                placeholder="I'd like to reserve a seat for the Veracruz 2027 cohort…"
                 className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-3 text-sm text-white outline-none placeholder:text-white/40 transition-all focus:border-gold focus:bg-white/15 focus:ring-4 focus:ring-gold/15"
               />
               {errors.message && (

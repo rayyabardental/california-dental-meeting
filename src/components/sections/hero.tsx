@@ -65,7 +65,7 @@ export function Hero(): React.ReactElement {
               className="mt-7 max-w-xl text-lg leading-relaxed text-ink-muted text-pretty"
             >
               California Dental Meeting&apos;s flagship continuing-education
-              programme: seven days of supervised live-patient implant
+              program: seven days of supervised live-patient implant
               surgery at <strong className="font-semibold text-primary">Universidad CEYESOV</strong>, directed by{" "}
               <strong className="font-semibold text-primary">Dr. Jaime Franco</strong>. 35 CE credits, hands-on
               workshops, and a graduation dinner on the Mexican coast.

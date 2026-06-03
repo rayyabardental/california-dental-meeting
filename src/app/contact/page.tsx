@@ -4,12 +4,12 @@ import { Contact } from "@/components/sections/contact";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Reach the California Dental Meeting enrollment team. Reserve your seat for the Veracruz 2026 cohort or request the tuition schedule. Ray Buelna & Jacky Sanchez respond within one business day.",
+    "Reach the California Dental Meeting enrollment team. Reserve your seat for the Veracruz 2027 cohort or request the tuition schedule. Ray Buelna & Jacky Sanchez respond within one business day.",
   alternates: { canonical: "/contact" },
   openGraph: {
     title: "Contact · California Dental Meeting",
     description:
-      "Contact the CDM enrollment team to reserve a seat for the Veracruz 2026 cohort.",
+      "Contact the CDM enrollment team to reserve a seat for the Veracruz 2027 cohort.",
     url: "/contact",
   },
 };

@@ -33,10 +33,10 @@ export function Courses(): React.ReactElement {
           <div className="max-w-2xl">
             <SectionEyebrow tone="accent">Course catalog</SectionEyebrow>
             <h2 className="mt-4 font-display text-4xl font-medium tracking-tight text-primary md:text-5xl text-balance">
-              All California Dental Meeting programmes.
+              All California Dental Meeting programs.
             </h2>
             <p className="mt-5 text-lg text-ink-muted text-pretty">
-              Our 2026 flagship live-patient programme in Veracruz, plus two
+              Our 2027 flagship live-patient program in Veracruz, plus two
               international summits in partnership with ISADe — IDES 2026 in
               Kerala and SIDHE 2026 in Shenzhen. Open any card to view that
               course&apos;s full curriculum and logistics.

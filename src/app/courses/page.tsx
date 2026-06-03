@@ -5,12 +5,12 @@ import { EventsMap } from "@/components/sections/events-map";
 export const metadata: Metadata = {
   title: "Courses",
   description:
-    "California Dental Meeting's course catalogue — flagship Veracruz programme and upcoming California and international cohorts. Live-patient surgical training, hands-on workshops, and academic-partner certificates.",
+    "California Dental Meeting's course catalogue — flagship Veracruz program and upcoming California and international cohorts. Live-patient surgical training, hands-on workshops, and academic-partner certificates.",
   alternates: { canonical: "/courses" },
   openGraph: {
     title: "Courses · California Dental Meeting",
     description:
-      "Live-patient implant surgery training. Flagship Veracruz 2026 plus upcoming California and international cohorts.",
+      "Live-patient implant surgery training. Flagship Veracruz 2027 plus upcoming California and international cohorts.",
     url: "/courses",
   },
 };

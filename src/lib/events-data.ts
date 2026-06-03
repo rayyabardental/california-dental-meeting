@@ -102,12 +102,12 @@ export const EVENTS: readonly Course[] = [
     title: "Basic Dental Implant Course",
     subtitle: "Live Patient Surgery · Hands-On Training · International Faculty",
     summary:
-      "Seven-day immersive implantology programme with live patient surgery under direct faculty supervision at Universidad CEYESOV, Veracruz.",
+      "Seven-day immersive implantology program with live patient surgery under direct faculty supervision at Universidad CEYESOV, Veracruz.",
     description:
-      "An intensive, immersive implantology programme offering live patient surgery under direct faculty supervision at Universidad CEYESOV, Veracruz, Mexico. Participants complete real surgical cases alongside peers, building confidence and clinical mastery in modern implant dentistry within a structured, team-based educational environment.",
-    date: "2026-08-30T00:00:00.000Z",
-    endDate: "2026-09-05T00:00:00.000Z",
-    dateLabel: "Aug 30 – Sep 5, 2026",
+      "An intensive, immersive implantology program offering live patient surgery under direct faculty supervision at Universidad CEYESOV, Veracruz, Mexico. Participants complete real surgical cases alongside peers, building confidence and clinical mastery in modern implant dentistry within a structured, team-based educational environment.",
+    date: "2027-08-30T00:00:00.000Z",
+    endDate: "2027-09-05T00:00:00.000Z",
+    dateLabel: "Aug 30 – Sep 5, 2027",
     city: "Veracruz",
     country: "Mexico",
     venue: "Universidad CEYESOV",
@@ -197,10 +197,10 @@ export const EVENTS: readonly Course[] = [
     universityPartner: "Universidad CEYESOV — Veracruz",
     speaker: {
       name: "Dr. Jaime Franco",
-      title: "Course Director — Veracruz Programme",
+      title: "Course Director — Veracruz Program",
       specialty: "Implantology",
       org: "California Dental Meeting",
-      bio: "Course Director for the Veracruz programme, leading the live-patient surgical curriculum in partnership with Universidad CEYESOV. Dr. Franco directs all clinical sessions, oversees treatment planning, and supervises every implant placement performed during the programme.",
+      bio: "Course Director for the Veracruz program, leading the live-patient surgical curriculum in partnership with Universidad CEYESOV. Dr. Franco directs all clinical sessions, oversees treatment planning, and supervises every implant placement performed during the program.",
     },
     schedule: [
       {
@@ -217,7 +217,7 @@ export const EVENTS: readonly Course[] = [
           {
             time: "Evening",
             activity:
-              "Welcome meeting — introductions, materials distribution (backpacks, scrubs, caps), programme overview, clinical team organization",
+              "Welcome meeting — introductions, materials distribution (backpacks, scrubs, caps), program overview, clinical team organization",
             note: "All participants",
           },
         ],
@@ -329,7 +329,7 @@ export const EVENTS: readonly Course[] = [
     summary:
       "Three-day intercontinental dental summit hosted by ISADe and Indian Dentist Research & Review at Lemongrass Hill, Kerala.",
     description:
-      "An intercontinental gathering of clinicians, researchers, and educators convened by the International Society of Advanced Dentistry (ISADe) and Indian Dentist Research & Review. Full programme, faculty, and continuing-education accreditation will be released ahead of the summit. Visit IDESsummit.com for the latest updates.",
+      "An intercontinental gathering of clinicians, researchers, and educators convened by the International Society of Advanced Dentistry (ISADe) and Indian Dentist Research & Review. Full program, faculty, and continuing-education accreditation will be released ahead of the summit. Visit IDESsummit.com for the latest updates.",
     date: "2026-10-23T00:00:00.000Z",
     endDate: "2026-10-25T00:00:00.000Z",
     dateLabel: "Oct 23–25, 2026",
@@ -348,16 +348,16 @@ export const EVENTS: readonly Course[] = [
     price: "Coming soon",
     status: "ANNOUNCING_SOON",
     highlights: [
-      "Intercontinental faculty programme",
+      "Intercontinental faculty program",
       "Hosted by ISADe & Indian Dentist Research & Review",
       "Hill-station setting in Kerala, India",
     ],
     whatsIncluded: [
-      "Programme details to be announced — visit IDESsummit.com for full agenda updates.",
+      "Program details to be announced — visit IDESsummit.com for full agenda updates.",
     ],
     idealParticipant: [
       "Dental clinicians, researchers, and educators worldwide",
-      "Members of ISADe and partner organisations",
+      "Members of ISADe and partner organizations",
       "Practitioners across the Indo-Pacific dental community",
     ],
     learningObjectives: [
@@ -369,7 +369,7 @@ export const EVENTS: readonly Course[] = [
     ],
     speaker: {
       name: "ISADe × Indian Dentist Research & Review",
-      title: "Joint Host Organisations",
+      title: "Joint Host Organizations",
       specialty: "International Dental Education",
       org: "Faculty to be announced",
     },
@@ -401,12 +401,12 @@ export const EVENTS: readonly Course[] = [
     price: "Coming soon",
     status: "ANNOUNCING_SOON",
     highlights: [
-      "Tri-organisational hosting: SIDHE × ISADe × FDILA",
+      "Tri-organizational hosting: SIDHE × ISADe × FDILA",
       "Dental innovation & high-tech focus",
       "Three days in Shenzhen, China",
     ],
     whatsIncluded: [
-      "Programme details to be announced — more information coming soon.",
+      "Program details to be announced — more information coming soon.",
     ],
     idealParticipant: [
       "Clinicians focused on dental technology and innovation",
@@ -423,7 +423,7 @@ export const EVENTS: readonly Course[] = [
     ],
     speaker: {
       name: "SIDHE × ISADe × FDILA",
-      title: "Joint Host Organisations",
+      title: "Joint Host Organizations",
       specialty: "International Dental Education",
       org: "Faculty to be announced",
     },

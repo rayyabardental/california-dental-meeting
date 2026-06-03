@@ -49,7 +49,7 @@ export function EventsMap(): React.ReactElement {
               From Southern California to the Mexican coast.
             </h2>
             <p className="mt-5 max-w-xl text-lg text-white/70 text-pretty">
-              The 2026 flagship programme convenes in Veracruz at
+              The 2026 flagship program convenes in Veracruz at
               Universidad CEYESOV. Click any marker to see the course,
               schedule, and CE credits.
             </p>

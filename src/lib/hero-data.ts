@@ -57,7 +57,7 @@ export const HERO_MASCOT: HeroMascot = {
 export const HERO_MISSION: HeroMission = {
   missionHeading: "Where dentists become surgeons.",
   missionText:
-    "California Dental Meeting is an international continuing-education organisation built on clinical competence through hands-on CE and supervised live-patient surgical training. In partnership with academic institutions across the Americas, we run intensive programmes where dentists complete real surgical cases — not models alone — under direct faculty supervision.",
+    "California Dental Meeting is an international continuing-education organization built on clinical competence through hands-on CE and supervised live-patient surgical training. In partnership with academic institutions across the Americas, we run intensive programs where dentists complete real surgical cases — not models alone — under direct faculty supervision.",
 };
 
 /* -------------------------------------------------------------------------- */
@@ -87,7 +87,7 @@ export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
     ceCredits: flagshipCE,
     description:
       "Six clinical days on the Gulf coast — at the heart of one of Mexico's most historic cities, hosted by Universidad CEYESOV.",
-    ctaText: "View Veracruz 2026",
+    ctaText: "View Veracruz 2027",
     ctaHref: flagshipHref,
     instructor: flagshipInstructor,
     status: flagshipStatus,
@@ -97,7 +97,7 @@ export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
   {
     id: "veracruz-universidad",
     image: "/carousel/universidad.png",
-    alt: "California Dental Meeting cohort outside the entrance to Universidad CEYESOV, the academic host of the Veracruz programme.",
+    alt: "California Dental Meeting cohort outside the entrance to Universidad CEYESOV, the academic host of the Veracruz program.",
     headline: "Universidad CEYESOV.",
     courseTitle: FLAGSHIP_COURSE.title,
     courseType: flagshipCourseType,
@@ -139,7 +139,7 @@ export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
     dates: IDES.dateLabel,
     ceCredits: ceLabel(IDES),
     description:
-      "Three days of intercontinental dental education at Lemongrass Hill, Kerala — hosted by ISADe and Indian Dentist Research & Review. Full programme details at IDESsummit.com.",
+      "Three days of intercontinental dental education at Lemongrass Hill, Kerala — hosted by ISADe and Indian Dentist Research & Review. Full program details at IDESsummit.com.",
     ctaText: "IDES 2026 details",
     ctaHref: `/courses/${IDES.slug}`,
     instructor: IDES.speaker.name,

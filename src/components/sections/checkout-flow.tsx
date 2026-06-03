@@ -446,7 +446,7 @@ function NothingToCheckOut(): React.ReactElement {
         Nothing to check out
       </h2>
       <p className="mt-2 text-ink-muted">
-        Your cart is empty. Browse our programmes to reserve a seat.
+        Your cart is empty. Browse our programs to reserve a seat.
       </p>
       <Button href="/courses" variant="primary" size="lg" className="mt-8">
         Explore courses

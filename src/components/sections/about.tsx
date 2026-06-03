@@ -16,13 +16,13 @@ import { CountUp } from "@/components/ui/count-up";
 import { CdmLogo } from "@/components/ui/cdm-logo";
 import { FLAGSHIP_COURSE } from "@/lib/events-data";
 
-const ORGANISATIONAL_GOALS: ReadonlyArray<string> = [
+const ORGANIZATIONAL_GOALS: ReadonlyArray<string> = [
   "Deliver accessible continuing dental education to practitioners worldwide.",
   "Advance evidence-based dentistry and uphold scientific integrity.",
   "Support lifelong learning and ongoing professional development.",
   "Maintain full compliance with AGD PACE Standards and Criteria.",
-  "Build educational partnerships with recognised academic institutions and organisations.",
-  "Champion safe, ethical patient care across every programme.",
+  "Build educational partnerships with recognised academic institutions and organizations.",
+  "Champion safe, ethical patient care across every program.",
 ];
 
 const EDUCATIONAL_GOALS: ReadonlyArray<string> = [
@@ -51,7 +51,7 @@ const PILLARS: ReadonlyArray<{
   {
     icon: <Globe2 className="h-5 w-5" />,
     title: "International faculty",
-    body: "Founded and directed by Dr. Wilmer Yabar. Course Director Dr. Jaime Franco leads the Veracruz programme in partnership with Universidad CEYESOV.",
+    body: "Founded and directed by Dr. Wilmer Yabar. Course Director Dr. Jaime Franco leads the Veracruz program in partnership with Universidad CEYESOV.",
   },
   {
     icon: <ShieldCheck className="h-5 w-5" />,
@@ -76,8 +76,8 @@ export function About(): React.ReactElement {
             </h2>
             <p className="mt-5 text-lg text-ink-muted text-pretty">
               California Dental Meeting is an international continuing-
-              education organisation. CDM partners with leading academic
-              institutions to deliver structured, immersive programmes built
+              education organization. CDM partners with leading academic
+              institutions to deliver structured, immersive programs built
               around supervised live-patient surgery — not lectures, not
               models alone.
             </p>
@@ -139,7 +139,7 @@ export function About(): React.ReactElement {
                 </div>
                 <div className="p-7">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-gold">
-                    Programme Director
+                    Program Director
                   </p>
                   <p className="mt-2 font-display text-2xl font-medium">
                     {FLAGSHIP_COURSE.speaker.name}
@@ -170,7 +170,7 @@ export function About(): React.ReactElement {
                 <p className="mt-4 text-sm text-ink-muted text-pretty">
                   Modern clinical facilities, experienced faculty, and
                   supervised live-patient surgical cases. Clinically oriented
-                  programmes in real patient care and advanced surgical
+                  programs in real patient care and advanced surgical
                   training.
                 </p>
               </div>
@@ -205,7 +205,7 @@ export function About(): React.ReactElement {
               </div>
             </div>
 
-            {/* Mission statement + organisational & educational goals */}
+            {/* Mission statement + organizational & educational goals */}
             <div id="mission" className="space-y-6">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
@@ -227,9 +227,9 @@ export function About(): React.ReactElement {
 
               <div className="grid gap-6 sm:grid-cols-2">
                 <GoalCard
-                  eyebrow="Organisational Goals"
+                  eyebrow="Organizational Goals"
                   icon={<Target className="h-5 w-5" />}
-                  items={ORGANISATIONAL_GOALS}
+                  items={ORGANIZATIONAL_GOALS}
                 />
                 <GoalCard
                   eyebrow="Educational Goals"

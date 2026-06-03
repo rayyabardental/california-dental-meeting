@@ -61,11 +61,11 @@ export function Included({ course }: { course: Course }): React.ReactElement {
             <h2 className="mt-4 font-display text-4xl font-medium tracking-tight text-primary md:text-5xl text-balance">
               {hasClinicalTeam
                 ? "Tuition covers everything from airport to graduation dinner."
-                : "What's included in this programme."}
+                : "What's included in this program."}
             </h2>
             <p className="mt-5 max-w-xl text-lg text-ink-muted text-pretty">
               {hasClinicalTeam
-                ? `The ${course.title} is fully inclusive — hotel, transportation, scrubs, materials, daily lunch, and the closing graduation dinner are all part of the programme.`
+                ? `The ${course.title} is fully inclusive — hotel, transportation, scrubs, materials, daily lunch, and the closing graduation dinner are all part of the program.`
                 : "Full inclusions for this cohort are being finalised with the academic partner."}
             </p>
 

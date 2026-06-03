@@ -22,21 +22,21 @@ const TEAM: ReadonlyArray<{
     name: "Dr. Wilmer Yabar",
     role: "Founder & Director",
     detail:
-      "Founder and Director of California Dental Meeting. Oversees the organisation's international programme strategy, academic partnerships, and continuing-education accreditation.",
+      "Founder and Director of California Dental Meeting. Oversees the organization's international program strategy, academic partnerships, and continuing-education accreditation.",
     initials: "WY",
   },
   {
     name: "Dr. Jaime Franco",
-    role: "Course Director — Veracruz Programme",
+    role: "Course Director — Veracruz Program",
     detail:
-      "International implantology educator. Course Director for the flagship Veracruz live-patient surgical programme, leading all clinical sessions and supervising every implant placement.",
+      "International implantology educator. Course Director for the flagship Veracruz live-patient surgical program, leading all clinical sessions and supervising every implant placement.",
     initials: "JF",
   },
   {
     name: "Ray Buelna",
     role: "Enrollment & Logistics",
     detail:
-      "Coordinates participant onboarding, travel, and accommodation across the seven-day Veracruz programme.",
+      "Coordinates participant onboarding, travel, and accommodation across the seven-day Veracruz program.",
     initials: "RB",
   },
   {
@@ -56,12 +56,12 @@ const CREDENTIALS: ReadonlyArray<{
   {
     icon: <GraduationCap className="h-5 w-5" />,
     title: "35 CE credits per cohort",
-    body: "Each Veracruz programme delivers 35 continuing-education credits across theory, hands-on workshops, and supervised live surgery.",
+    body: "Each Veracruz program delivers 35 continuing-education credits across theory, hands-on workshops, and supervised live surgery.",
   },
   {
     icon: <Award className="h-5 w-5" />,
     title: "Academic partnership accreditation",
-    body: "Programme certificates are issued in partnership with Universidad CEYESOV — one of Mexico's premier dental education institutions.",
+    body: "Program certificates are issued in partnership with Universidad CEYESOV — one of Mexico's premier dental education institutions.",
   },
   {
     icon: <ShieldCheck className="h-5 w-5" />,
@@ -84,7 +84,7 @@ const PARTNERSHIPS: ReadonlyArray<{
     name: "Universidad CEYESOV",
     region: "Veracruz, Mexico",
     description:
-      "Academic host of the flagship Veracruz programme. Provides clinical facilities, resident faculty, and patient cases.",
+      "Academic host of the flagship Veracruz program. Provides clinical facilities, resident faculty, and patient cases.",
   },
   {
     name: "ISADe — International Society of Advanced Dentistry",
@@ -102,13 +102,13 @@ const PARTNERSHIPS: ReadonlyArray<{
     name: "SIDHE — Shenzhen International Dental High-Tech",
     region: "Shenzhen, China",
     description:
-      "Host organisation for SIDHE 2026. Convening clinicians and innovators in the Pearl River Delta around dental technology and high-tech practice.",
+      "Host organization for SIDHE 2026. Convening clinicians and innovators in the Pearl River Delta around dental technology and high-tech practice.",
   },
   {
     name: "FDILA — Federación Dental Ibero Latino Americana",
     region: "Ibero-Latin America",
     description:
-      "Ibero-Latin American dental federation. Co-host of SIDHE 2026 and ongoing partner across the CDM live-patient and international summit programmes.",
+      "Ibero-Latin American dental federation. Co-host of SIDHE 2026 and ongoing partner across the CDM live-patient and international summit programs.",
   },
   {
     name: "IDII",
@@ -188,7 +188,7 @@ export function AboutExtended(): React.ReactElement {
                 Structured. Accredited. Clinically rigorous.
               </h2>
               <p className="mt-5 text-base text-ink-muted text-pretty">
-                CDM programmes are built on the academic infrastructure of a
+                CDM programs are built on the academic infrastructure of a
                 partner university. Every participant earns a certificate of
                 completion alongside the continuing-education credit hours
                 their licensure body recognises.

@@ -12,10 +12,10 @@ const FOOTER_LINKS: ReadonlyArray<{
   links: ReadonlyArray<{ label: string; href: string }>;
 }> = [
   {
-    title: "Programmes",
+    title: "Programs",
     links: [
       {
-        label: "Veracruz 2026 (flagship)",
+        label: "Veracruz 2027 (flagship)",
         href: "/courses/basic-dental-implant-course-veracruz-2026",
       },
       {
@@ -30,7 +30,7 @@ const FOOTER_LINKS: ReadonlyArray<{
     ],
   },
   {
-    title: "Organisation",
+    title: "Organization",
     links: [
       { label: "About CDM", href: "/about" },
       { label: "Team", href: "/about#team" },
@@ -72,7 +72,7 @@ export function Footer(): React.ReactElement {
               </div>
             </div>
             <p className="mt-6 max-w-md text-pretty text-white/70">
-              An international continuing-education organisation delivering
+              An international continuing-education organization delivering
               live-patient surgical training in partnership with academic
               institutions across the Americas.
             </p>
