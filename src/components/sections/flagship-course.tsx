@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   ArrowUpRight,
@@ -95,6 +96,17 @@ export function FlagshipCourse({
           </div>
 
           <aside className="lg:sticky lg:top-28">
+            {course.flyerImage && (
+              <div className="mb-6 overflow-hidden rounded-3xl border border-primary/10 bg-white shadow-[0_20px_50px_-30px_rgba(13,35,64,0.35)]">
+                <Image
+                  src={course.flyerImage}
+                  alt={`${course.title} event flyer`}
+                  width={800}
+                  height={1200}
+                  className="h-auto w-full"
+                />
+              </div>
+            )}
             <div className="overflow-hidden rounded-3xl border border-primary/10 bg-white shadow-[0_20px_50px_-30px_rgba(13,35,64,0.35)]">
               <div className="relative h-32 sunset-gradient">
                 <div className="absolute right-5 top-5 grid h-10 w-10 place-items-center rounded-full bg-white/85 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">

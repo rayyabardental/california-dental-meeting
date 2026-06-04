@@ -20,6 +20,7 @@ import { SectionEyebrow } from "@/components/ui/section-eyebrow";
 import { findEvent } from "@/lib/events-data";
 import {
   isPurchasable,
+  allowsDeposit,
   amountDueTodayCents,
   balanceDueCents,
   formatMoney,
@@ -97,8 +98,10 @@ function Inner({
 }): React.ReactElement {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [registrant, setRegistrant] = useState<DetailsInput | null>(null);
-  const dueToday = amountDueTodayCents(course, payMode);
-  const balance = balanceDueCents(course, payMode);
+  // Single-price courses (deposit == full) can only be paid in full.
+  const mode: PayMode = allowsDeposit(course) ? payMode : "full";
+  const dueToday = amountDueTodayCents(course, mode);
+  const balance = balanceDueCents(course, mode);
   const currency = course.purchase.currency;
 
   const onReady = (cs: string, values: DetailsInput): void => {
@@ -116,20 +119,20 @@ function Inner({
           >
             <PaymentStage
               course={course}
-              payMode={payMode}
+              payMode={mode}
               registrant={registrant}
               amountLabel={formatMoney(dueToday, currency)}
               onBack={() => setClientSecret(null)}
             />
           </Elements>
         ) : (
-          <DetailsStage course={course} payMode={payMode} onReady={onReady} />
+          <DetailsStage course={course} payMode={mode} onReady={onReady} />
         )}
       </div>
 
       <OrderSummary
         course={course}
-        payMode={payMode}
+        payMode={mode}
         dueToday={dueToday}
         balance={balance}
         currency={currency}

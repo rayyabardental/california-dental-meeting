@@ -73,6 +73,31 @@ const flagshipStatus = FLAGSHIP_COURSE.status;
 
 const IDES = findEvent("ides_kerala_2026")!;
 const SIDHE = findEvent("sidhe_shenzhen_2026")!;
+const BIOMIMETICS = findEvent("cdm_biomimetics_2026")!;
+const PERIODONTAL = findEvent("cdm_periodontal_2026")!;
+const OCCLUSION = findEvent("cdm_occlusion_2026")!;
+
+/** Build a carousel slide from one of the California flyer courses. */
+function californiaSlide(course: typeof BIOMIMETICS): CarouselSlide {
+  return {
+    id: course.id,
+    image: course.flyerImage!,
+    alt: `${course.title} — California Dental Meeting CE lecture by ${course.speaker.name}, ${course.dateLabel}, ${course.city}, ${course.country}. 7 hours of CE approved by the DBC.`,
+    headline: `${course.speaker.name}.`,
+    courseTitle: course.title,
+    courseType: course.type,
+    location: `${course.city}, ${course.country}`,
+    dates: course.dateLabel,
+    ceCredits: ceLabel(course),
+    description: course.summary,
+    ctaText: "View course",
+    ctaHref: `/courses/${course.slug}`,
+    instructor: course.speaker.name,
+    status: course.status,
+    // Full poster artwork — contain keeps the whole flyer visible.
+    imageFit: "contain",
+  };
+}
 
 export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
   {
@@ -166,4 +191,7 @@ export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
     // Save-the-date poster — contain preserves the full layout & logos.
     imageFit: "contain",
   },
+  californiaSlide(BIOMIMETICS),
+  californiaSlide(PERIODONTAL),
+  californiaSlide(OCCLUSION),
 ];

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -18,6 +19,7 @@ import { SectionEyebrow } from "@/components/ui/section-eyebrow";
 import { findEvent, ceLabel } from "@/lib/events-data";
 import {
   isPurchasable,
+  allowsDeposit,
   amountDueTodayCents,
   balanceDueCents,
   discountCents,
@@ -95,9 +97,16 @@ function FilledCart({
   const currency = course.purchase.currency;
   const fullAmount = fullAmountCents(course);
   const discount = discountCents(course);
-  const dueToday = amountDueTodayCents(course, payMode);
-  const balance = balanceDueCents(course, payMode);
+  const canDeposit = allowsDeposit(course);
+  // Single-price courses (deposit == full) can't be paid by deposit; force full.
+  const mode: PayMode = canDeposit ? payMode : "full";
+  const dueToday = amountDueTodayCents(course, mode);
+  const balance = balanceDueCents(course, mode);
   const earlyActive = course.earlyRegistrationActive && discount > 0;
+
+  useEffect(() => {
+    if (!canDeposit && payMode !== "full") onPayModeChange("full");
+  }, [canDeposit, payMode, onPayModeChange]);
 
   return (
     <div className="mt-10 grid gap-8 lg:grid-cols-[1.5fr_1fr] lg:items-start">
@@ -156,35 +165,37 @@ function FilledCart({
           </div>
         </motion.article>
 
-        {/* Payment option selector */}
-        <div className="rounded-3xl border border-primary/10 bg-white p-6 sm:p-7">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-muted">
-            Choose how to pay
-          </p>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            <PayOption
-              active={payMode === "full"}
-              onClick={() => onPayModeChange("full")}
-              title="Pay in full"
-              amount={formatMoney(fullAmount, currency)}
-              note={
-                earlyActive
-                  ? `Includes ${formatMoney(discount, currency)} early-registration discount`
-                  : "Full tuition, settled today"
-              }
-            />
-            <PayOption
-              active={payMode === "deposit"}
-              onClick={() => onPayModeChange("deposit")}
-              title="Reserve with deposit"
-              amount={formatMoney(course.purchase.depositCents, currency)}
-              note={`Balance of ${formatMoney(
-                fullAmountCents(course) - course.purchase.depositCents,
-                currency,
-              )} collected before the course`}
-            />
+        {/* Payment option selector — only when a real deposit option exists */}
+        {canDeposit && (
+          <div className="rounded-3xl border border-primary/10 bg-white p-6 sm:p-7">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-muted">
+              Choose how to pay
+            </p>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <PayOption
+                active={mode === "full"}
+                onClick={() => onPayModeChange("full")}
+                title="Pay in full"
+                amount={formatMoney(fullAmount, currency)}
+                note={
+                  earlyActive
+                    ? `Includes ${formatMoney(discount, currency)} early-registration discount`
+                    : "Full tuition, settled today"
+                }
+              />
+              <PayOption
+                active={mode === "deposit"}
+                onClick={() => onPayModeChange("deposit")}
+                title="Reserve with deposit"
+                amount={formatMoney(course.purchase.depositCents, currency)}
+                note={`Balance of ${formatMoney(
+                  fullAmountCents(course) - course.purchase.depositCents,
+                  currency,
+                )} collected before the course`}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Order summary */}
@@ -209,7 +220,7 @@ function FilledCart({
                 accent
               />
             )}
-            {payMode === "deposit" && (
+            {mode === "deposit" && (
               <SummaryRow
                 label="Reservation deposit"
                 value={formatMoney(course.purchase.depositCents, currency)}

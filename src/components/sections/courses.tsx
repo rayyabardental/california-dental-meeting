@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   ArrowUpRight,
@@ -36,10 +37,10 @@ export function Courses(): React.ReactElement {
               All California Dental Meeting programs.
             </h2>
             <p className="mt-5 text-lg text-ink-muted text-pretty">
-              Our 2027 flagship live-patient program in Veracruz, plus two
-              international summits in partnership with ISADe — IDES 2026 in
-              Kerala and SIDHE 2026 in Shenzhen. Open any card to view that
-              course&apos;s full curriculum and logistics.
+              Our 2027 flagship live-patient program in Veracruz, a series of
+              7-hour CE lectures in California with ISADe, and two international
+              summits — IDES 2026 in Kerala and SIDHE 2026 in Shenzhen. Open any
+              card to view that course&apos;s full details.
             </p>
           </div>
         </div>
@@ -243,19 +244,41 @@ function CourseCardHeader({ course }: { course: Course }): React.ReactElement {
     course.type === "INTERNATIONAL"
       ? "sunset-gradient"
       : `bg-gradient-to-br ${palettes[course.type]}`;
+
+  // Courses with a promotional flyer use it as the card visual, with a scrim
+  // so the country/date/CE overlay stays legible.
+  const isImage = Boolean(course.flyerImage);
   return (
-    <div className={cn("relative h-32 w-full overflow-hidden", gradientClass)}>
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.18),transparent_60%)]" />
+    <div
+      className={cn(
+        "relative w-full overflow-hidden",
+        isImage ? "h-40" : cn("h-32", gradientClass),
+      )}
+    >
+      {course.flyerImage ? (
+        <>
+          <Image
+            src={course.flyerImage}
+            alt={`${course.title} event flyer`}
+            fill
+            sizes="(max-width: 1024px) 100vw, 400px"
+            className="object-cover object-top"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary/85 via-primary/25 to-transparent" />
+        </>
+      ) : (
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.18),transparent_60%)]" />
+      )}
       <div className="relative flex h-full items-end justify-between p-5 text-white">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/80">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/85">
             {course.country}
           </p>
           <p className="mt-1 font-display text-xl font-medium leading-none">
             {course.dateLabel.split("·")[0]?.trim() ?? course.dateLabel}
           </p>
         </div>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/80">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/85">
           {ceLabel(course, "short")}
         </p>
       </div>

@@ -44,6 +44,13 @@ export function amountDueTodayCents(
     : fullAmountCents(course);
 }
 
+/** Whether a deposit option is meaningful for this course (i.e. the deposit
+ *  is actually less than the full amount). Single-price courses set the
+ *  deposit equal to the full price, which hides the deposit choice. */
+export function allowsDeposit(course: PurchasableCourse): boolean {
+  return course.purchase.depositCents < fullAmountCents(course);
+}
+
 /** Remaining balance after today's charge (only non-zero for deposits). */
 export function balanceDueCents(
   course: PurchasableCourse,

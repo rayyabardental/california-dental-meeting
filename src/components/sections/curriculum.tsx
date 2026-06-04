@@ -30,6 +30,9 @@ const ICON_MAP: Record<ScheduleIconKey, React.ReactNode> = {
  */
 export function Curriculum({ course }: { course: Course }): React.ReactElement {
   const schedule = course.schedule;
+  const hasObjectives = course.learningObjectives.length > 0;
+  const hasIdeal = course.idealParticipant.length > 0;
+  const bothPanels = hasObjectives && hasIdeal;
 
   return (
     <section
@@ -74,20 +77,30 @@ export function Curriculum({ course }: { course: Course }): React.ReactElement {
           </div>
         )}
 
-        <div className="mx-auto mt-20 grid max-w-5xl gap-8 lg:grid-cols-2">
-          <ListPanel
-            eyebrow="Learning Objectives"
-            heading="What you'll walk away knowing how to do."
-            items={course.learningObjectives}
-            tone="accent"
-          />
-          <ListPanel
-            eyebrow="Ideal Participant"
-            heading="Designed for these clinicians."
-            items={course.idealParticipant}
-            tone="gold"
-          />
-        </div>
+        {(hasObjectives || hasIdeal) && (
+          <div
+            className={`mx-auto mt-20 grid gap-8 ${
+              bothPanels ? "max-w-5xl lg:grid-cols-2" : "max-w-2xl"
+            }`}
+          >
+            {hasObjectives && (
+              <ListPanel
+                eyebrow="Learning Objectives"
+                heading="What you'll walk away knowing how to do."
+                items={course.learningObjectives}
+                tone="accent"
+              />
+            )}
+            {hasIdeal && (
+              <ListPanel
+                eyebrow="Ideal Participant"
+                heading="Designed for these clinicians."
+                items={course.idealParticipant}
+                tone="gold"
+              />
+            )}
+          </div>
+        )}
       </Container>
     </section>
   );
