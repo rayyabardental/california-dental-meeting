@@ -20,6 +20,7 @@ const NAV_ITEMS = [
   { label: "Courses", href: "/courses" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
+  { label: "Order lookup", href: "/orders" },
 ] as const;
 
 export function Navbar(): React.ReactElement {
