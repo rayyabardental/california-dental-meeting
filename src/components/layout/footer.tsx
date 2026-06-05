@@ -43,10 +43,7 @@ const FOOTER_LINKS: ReadonlyArray<{
     links: [
       { label: "Enrollment", href: "/contact" },
       { label: "Order lookup", href: "/orders" },
-      {
-        label: "Continuing Education",
-        href: "/courses/basic-dental-implant-course-veracruz-2026",
-      },
+      { label: "CE policies", href: "/ce-policies" },
       { label: "Sponsors", href: "/about#sponsors" },
       { label: "Contact", href: "/contact" },
     ],
