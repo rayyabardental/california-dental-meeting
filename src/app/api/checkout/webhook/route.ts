@@ -3,6 +3,8 @@ import { env } from "@/lib/env";
 import { getStripe } from "@/lib/stripe";
 import { sendRegistrationConfirmation } from "@/lib/resend";
 import { addContactToList } from "@/lib/constant-contact";
+import { findEvent } from "@/lib/events-data";
+import { ensureOrder, orderInputFromCourse } from "@/lib/orders";
 import type { PayMode } from "@/lib/checkout";
 
 export const runtime = "nodejs";
@@ -41,12 +43,33 @@ export async function POST(req: Request): Promise<Response> {
     const pi = event.data.object;
     const m = pi.metadata ?? {};
     if (m.email && m.courseTitle) {
-      // Add the paying registrant to the Constant Contact announcements list,
-      // and send the (optional) branded confirmation email. Both fail soft.
+      const payMode = (m.payMode as PayMode) ?? "full";
+      const course = m.courseId ? findEvent(m.courseId) : undefined;
+
+      // Idempotently record the order (for the lookup page). No card data.
+      if (course) {
+        await ensureOrder(
+          orderInputFromCourse(course, {
+            provider: "stripe",
+            providerId: pi.id,
+            amountPaidCents: pi.amount_received || pi.amount,
+            currency: pi.currency,
+            payMode,
+            balanceDueCents: Number(m.balanceDueCents ?? "0"),
+            firstName: m.firstName ?? "",
+            lastName: m.lastName ?? "",
+            email: m.email,
+          }),
+        );
+      }
+
+      // Add the registrant to the announcements list, tagged by course, and
+      // send the (optional) branded confirmation email. All fail soft.
       await addContactToList({
         email: m.email,
         firstName: m.firstName ?? "",
         lastName: m.lastName ?? "",
+        courseName: m.courseTitle,
       });
       await sendRegistrationConfirmation({
         email: m.email,

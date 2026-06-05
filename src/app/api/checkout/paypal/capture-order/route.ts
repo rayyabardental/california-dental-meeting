@@ -6,6 +6,7 @@ import { capturePayPalOrder, isPayPalConfigured } from "@/lib/paypal";
 import { CheckoutSchema } from "@/lib/validations/checkout";
 import { sendRegistrationConfirmation } from "@/lib/resend";
 import { addContactToList } from "@/lib/constant-contact";
+import { ensureOrder, orderInputFromCourse } from "@/lib/orders";
 
 export const runtime = "nodejs";
 
@@ -44,9 +45,29 @@ export async function POST(req: Request): Promise<Response> {
       return fail(`Payment not completed (status: ${capture.status}).`, 402);
     }
 
-    // Add to the Constant Contact announcements list + send the (optional)
-    // branded confirmation email. Both fail soft.
-    await addContactToList({ email, firstName, lastName });
+    // Idempotently record the order (for the lookup page). No card data.
+    const order = await ensureOrder(
+      orderInputFromCourse(course, {
+        provider: "paypal",
+        providerId: orderId,
+        amountPaidCents: capture.amountCents,
+        currency: capture.currency,
+        payMode,
+        balanceDueCents: balanceDueCents(course, payMode),
+        firstName,
+        lastName,
+        email,
+      }),
+    );
+
+    // Add to the announcements list, tagged by course + send the (optional)
+    // branded confirmation email. All fail soft.
+    await addContactToList({
+      email,
+      firstName,
+      lastName,
+      courseName: course.title,
+    });
     await sendRegistrationConfirmation({
       email,
       firstName,
@@ -60,7 +81,10 @@ export async function POST(req: Request): Promise<Response> {
     });
 
     void license; // captured for parity with Stripe metadata; not persisted here
-    return ok({ status: capture.status, orderId }, 200);
+    return ok(
+      { status: capture.status, orderId, orderNumber: order?.orderNumber ?? null },
+      200,
+    );
   } catch (err) {
     console.error(
       "[paypal/capture-order]",

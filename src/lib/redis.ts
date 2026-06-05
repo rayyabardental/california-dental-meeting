@@ -65,3 +65,23 @@ export async function redisSet(
 export async function redisDel(key: string): Promise<void> {
   await command(["DEL", key]);
 }
+
+/** Atomic increment. Returns the new value, or null if Redis is unavailable. */
+export async function redisIncr(key: string): Promise<number | null> {
+  return command<number>(["INCR", key]);
+}
+
+/**
+ * SET only if the key does not already exist (atomic claim). Returns true when
+ * this caller set the key (won the race), false when it already existed.
+ */
+export async function redisSetNx(
+  key: string,
+  value: string,
+  ttlSeconds?: number,
+): Promise<boolean> {
+  const args: (string | number)[] = ["SET", key, value, "NX"];
+  if (ttlSeconds && ttlSeconds > 0) args.push("EX", ttlSeconds);
+  const result = await command<string>(args);
+  return result === "OK";
+}

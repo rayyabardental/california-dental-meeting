@@ -44,6 +44,9 @@ export interface ContactInput {
   email: string;
   firstName?: string;
   lastName?: string;
+  /** When set, the contact is also added to a per-course list (a "tag" by
+   *  course) so reminder campaigns can target that course's segment. */
+  courseName?: string;
 }
 
 /** True when the API credentials and Redis token store are all present. */
@@ -273,6 +276,66 @@ async function getOrCreateListId(accessToken: string): Promise<string | null> {
   }
 }
 
+/**
+ * Find or create a per-course list ("CDM — <course>") so purchasers can be
+ * segmented by course. Cached in Redis by course name. Returns null on any
+ * failure — course tagging is best-effort and never blocks the main list add.
+ */
+async function getOrCreateCourseListId(
+  accessToken: string,
+  courseName: string,
+): Promise<string | null> {
+  const listName = `CDM — ${courseName}`.slice(0, 255);
+  const cacheKey = `cc:course_list:${listName}`;
+  const cached = await redisGet(cacheKey);
+  if (cached) return cached;
+
+  try {
+    const listRes = await fetch(
+      `${API_BASE}/contact_lists?include_count=false&limit=1000`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "application/json",
+        },
+        cache: "no-store",
+      },
+    );
+    if (listRes.ok) {
+      const data = (await listRes.json()) as {
+        lists?: { list_id: string; name: string }[];
+      };
+      const match = data.lists?.find((l) => l.name === listName);
+      if (match) {
+        await redisSet(cacheKey, match.list_id);
+        return match.list_id;
+      }
+    }
+
+    const createRes = await fetch(`${API_BASE}/contact_lists`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: listName,
+        favorite: false,
+        description: `Registrants for ${courseName}.`.slice(0, 255),
+      }),
+      cache: "no-store",
+    });
+    if (!createRes.ok) return null;
+    const created = (await createRes.json()) as { list_id: string };
+    await redisSet(cacheKey, created.list_id);
+    return created.list_id;
+  } catch (err) {
+    console.error("[constant-contact] course list error", err);
+    return null;
+  }
+}
+
 /* -------------------------------------------------------------------------- */
 /* Public API                                                                 */
 /* -------------------------------------------------------------------------- */
@@ -302,9 +365,19 @@ export async function addContactToList(input: ContactInput): Promise<boolean> {
     const listId = await getOrCreateListId(accessToken);
     if (!listId) return false;
 
+    const listMemberships = [listId];
+    // Best-effort: also add to the per-course list (tag by course).
+    if (input.courseName?.trim()) {
+      const courseListId = await getOrCreateCourseListId(
+        accessToken,
+        input.courseName.trim(),
+      );
+      if (courseListId) listMemberships.push(courseListId);
+    }
+
     const payload: Record<string, unknown> = {
       email_address: email,
-      list_memberships: [listId],
+      list_memberships: listMemberships,
     };
     const firstName = input.firstName?.trim();
     const lastName = input.lastName?.trim();
