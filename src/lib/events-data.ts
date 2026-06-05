@@ -77,6 +77,14 @@ export type Course = {
   idealParticipant: ReadonlyArray<string>;
   learningObjectives: ReadonlyArray<string>;
   clinicalTeam?: ReadonlyArray<{ role: string; description: string }>;
+  /** Multi-speaker faculty for symposium-style programs. Each entry carries
+   * the speaker's session topic and that session's learning objectives. */
+  faculty?: ReadonlyArray<{
+    name: string;
+    topic: string;
+    note?: string;
+    objectives: ReadonlyArray<string>;
+  }>;
   sponsors?: ReadonlyArray<Sponsor>;
   universityPartner?: string;
   /** Promotional flyer/poster image used as the course visual on the card,
@@ -326,14 +334,14 @@ export const EVENTS: readonly Course[] = [
     ],
   },
   {
-    id: "cdm_biomimetics_2026",
-    slug: "biomimicry-and-biomimetics-2026",
-    title: "Biomimicry and Biomimetics in Our Rehabilitations",
-    subtitle: "7-Hour CE Lecture · Dr. Esteban Peral",
+    id: "cdm_california_2026",
+    slug: "california-dental-meeting-august-2026",
+    title: "California Dental Meeting — August 8, 2026",
+    subtitle: "Full-Day CE Program · Occlusion · Periodontics · Biomimetics",
     summary:
-      "A seven-hour continuing-education lecture by Dr. Esteban Peral on the behavior of dental materials in normal function and dysfunction.",
+      "A full day of continuing education in California, presented with ISADe — three expert sessions spanning periodontics, occlusion & disocclusion, and biomimetics, for 7 hours of DBC-approved CE.",
     description:
-      "Behavior of materials in normal function and dysfunction. Understanding it is key to preventing failures and achieving stable and predictable clinical outcomes.",
+      "A full-day continuing-education program presented by California Dental Meeting and the International Society of Advanced Dentistry (ISADe). The day brings together three faculty across periodontics, occlusion and disocclusion, and biomimetics — anchored by Dr. Aníbal Alonso's five-hour session on occlusion and disocclusion — and closes with a certificates ceremony and a networking reception. Participants who complete the attendance requirements receive 7 hours of continuing-education credit.",
     date: "2026-08-08T00:00:00.000Z",
     dateLabel: "August 8, 2026",
     city: "California",
@@ -344,10 +352,10 @@ export const EVENTS: readonly Course[] = [
     lat: 34.0522,
     lng: -118.2437,
     type: "CALIFORNIA",
-    capacity: 60,
-    spotsRemaining: 60,
+    capacity: 80,
+    spotsRemaining: 80,
     ceCredits: 7,
-    topic: "Restorative · Biomaterials",
+    topic: "Continuing Education · Multi-Speaker Program",
     price: "$500",
     purchase: {
       currency: "usd",
@@ -357,133 +365,122 @@ export const EVENTS: readonly Course[] = [
     },
     status: "OPEN",
     highlights: [
-      "7 hours of continuing education",
-      "CE approved by the Dental Board of California (DBC)",
-      "Presented by Dr. Esteban Peral",
-      "Hosted by ISADe & California Dental Meeting",
+      "7 hours of CE, approved by the Dental Board of California (DBC)",
+      "Dr. Aníbal Alonso — Occlusion and Disocclusion (5-hour session)",
+      "Dr. Sergio Hiskin — Periodontal Treatment for Non-Axial Damaging Forces",
+      "Dr. Esteban Peral — Biomimicry and Biomimetics",
+      "Certificates & awards ceremony",
+      "Networking BBQ & wine reception",
     ],
     whatsIncluded: [
       "7 hours of CE credit, approved by the Dental Board of California (DBC)",
+      "Coffee breaks and lunch",
+      "Certificate of completion (issued after verified attendance)",
+      "Closing networking BBQ & wine reception",
     ],
-    idealParticipant: [],
-    learningObjectives: [],
+    idealParticipant: [
+      "General dentists",
+      "Dental specialists",
+      "Dental hygienists",
+      "Registered dental assistants",
+      "Dental laboratory technicians",
+      "Dental students and residents",
+    ],
+    learningObjectives: [
+      "Evaluate current concepts and emerging trends in dentistry.",
+      "Analyze scientific evidence relevant to clinical decision-making.",
+      "Integrate contemporary treatment approaches into clinical practice.",
+      "Apply evidence-based protocols to patient care.",
+      "Recognize and manage clinical complications more effectively.",
+      "Strengthen ethical and professional decision-making.",
+    ],
+    faculty: [
+      {
+        name: "Dr. Aníbal Alonso",
+        topic: "Occlusion and Disocclusion",
+        note: "Lead faculty · 5-hour session",
+        objectives: [
+          "Explain the fundamental principles of occlusion and disocclusion.",
+          "Identify occlusal factors that influence restorative and prosthetic success.",
+          "Analyze functional and dysfunctional occlusal relationships.",
+          "Integrate occlusal principles into comprehensive treatment planning.",
+          "Reduce complications associated with occlusal instability.",
+        ],
+      },
+      {
+        name: "Dr. Sergio Hiskin",
+        topic:
+          "Successes and Failures of Periodontal Treatment for Non-Axial Damaging Forces",
+        objectives: [
+          "Define non-axial occlusal forces and their effects on periodontal tissues.",
+          "Identify clinical manifestations of occlusal trauma.",
+          "Evaluate factors influencing periodontal treatment outcomes.",
+          "Develop treatment strategies to reduce biomechanical complications.",
+          "Improve long-term periodontal stability through appropriate diagnosis and management.",
+        ],
+      },
+      {
+        name: "Dr. Esteban Peral",
+        topic: "Biomimicry and Biomimetics in Our Rehabilitations",
+        objectives: [
+          "Define the concepts of biomimicry and biomimetics in restorative dentistry.",
+          "Evaluate the biomechanical behavior of restorative materials under functional loading.",
+          "Identify principles of biomechanics applicable to oral rehabilitation.",
+          "Apply biomimetic concepts to restorative treatment planning.",
+          "Improve the predictability and longevity of restorative treatments.",
+        ],
+      },
+    ],
     sponsors: [
       { name: "ISADe", note: "International Society of Advanced Dentistry" },
     ],
-    speaker: {
-      name: "Dr. Esteban Peral",
-      title: "Guest Lecturer",
-      specialty: "Biomimetics & Restorative Dentistry",
-      org: "ISADe × California Dental Meeting",
-    },
-    flyerImage: "/courses/biomimetics-peral.jpg",
-  },
-  {
-    id: "cdm_periodontal_2026",
-    slug: "periodontal-treatment-non-axial-forces-2026",
-    title:
-      "Successes and Failures of Periodontal Treatment for Non-Axial Damaging Forces",
-    subtitle: "7-Hour CE Lecture · Dr. Sergio Hiskin",
-    summary:
-      "A seven-hour continuing-education lecture by Dr. Sergio Hiskin on the successes and failures of periodontal treatment under non-axial damaging forces.",
-    description:
-      "Understanding it is key to preventing failures and achieving stable and predictable clinical outcomes.",
-    date: "2026-08-08T00:00:00.000Z",
-    dateLabel: "August 8, 2026",
-    city: "California",
-    country: "USA",
-    venue: "To be announced",
-    venueDetail:
-      "Presented by the International Society of Advanced Dentistry (ISADe) and California Dental Meeting. Exact California venue to be announced.",
-    lat: 34.0505,
-    lng: -118.2495,
-    type: "CALIFORNIA",
-    capacity: 60,
-    spotsRemaining: 60,
-    ceCredits: 7,
-    topic: "Periodontics",
-    price: "$500",
-    purchase: {
-      currency: "usd",
-      regularCents: 50000,
-      earlyCents: 50000,
-      depositCents: 50000,
-    },
-    status: "OPEN",
-    highlights: [
-      "7 hours of continuing education",
-      "CE approved by the Dental Board of California (DBC)",
-      "Presented by Dr. Sergio Hiskin",
-      "Hosted by ISADe & California Dental Meeting",
-    ],
-    whatsIncluded: [
-      "7 hours of CE credit, approved by the Dental Board of California (DBC)",
-    ],
-    idealParticipant: [],
-    learningObjectives: [],
-    sponsors: [
-      { name: "ISADe", note: "International Society of Advanced Dentistry" },
-    ],
-    speaker: {
-      name: "Dr. Sergio Hiskin",
-      title: "Guest Lecturer",
-      specialty: "Periodontics",
-      org: "ISADe × California Dental Meeting",
-    },
-    flyerImage: "/courses/periodontal-hiskin.jpg",
-  },
-  {
-    id: "cdm_occlusion_2026",
-    slug: "occlusion-and-disocclusion-2026",
-    title: "Occlusion and Disocclusion",
-    subtitle: "7-Hour CE Lecture · Dr. Aníbal Alonso",
-    summary:
-      "A seven-hour continuing-education lecture by Dr. Aníbal Alonso on occlusion and disocclusion as the foundation of successful oral rehabilitation.",
-    description:
-      "Occlusion is the foundation of every successful oral rehabilitation. Understanding it is key to preventing failures and achieving stable and predictable clinical outcomes.",
-    date: "2026-08-08T00:00:00.000Z",
-    dateLabel: "August 8, 2026",
-    city: "California",
-    country: "USA",
-    venue: "To be announced",
-    venueDetail:
-      "Presented by the International Society of Advanced Dentistry (ISADe) and California Dental Meeting. Exact California venue to be announced.",
-    lat: 34.0540,
-    lng: -118.2400,
-    type: "CALIFORNIA",
-    capacity: 60,
-    spotsRemaining: 60,
-    ceCredits: 7,
-    topic: "Occlusion · Rehabilitation",
-    price: "$500",
-    purchase: {
-      currency: "usd",
-      regularCents: 50000,
-      earlyCents: 50000,
-      depositCents: 50000,
-    },
-    status: "OPEN",
-    highlights: [
-      "7 hours of continuing education",
-      "CE approved by the Dental Board of California (DBC)",
-      "Presented by Dr. Aníbal Alonso",
-      "Hosted by ISADe & California Dental Meeting",
-    ],
-    whatsIncluded: [
-      "7 hours of CE credit, approved by the Dental Board of California (DBC)",
-    ],
-    idealParticipant: [],
-    learningObjectives: [],
-    sponsors: [
-      { name: "ISADe", note: "International Society of Advanced Dentistry" },
+    flyerImage: "/courses/california-program-schedule.jpg",
+    schedule: [
+      {
+        date: "Aug 8, 2026",
+        weekday: "Saturday",
+        title: "Program Schedule",
+        icon: "clock",
+        blocks: [
+          { time: "8:30 AM", activity: "Registration" },
+          { time: "9:00 AM", activity: "Welcome & opening remarks" },
+          {
+            time: "9:05 AM",
+            activity:
+              "Dr. Sergio Hiskin — Successes and Failures of Periodontal Treatment for Non-Axial Damaging Forces",
+          },
+          { time: "9:50 AM", activity: "Coffee break" },
+          {
+            time: "10:00 AM",
+            activity: "Dr. Aníbal Alonso — Occlusion and Disocclusion",
+          },
+          { time: "12:00 PM", activity: "Lunch" },
+          {
+            time: "1:00 PM",
+            activity: "Dr. Aníbal Alonso — Occlusion and Disocclusion",
+          },
+          { time: "2:50 PM", activity: "Coffee break" },
+          {
+            time: "3:00 PM",
+            activity: "Dr. Aníbal Alonso — Occlusion and Disocclusion",
+          },
+          { time: "4:50 PM", activity: "Coffee break" },
+          {
+            time: "5:00 PM",
+            activity:
+              "Dr. Esteban Peral — Biomimicry and Biomimetics in Our Rehabilitations",
+          },
+          { time: "5:45 PM", activity: "Certificates & awards ceremony" },
+          { time: "6:00 PM", activity: "Networking BBQ & wine reception" },
+        ],
+      },
     ],
     speaker: {
       name: "Dr. Aníbal Alonso",
-      title: "Guest Lecturer",
+      title: "Lead Faculty",
       specialty: "Occlusion & Oral Rehabilitation",
       org: "ISADe × California Dental Meeting",
     },
-    flyerImage: "/courses/occlusion-alonso.jpg",
   },
   {
     id: "ides_kerala_2026",

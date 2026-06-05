@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { SectionEyebrow } from "@/components/ui/section-eyebrow";
 import { EarlyRegistrationBanner } from "@/components/sections/early-registration-banner";
 import { FlagshipCourse } from "@/components/sections/flagship-course";
+import { CourseFaculty } from "@/components/sections/course-faculty";
 import { Curriculum } from "@/components/sections/curriculum";
 import { Included } from "@/components/sections/included";
 import { RegistrationModal } from "@/components/shared/registration-modal";
@@ -39,6 +40,7 @@ export function CourseDetail({
     <>
       <EarlyRegistrationBanner course={course} onRegister={openRegister} />
       <FlagshipCourse course={course} onRegister={openRegister} />
+      <CourseFaculty course={course} />
       <Curriculum course={course} />
       <Included course={course} />
       <BottomRegisterCta course={course} onRegister={openRegister} />

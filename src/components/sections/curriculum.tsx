@@ -43,17 +43,25 @@ export function Curriculum({ course }: { course: Course }): React.ReactElement {
       <Container size="wide">
         <div className="mx-auto max-w-3xl text-center">
           <SectionEyebrow tone="primary" className="justify-center">
-            {schedule && schedule.length > 0 ? "Daily Schedule" : "Curriculum"}
+            {!schedule || schedule.length === 0
+              ? "Curriculum"
+              : schedule.length === 1
+                ? "Program Schedule"
+                : "Daily Schedule"}
           </SectionEyebrow>
           <h2 className="mt-4 font-display text-4xl font-medium tracking-tight text-primary md:text-5xl text-balance">
-            {schedule && schedule.length > 0
-              ? `${schedule.length} days. ${course.ceCredits} CE credits.`
-              : "Curriculum being finalised."}
+            {!schedule || schedule.length === 0
+              ? "Curriculum being finalised."
+              : schedule.length === 1
+                ? `A full day. ${course.ceCredits} CE credits.`
+                : `${schedule.length} days. ${course.ceCredits} CE credits.`}
           </h2>
           <p className="mt-5 text-lg text-ink-muted text-pretty">
-            {schedule && schedule.length > 0
-              ? `The full agenda for the ${course.title} at ${course.venue}, ${course.city}.`
-              : `Detailed agenda for ${course.title} will be published as the cohort approaches. Join the waitlist to receive the full curriculum once confirmed.`}
+            {!schedule || schedule.length === 0
+              ? `Detailed agenda for ${course.title} will be published as the cohort approaches. Join the waitlist to receive the full curriculum once confirmed.`
+              : schedule.length === 1
+                ? `The full agenda for ${course.title}.`
+                : `The full agenda for the ${course.title} at ${course.venue}, ${course.city}.`}
           </p>
         </div>
 

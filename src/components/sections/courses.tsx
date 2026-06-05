@@ -37,10 +37,10 @@ export function Courses(): React.ReactElement {
               All California Dental Meeting programs.
             </h2>
             <p className="mt-5 text-lg text-ink-muted text-pretty">
-              Our 2027 flagship live-patient program in Veracruz, a series of
-              7-hour CE lectures in California with ISADe, and two international
-              summits — IDES 2026 in Kerala and SIDHE 2026 in Shenzhen. Open any
-              card to view that course&apos;s full details.
+              Our 2027 flagship live-patient program in Veracruz, a full-day CE
+              program in California with ISADe, and two international summits —
+              IDES 2026 in Kerala and SIDHE 2026 in Shenzhen. Open any card to
+              view that course&apos;s full details.
             </p>
           </div>
         </div>
