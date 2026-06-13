@@ -149,14 +149,17 @@ export function HeroCarousel({
                 onClick={() => goTo(i)}
                 aria-label={`Go to slide ${i + 1}: ${s.headline}`}
                 aria-current={isActive ? "true" : undefined}
-                className={cn(
-                  "h-2 rounded-full transition-all duration-300",
-                  isActive
-                    ? "w-8 bg-primary"
-                    : "w-2 bg-primary/25 hover:bg-primary/45",
-                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
-                )}
-              />
+                className="grid h-6 min-w-6 place-items-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              >
+                <span
+                  className={cn(
+                    "block h-2 rounded-full transition-all duration-300",
+                    isActive
+                      ? "w-8 bg-primary"
+                      : "w-2 bg-primary/25 hover:bg-primary/45",
+                  )}
+                />
+              </button>
             );
           })}
         </nav>

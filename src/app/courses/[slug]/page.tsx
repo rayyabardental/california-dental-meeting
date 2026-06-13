@@ -26,6 +26,7 @@ export async function generateMetadata({
       title: `${course.title} · California Dental Meeting`,
       description: course.summary,
       url: canonical,
+      images: course.flyerImage ? [{ url: course.flyerImage }] : undefined,
     },
   };
 }

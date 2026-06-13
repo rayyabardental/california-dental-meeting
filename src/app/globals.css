@@ -103,6 +103,37 @@
     outline-offset: 3px;
     border-radius: 4px;
   }
+
+  /* Keyboard "skip to main content" link — visible only when focused. */
+  .skip-link {
+    position: fixed;
+    top: 0.625rem;
+    left: 0.625rem;
+    z-index: 100;
+    transform: translateY(-150%);
+    border-radius: var(--radius-pill);
+    background: var(--color-primary);
+    color: #fff;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+
+  /* Respect users who prefer reduced motion (WCAG 2.3.3). */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer utilities {

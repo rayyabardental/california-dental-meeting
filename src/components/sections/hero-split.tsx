@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
+import { Button } from "@/components/ui/button";
 import { HeroCarousel } from "@/components/sections/hero-carousel";
 import type {
   CarouselSlide,
@@ -54,14 +56,14 @@ export function HeroSplit({
               International Education · Clinical Excellence
             </span>
 
-            <div className="relative mt-6 w-full max-w-md">
+            <div className="relative mt-6 w-full max-w-[15rem] sm:max-w-sm lg:max-w-md">
               <Image
                 src={mascot.mascotImage}
                 alt={mascot.mascotAlt}
                 width={1536}
                 height={1024}
                 priority
-                sizes="(max-width: 1024px) 80vw, 32rem"
+                sizes="(max-width: 640px) 60vw, (max-width: 1024px) 24rem, 32rem"
                 className="h-auto w-full"
               />
             </div>
@@ -73,6 +75,20 @@ export function HeroSplit({
             <p className="mt-5 max-w-xl text-base leading-relaxed text-ink-muted text-pretty sm:text-lg">
               {mission.missionText}
             </p>
+
+            <div className="mt-7 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+              <Button href="/courses" variant="primary" size="lg">
+                Explore courses
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+              <Button
+                href="/courses/basic-dental-implant-course-veracruz-2026"
+                variant="ghost"
+                size="lg"
+              >
+                Veracruz 2027 — flagship
+              </Button>
+            </div>
           </motion.div>
 
           {/* ───────────────────── Right: carousel ──────────────────────── */}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -21,6 +21,7 @@ import { RegistrationModal } from "@/components/shared/registration-modal";
 import { ceLabel, type Course } from "@/lib/events-data";
 import { isPurchasable } from "@/lib/checkout";
 import { useEnroll } from "@/lib/cart-store";
+import { cn } from "@/lib/utils";
 
 /**
  * Course detail page — single template used by every course's
@@ -49,6 +50,8 @@ export function CourseDetail({
         event={registering ? course : null}
         onClose={closeRegister}
       />
+
+      <MobileEnrollBar course={course} onRegister={openRegister} />
     </>
   );
 }
@@ -180,6 +183,70 @@ function CtaMeta({
       <p className="mt-1.5 font-display text-base font-medium text-white">
         {value}
       </p>
+    </div>
+  );
+}
+
+/**
+ * Sticky mobile enrollment bar — keeps price + the enroll CTA reachable
+ * without scrolling past the full description on small screens. Hidden on
+ * desktop (the sidebar handles it) and near the page bottom (so it doesn't
+ * double with the closing CTA or cover the footer).
+ */
+function MobileEnrollBar({
+  course,
+  onRegister,
+}: {
+  course: Course;
+  onRegister: () => void;
+}): React.ReactElement {
+  const purchasable = isPurchasable(course);
+  const enroll = useEnroll();
+  const isAnnouncing = course.status === "ANNOUNCING_SOON";
+  const price =
+    course.earlyRegistrationActive && course.earlyPrice
+      ? course.earlyPrice
+      : course.price;
+
+  const [atBottom, setAtBottom] = useState(false);
+  useEffect(() => {
+    const onScroll = (): void => {
+      setAtBottom(
+        window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 360,
+      );
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <div
+      className={cn(
+        "fixed inset-x-0 bottom-0 z-40 border-t border-primary/10 bg-white/95 backdrop-blur-md transition-transform duration-300 lg:hidden",
+        atBottom ? "translate-y-full" : "translate-y-0",
+      )}
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+    >
+      <div className="mx-auto flex max-w-md items-center justify-between gap-3 px-4 py-3">
+        <div className="min-w-0">
+          <p className="truncate text-[11px] font-medium uppercase tracking-[0.14em] text-ink-muted">
+            {course.dateLabel}
+          </p>
+          <p className="font-display text-lg font-medium leading-none text-primary">
+            {isAnnouncing ? "Announcing soon" : price}
+          </p>
+        </div>
+        <Button
+          size="md"
+          className="flex-none"
+          disabled={isAnnouncing}
+          onClick={purchasable ? () => enroll(course) : onRegister}
+        >
+          {purchasable ? "Enroll now" : isAnnouncing ? "Notify me" : "Reserve"}
+        </Button>
+      </div>
     </div>
   );
 }
