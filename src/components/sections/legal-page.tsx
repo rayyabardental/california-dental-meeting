@@ -84,10 +84,10 @@ export function LegalPage({
           <p className="mt-12 border-t border-primary/10 pt-6 text-sm text-ink-muted">
             Questions about this policy? Contact California Dental Meeting at{" "}
             <a
-              href="mailto:wyabardds@gmail.com"
+              href="mailto:ray.yabardental@gmail.com"
               className="font-medium text-primary underline-offset-4 hover:underline"
             >
-              wyabardds@gmail.com
+              ray.yabardental@gmail.com
             </a>
             .
           </p>

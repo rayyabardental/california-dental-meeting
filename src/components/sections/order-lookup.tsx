@@ -258,10 +258,10 @@ function Result({ order }: { order: PublicOrder }): React.ReactElement {
         <p className="mt-5 text-xs text-ink-muted">
           Need help with your registration? Contact our enrollment team at{" "}
           <a
-            href="mailto:wyabardds@gmail.com"
+            href="mailto:ray.yabardental@gmail.com"
             className="font-medium text-primary underline-offset-4 hover:underline"
           >
-            wyabardds@gmail.com
+            ray.yabardental@gmail.com
           </a>{" "}
           or{" "}
           <a

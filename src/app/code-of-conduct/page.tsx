@@ -42,7 +42,7 @@ export default function CodeOfConductPage(): React.ReactElement {
         {
           heading: "Grievances & Complaints",
           paragraphs: [
-            "Participants may submit complaints regarding course administration, educational quality, facilities, faculty performance, attendance verification, or continuing-education documentation. Complaints may be sent to California Dental Meeting at wyabardds@gmail.com and will be reviewed and addressed in a timely and professional manner.",
+            "Participants may submit complaints regarding course administration, educational quality, facilities, faculty performance, attendance verification, or continuing-education documentation. Complaints may be sent to California Dental Meeting at ray.yabardental@gmail.com and will be reviewed and addressed in a timely and professional manner.",
           ],
         },
       ]}

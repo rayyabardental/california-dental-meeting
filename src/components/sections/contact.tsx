@@ -129,9 +129,9 @@ export function Contact(): React.ReactElement {
                 <Mail className="h-4 w-4 text-gold" />
                 <a
                   className="hover:text-white"
-                  href="mailto:enrollment@californiadentalmeeting.com"
+                  href="mailto:ray.yabardental@gmail.com"
                 >
-                  enrollment@californiadentalmeeting.com
+                  ray.yabardental@gmail.com
                 </a>
               </p>
             </div>

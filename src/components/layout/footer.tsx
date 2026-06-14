@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Mail, Phone } from "lucide-react";
 import {
   InstagramIcon,
-  LinkedInIcon,
+  TikTokIcon,
 } from "@/components/ui/social-icons";
 import { CdmLogo } from "@/components/ui/cdm-logo";
 import { Container } from "@/components/ui/container";
@@ -85,23 +85,33 @@ export function Footer(): React.ReactElement {
               <p className="inline-flex items-center gap-2">
                 <Mail className="h-4 w-4 text-gold" />
                 <a
-                  href="mailto:enrollment@californiadentalmeeting.com"
+                  href="mailto:ray.yabardental@gmail.com"
                   className="hover:text-white"
                 >
-                  enrollment@californiadentalmeeting.com
+                  ray.yabardental@gmail.com
                 </a>
               </p>
             </div>
 
             <div className="mt-7 flex items-center gap-3">
               {[
-                { Icon: InstagramIcon, label: "Instagram" },
-                { Icon: LinkedInIcon, label: "LinkedIn" },
-              ].map(({ Icon, label }) => (
+                {
+                  Icon: InstagramIcon,
+                  label: "Instagram",
+                  href: "https://www.instagram.com/californiadentalmeetings?igsh=NTc4MTIwNjQ2YQ%3D%3D&utm_source=qr",
+                },
+                {
+                  Icon: TikTokIcon,
+                  label: "TikTok",
+                  href: "https://www.tiktok.com/@californiadentalmeetings?_r=1&_t=ZT-97C3jtIWeQX",
+                },
+              ].map(({ Icon, label, href }) => (
                 <a
                   key={label}
-                  href="#"
-                  aria-label={label}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  aria-label={`California Dental Meeting on ${label}`}
                   className="grid h-10 w-10 place-items-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-gold/60 hover:text-gold"
                 >
                   <Icon className="h-4 w-4" />
