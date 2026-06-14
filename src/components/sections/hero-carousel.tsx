@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   ArrowUpRight,
   Calendar,
@@ -22,7 +22,8 @@ import { cn } from "@/lib/utils";
  * Behaviour
  * ─────────
  *   • Renders one slide at a time with restrained fade + slight horizontal
- *     slide transitions (no autoplay — predictable for users).
+ *     slide transitions. Auto-advances every 6s, pausing on hover/focus and
+ *     when the user prefers reduced motion.
  *   • Previous / next arrow buttons, keyboard-accessible (Tab → Enter/Space).
  *   • Arrow-key navigation (← / →) while focus is anywhere inside the
  *     carousel region.
@@ -48,11 +49,15 @@ export function HeroCarousel({
 }): React.ReactElement | null {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
+  const [paused, setPaused] = useState(false);
   const regionRef = useRef<HTMLDivElement>(null);
   const id = useId();
+  const reduceMotion = useReducedMotion();
 
   const total = slides.length;
   const current = slides[index];
+  // Auto-advance unless the user is interacting with it or prefers less motion.
+  const autoplaying = !reduceMotion && !paused && total > 1;
 
   const goTo = useCallback(
     (next: number): void => {
@@ -66,6 +71,15 @@ export function HeroCarousel({
 
   const goNext = useCallback((): void => goTo(index + 1), [goTo, index]);
   const goPrev = useCallback((): void => goTo(index - 1), [goTo, index]);
+
+  // Autoplay: advance every 6s. Re-runs (resetting the timer) whenever the
+  // slide changes or interaction state flips, so a manual change restarts the
+  // countdown. Cleared while paused / reduced-motion.
+  useEffect(() => {
+    if (!autoplaying) return;
+    const timer = window.setInterval(goNext, 6000);
+    return () => window.clearInterval(timer);
+  }, [autoplaying, goNext]);
 
   // Arrow-key navigation when focus is anywhere inside the carousel.
   useEffect(() => {
@@ -93,10 +107,17 @@ export function HeroCarousel({
       aria-label="Featured course locations"
       role="region"
       className={cn("relative w-full", className)}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
     >
       <div className="overflow-hidden rounded-3xl border border-primary/10 bg-white shadow-[0_20px_50px_-30px_rgba(13,35,64,0.35)]">
         <div
-          aria-live="polite"
+          // autoplaying depends on the client-only reduced-motion preference,
+          // so this attribute legitimately differs from the server render.
+          suppressHydrationWarning
+          aria-live={autoplaying ? "off" : "polite"}
           aria-atomic="false"
           className="relative"
         >
