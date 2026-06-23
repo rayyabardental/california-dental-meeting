@@ -51,7 +51,7 @@ export function Testimonials(): React.ReactElement {
             From the CDM alumni community.
           </h2>
           <p className="mt-4 text-sm uppercase tracking-[0.18em] text-white/40">
-            (Placeholder quotes — real alumni testimonials to be collected after Veracruz 2027)
+            (Placeholder quotes — real alumni testimonials to be collected after Veracruz)
           </p>
         </div>
 

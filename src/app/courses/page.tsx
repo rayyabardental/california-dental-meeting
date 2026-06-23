@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Courses · California Dental Meeting",
     description:
-      "Live-patient implant surgery training. Flagship Veracruz 2027 plus upcoming California and international cohorts.",
+      "Live-patient implant surgery training. Flagship Veracruz plus upcoming California and international cohorts.",
     url: "/courses",
   },
 };

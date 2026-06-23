@@ -110,7 +110,7 @@ export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
     ceCredits: flagshipCE,
     description:
       "Six clinical days on the Gulf coast — at the heart of one of Mexico's most historic cities, hosted by Universidad CEYESOV.",
-    ctaText: "View Veracruz 2027",
+    ctaText: "View Veracruz",
     ctaHref: flagshipHref,
     instructor: flagshipInstructor,
     status: flagshipStatus,

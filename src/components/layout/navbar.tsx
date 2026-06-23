@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
  */
 const NAV_ITEMS = [
   {
-    label: "Veracruz 2027",
+    label: "Veracruz",
     href: "/courses/basic-dental-implant-course-veracruz-2026",
   },
   { label: "Courses", href: "/courses" },
@@ -49,7 +49,7 @@ export function Navbar(): React.ReactElement {
 
   // Pick the *most specific* matching nav item so a deep route like
   // /courses/basic-dental-implant-course-veracruz-2026 highlights only the
-  // "Veracruz 2027" link, not also "Courses".
+  // "Veracruz" link, not also "Courses".
   const activeHref = ((): string | null => {
     if (!pathname) return null;
     const matches = NAV_ITEMS.filter(

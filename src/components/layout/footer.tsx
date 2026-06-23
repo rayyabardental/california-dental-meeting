@@ -15,7 +15,7 @@ const FOOTER_LINKS: ReadonlyArray<{
     title: "Programs",
     links: [
       {
-        label: "Veracruz 2027 (flagship)",
+        label: "Veracruz (flagship)",
         href: "/courses/basic-dental-implant-course-veracruz-2026",
       },
       {

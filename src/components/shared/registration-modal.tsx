@@ -12,7 +12,6 @@ import {
 } from "@/lib/validations/event";
 import { Button } from "@/components/ui/button";
 import type { Event } from "@/lib/events-data";
-import { formatEventDateLong } from "@/lib/utils";
 
 export function RegistrationModal({
   event,
@@ -114,7 +113,7 @@ export function RegistrationModal({
               <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-white/85">
                 <span className="inline-flex items-center gap-1.5">
                   <Calendar className="h-3.5 w-3.5 text-gold" />
-                  {formatEventDateLong(event.date)}
+                  {event.dateLabel}
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <MapPin className="h-3.5 w-3.5 text-gold" />

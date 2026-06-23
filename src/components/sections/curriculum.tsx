@@ -138,7 +138,9 @@ function ScheduleDayCard({
           <p className="mt-3 font-display text-2xl font-medium text-primary">
             {day.date}
           </p>
-          <p className="mt-1 text-sm text-ink-muted">{day.weekday}</p>
+          {day.weekday !== day.date && (
+            <p className="mt-1 text-sm text-ink-muted">{day.weekday}</p>
+          )}
           <p className="mt-4 text-sm font-medium text-accent-600">
             {day.title}
           </p>

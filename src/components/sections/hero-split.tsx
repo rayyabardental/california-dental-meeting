@@ -86,7 +86,7 @@ export function HeroSplit({
                 variant="ghost"
                 size="lg"
               >
-                Veracruz 2027 — flagship
+                Veracruz — flagship
               </Button>
             </div>
           </motion.div>
