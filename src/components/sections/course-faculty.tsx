@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { Container } from "@/components/ui/container";
@@ -47,42 +48,65 @@ export function CourseFaculty({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ duration: 0.4, delay: Math.min(i * 0.06, 0.18) }}
-              className="rounded-3xl border border-primary/10 bg-white p-6 shadow-[0_1px_2px_rgba(13,35,64,0.04)] sm:p-8"
+              className="overflow-hidden rounded-3xl border border-primary/10 bg-white shadow-[0_1px_2px_rgba(13,35,64,0.04)]"
             >
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-accent-600">
-                    Faculty
-                  </p>
-                  <h3 className="mt-1 font-display text-2xl font-medium text-primary">
-                    {f.name}
-                  </h3>
-                  <p className="mt-1 text-sm font-medium text-ink text-pretty">
-                    {f.topic}
-                  </p>
-                </div>
-                {f.note && (
-                  <span className="flex-none rounded-full bg-gold/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-gold-600">
-                    {f.note}
-                  </span>
+              <div
+                className={
+                  f.image
+                    ? "grid gap-0 md:grid-cols-[16rem_1fr]"
+                    : undefined
+                }
+              >
+                {f.image && (
+                  <div className="relative border-b border-primary/8 bg-sand-100 md:border-b-0 md:border-r">
+                    <Image
+                      src={f.image}
+                      alt={`${f.name} — ${f.topic} session flyer, ${course.title}.`}
+                      width={1024}
+                      height={1536}
+                      sizes="(max-width: 768px) 100vw, 16rem"
+                      className="h-full w-full object-cover object-top md:object-center"
+                    />
+                  </div>
                 )}
-              </div>
 
-              <div className="mt-5 border-t border-primary/8 pt-5">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-muted">
-                  Learning objectives
-                </p>
-                <ul className="mt-3 grid gap-2.5 sm:grid-cols-2">
-                  {f.objectives.map((o) => (
-                    <li
-                      key={o}
-                      className="flex items-start gap-2.5 text-sm text-ink"
-                    >
-                      <Check className="mt-0.5 h-4 w-4 flex-none text-accent" />
-                      <span className="text-pretty">{o}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div className="p-6 sm:p-8">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-accent-600">
+                        Faculty
+                      </p>
+                      <h3 className="mt-1 font-display text-2xl font-medium text-primary">
+                        {f.name}
+                      </h3>
+                      <p className="mt-1 text-sm font-medium text-ink text-pretty">
+                        {f.topic}
+                      </p>
+                    </div>
+                    {f.note && (
+                      <span className="flex-none rounded-full bg-gold/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-gold-600">
+                        {f.note}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="mt-5 border-t border-primary/8 pt-5">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-muted">
+                      Learning objectives
+                    </p>
+                    <ul className="mt-3 grid gap-2.5 sm:grid-cols-2">
+                      {f.objectives.map((o) => (
+                        <li
+                          key={o}
+                          className="flex items-start gap-2.5 text-sm text-ink"
+                        >
+                          <Check className="mt-0.5 h-4 w-4 flex-none text-accent" />
+                          <span className="text-pretty">{o}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
               </div>
             </motion.article>
           ))}

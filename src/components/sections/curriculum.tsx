@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   Clock,
@@ -66,11 +67,30 @@ export function Curriculum({ course }: { course: Course }): React.ReactElement {
         </div>
 
         {schedule && schedule.length > 0 ? (
-          <ol className="mx-auto mt-14 max-w-4xl space-y-4">
-            {schedule.map((day, idx) => (
-              <ScheduleDayCard key={day.date} day={day} index={idx} />
-            ))}
-          </ol>
+          <>
+            <ol className="mx-auto mt-14 max-w-4xl space-y-4">
+              {schedule.map((day, idx) => (
+                <ScheduleDayCard key={day.date} day={day} index={idx} />
+              ))}
+            </ol>
+            {course.scheduleImage && (
+              <figure className="mx-auto mt-10 max-w-md">
+                <div className="overflow-hidden rounded-3xl border border-primary/10 bg-white shadow-[0_1px_2px_rgba(13,35,64,0.04)]">
+                  <Image
+                    src={course.scheduleImage}
+                    alt={`${course.title} — official program schedule flyer.`}
+                    width={1024}
+                    height={1536}
+                    sizes="(max-width: 768px) 100vw, 28rem"
+                    className="h-auto w-full"
+                  />
+                </div>
+                <figcaption className="mt-3 text-center text-xs text-ink-muted">
+                  Official program schedule
+                </figcaption>
+              </figure>
+            )}
+          </>
         ) : (
           <div className="mx-auto mt-14 max-w-2xl rounded-3xl border border-primary/10 bg-white p-8 text-center shadow-[0_1px_2px_rgba(13,35,64,0.04)]">
             <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-accent/10 text-accent">

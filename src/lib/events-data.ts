@@ -84,6 +84,8 @@ export type Course = {
     topic: string;
     note?: string;
     objectives: ReadonlyArray<string>;
+    /** Promotional speaker flyer shown alongside the session card. */
+    image?: string;
   }>;
   sponsors?: ReadonlyArray<Sponsor>;
   universityPartner?: string;
@@ -91,6 +93,9 @@ export type Course = {
    * carousel, and detail page. Optional — courses without one fall back to
    * the branded gradient header. */
   flyerImage?: string;
+  /** Program-schedule poster rendered alongside the curriculum section.
+   * Optional — only for courses with a published schedule flyer. */
+  scheduleImage?: string;
   /** Full day-by-day schedule. Optional — courses without a published agenda
    * yet (ANNOUNCING_SOON) leave this undefined and the detail page shows a
    * "to be announced" placeholder instead. */
@@ -347,13 +352,13 @@ export const EVENTS: readonly Course[] = [
       "A full-day continuing-education program presented by California Dental Meeting and the International Society of Advanced Dentistry (ISADe). The day brings together three faculty across periodontics, occlusion and disocclusion, and biomimetics — anchored by Dr. Aníbal Alonso's five-hour session on occlusion and disocclusion — and closes with a certificates ceremony and a networking reception. Participants who complete the attendance requirements receive 7 hours of continuing-education credit.",
     date: "2026-08-08T00:00:00.000Z",
     dateLabel: "August 8, 2026",
-    city: "California",
+    city: "Riverside",
     country: "USA",
-    venue: "To be announced",
+    venue: "Hyatt Place Riverside Downtown",
     venueDetail:
-      "Presented by the International Society of Advanced Dentistry (ISADe) and California Dental Meeting. Exact California venue to be announced.",
-    lat: 34.0522,
-    lng: -118.2437,
+      "Hyatt Place Riverside Downtown — 3500 Market Street, Riverside, CA 92501. Presented by the International Society of Advanced Dentistry (ISADe) and California Dental Meeting.",
+    lat: 33.9836,
+    lng: -117.374,
     type: "CALIFORNIA",
     capacity: 80,
     spotsRemaining: 80,
@@ -402,6 +407,7 @@ export const EVENTS: readonly Course[] = [
         name: "Dr. Aníbal Alonso",
         topic: "Occlusion and Disocclusion",
         note: "Lead faculty · 5-hour session",
+        image: "/courses/california-2026-alonso.webp",
         objectives: [
           "Explain the fundamental principles of occlusion and disocclusion.",
           "Identify occlusal factors that influence restorative and prosthetic success.",
@@ -414,6 +420,7 @@ export const EVENTS: readonly Course[] = [
         name: "Dr. Sergio Hiskin",
         topic:
           "Successes and Failures of Periodontal Treatment for Non-Axial Damaging Forces",
+        image: "/courses/california-2026-hiskin.webp",
         objectives: [
           "Define non-axial occlusal forces and their effects on periodontal tissues.",
           "Identify clinical manifestations of occlusal trauma.",
@@ -425,6 +432,7 @@ export const EVENTS: readonly Course[] = [
       {
         name: "Dr. Esteban Peral",
         topic: "Biomimicry and Biomimetics in Our Rehabilitations",
+        image: "/courses/california-2026-peral.webp",
         objectives: [
           "Define the concepts of biomimicry and biomimetics in restorative dentistry.",
           "Evaluate the biomechanical behavior of restorative materials under functional loading.",
@@ -437,7 +445,8 @@ export const EVENTS: readonly Course[] = [
     sponsors: [
       { name: "ISADe", note: "International Society of Advanced Dentistry" },
     ],
-    flyerImage: "/courses/california-program-schedule.jpg",
+    flyerImage: "/courses/california-2026-flyer.webp",
+    scheduleImage: "/courses/california-2026-schedule.webp",
     schedule: [
       {
         date: "Aug 8, 2026",
