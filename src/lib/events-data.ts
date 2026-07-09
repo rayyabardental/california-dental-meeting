@@ -54,6 +54,9 @@ export type Course = {
   earlyPrice?: string;
   /** When true, surface the early-registration callout banner & strikethrough. */
   earlyRegistrationActive?: boolean;
+  /** One-line "what the tuition covers" note shown under the price in the
+   * enrollment sidebar. Optional — omitted for courses without pricing. */
+  tuitionNote?: string;
   /**
    * Structured pricing for the online checkout flow, in integer cents (USD).
    * Present ONLY on courses that can be purchased online — gate every
@@ -144,6 +147,8 @@ export const EVENTS: readonly Course[] = [
     regularPrice: "$10,500",
     earlyPrice: "$9,990",
     earlyRegistrationActive: true,
+    tuitionNote:
+      "Includes hotel, ground transport, scrubs, materials, lunch daily, and graduation dinner.",
     purchase: {
       currency: "usd",
       regularCents: 1_050_000,
@@ -365,6 +370,8 @@ export const EVENTS: readonly Course[] = [
     ceCredits: 7,
     topic: "Continuing Education · Multi-Speaker Program",
     price: "$500",
+    tuitionNote:
+      "Includes 7 hours of DBC-approved CE, lunch, coffee breaks, and the closing BBQ & wine reception.",
     purchase: {
       currency: "usd",
       regularCents: 50000,

@@ -42,9 +42,21 @@ export function Navbar(): React.ReactElement {
     };
   }, [mobileOpen]);
 
-  // Close mobile menu on route change.
+  // Close the mobile menu with Escape (WCAG 2.1 — keyboard dismissible).
   useEffect(() => {
-    setMobileOpen(false);
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent): void => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mobileOpen]);
+
+  // Close mobile menu on route change (e.g. browser back with menu open).
+  // Deferred so setState isn't called synchronously in the effect body.
+  useEffect(() => {
+    const id = window.setTimeout(() => setMobileOpen(false), 0);
+    return () => window.clearTimeout(id);
   }, [pathname]);
 
   // Pick the *most specific* matching nav item so a deep route like
@@ -114,6 +126,16 @@ export function Navbar(): React.ReactElement {
                 {item.label}
               </Link>
             ))}
+            <Link
+              href="/courses"
+              className={cn(
+                "ml-3 inline-flex h-10 items-center gap-1.5 rounded-full bg-gold px-5 text-sm font-semibold text-primary",
+                "shadow-[0_8px_20px_-8px_rgba(215,161,74,0.6)] transition-all hover:bg-gold-300 hover:scale-[1.02] active:scale-[0.99]",
+                "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
+              )}
+            >
+              Enroll now
+            </Link>
           </nav>
 
           <button
@@ -132,6 +154,9 @@ export function Navbar(): React.ReactElement {
         {mobileOpen && (
           <motion.div
             key="overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -182,7 +207,7 @@ export function Navbar(): React.ReactElement {
                       onClick={() => setMobileOpen(false)}
                       aria-current={isActive(item.href) ? "page" : undefined}
                       className={cn(
-                        "block font-display text-3xl transition-colors",
+                        "block py-1.5 font-display text-3xl transition-colors",
                         isActive(item.href) ? "text-gold" : "text-white",
                       )}
                     >
@@ -190,6 +215,21 @@ export function Navbar(): React.ReactElement {
                     </Link>
                   </motion.div>
                 ))}
+                <motion.div
+                  variants={{
+                    hidden: { opacity: 0, y: 12 },
+                    show: { opacity: 1, y: 0 },
+                  }}
+                  className="mt-8"
+                >
+                  <Link
+                    href="/courses"
+                    onClick={() => setMobileOpen(false)}
+                    className="inline-flex h-13 items-center gap-2 rounded-full bg-gold px-8 font-sans text-base font-semibold text-primary shadow-[0_8px_20px_-8px_rgba(215,161,74,0.6)]"
+                  >
+                    Enroll now
+                  </Link>
+                </motion.div>
               </motion.nav>
             </div>
           </motion.div>

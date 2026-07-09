@@ -83,9 +83,9 @@ export function Contact(): React.ReactElement {
             <span className="inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-gold before:inline-block before:h-px before:w-8 before:bg-gold before:content-['']">
               Reserve your spot
             </span>
-            <h2 className="mt-4 font-display text-4xl font-medium tracking-tight text-white md:text-5xl text-balance">
+            <h1 className="mt-4 font-display text-4xl font-medium tracking-tight text-white md:text-5xl text-balance">
               Space is limited to ensure quality hands-on training.
-            </h2>
+            </h1>
             <p className="mt-5 max-w-lg text-lg text-white/75 text-pretty">
               Contact our enrollment team to confirm your seat for the
               Veracruz cohort. We&apos;ll follow up with registration

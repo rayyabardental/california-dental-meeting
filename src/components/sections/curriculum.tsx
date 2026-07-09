@@ -51,11 +51,14 @@ export function Curriculum({ course }: { course: Course }): React.ReactElement {
                 : "Daily Schedule"}
           </SectionEyebrow>
           <h2 className="mt-4 font-display text-4xl font-medium tracking-tight text-primary md:text-5xl text-balance">
+            {/* Multi-day programs group several days into one schedule card
+                (e.g. "Tuesday – Thursday"), so the card count is NOT the day
+                count — describe the format instead of miscounting. */}
             {!schedule || schedule.length === 0
               ? "Curriculum being finalised."
               : schedule.length === 1
                 ? `A full day. ${course.ceCredits} CE credits.`
-                : `${schedule.length} days. ${course.ceCredits} CE credits.`}
+                : `Day by day. ${course.ceCredits} CE credits.`}
           </h2>
           <p className="mt-5 text-lg text-ink-muted text-pretty">
             {!schedule || schedule.length === 0

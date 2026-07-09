@@ -71,9 +71,9 @@ export function About(): React.ReactElement {
         <div className="grid gap-14 lg:grid-cols-[1fr_1.1fr] lg:items-start">
           <div className="lg:sticky lg:top-24">
             <SectionEyebrow tone="primary">About CDM</SectionEyebrow>
-            <h2 className="mt-4 font-display text-4xl font-medium tracking-tight text-primary md:text-5xl text-balance">
+            <h1 className="mt-4 font-display text-4xl font-medium tracking-tight text-primary md:text-5xl text-balance">
               International education. Clinical excellence. Innovation.
-            </h2>
+            </h1>
             <p className="mt-5 text-lg text-ink-muted text-pretty">
               California Dental Meeting is an international continuing-
               education organization. CDM partners with leading academic

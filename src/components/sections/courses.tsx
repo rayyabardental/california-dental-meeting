@@ -33,9 +33,9 @@ export function Courses(): React.ReactElement {
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <div className="max-w-2xl">
             <SectionEyebrow tone="accent">Course catalog</SectionEyebrow>
-            <h2 className="mt-4 font-display text-4xl font-medium tracking-tight text-primary md:text-5xl text-balance">
+            <h1 className="mt-4 font-display text-4xl font-medium tracking-tight text-primary md:text-5xl text-balance">
               All California Dental Meeting programs.
-            </h2>
+            </h1>
             <p className="mt-5 text-lg text-ink-muted text-pretty">
               Our flagship live-patient program in Veracruz, a full-day CE
               program in California with ISADe, and two international summits —

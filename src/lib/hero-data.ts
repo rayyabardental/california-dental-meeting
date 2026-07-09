@@ -49,7 +49,7 @@ export type CarouselSlide = {
 /* -------------------------------------------------------------------------- */
 
 export const HERO_MASCOT: HeroMascot = {
-  mascotImage: "/dentist-mascot.png",
+  mascotImage: "/dentist-mascot.webp",
   mascotAlt:
     "Illustration of a thoughtful clinician in a white coat at a desk, with a stethoscope, books, and a coffee — representing the California Dental Meeting community.",
 };
@@ -100,7 +100,7 @@ function californiaSlide(course: typeof CALIFORNIA): CarouselSlide {
 export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
   {
     id: "veracruz-aerial",
-    image: "/carousel/VERACRUZINICIOMOVIL.png",
+    image: "/carousel/veracruz-aerial.webp",
     alt: "Aerial photograph of Veracruz, Mexico — historic Gulf-coast city seen from above, with 'VERACRUZ' overlay text on the left.",
     headline: "Veracruz, Mexico.",
     courseTitle: FLAGSHIP_COURSE.title,
@@ -153,7 +153,7 @@ export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
   },
   {
     id: "ides-kerala-2026",
-    image: "/carousel/ides-2026.png",
+    image: "/carousel/ides-2026.webp",
     alt: "IDES 2026 save-the-date — Intercontinental Dental Excellence Summit, 23–25 October 2026, Lemongrass Hill, Kerala, India. Hosted by Indian Dentist Research & Review and ISADe (International Society of Advanced Dentistry).",
     headline: "Kerala, India.",
     courseTitle: IDES.title,
@@ -172,7 +172,7 @@ export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
   },
   {
     id: "sidhe-shenzhen-2026",
-    image: "/carousel/sidhe-2026.png",
+    image: "/carousel/sidhe-2026.webp",
     alt: "SIDHE 2026 save-the-date — Shenzhen International Dental High-Tech, December 9–11, 2026, Shenzhen, China. Co-hosted by SIDHE, ISADe, and FDILA.",
     headline: "Shenzhen, China.",
     courseTitle: SIDHE.title,

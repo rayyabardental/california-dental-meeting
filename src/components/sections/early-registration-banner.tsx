@@ -58,13 +58,15 @@ export function EarlyRegistrationBanner({
           </span>
 
           <div className="flex-1">
-            <h2 className="font-display text-2xl font-medium leading-snug text-white sm:text-3xl">
+            {/* Promotional strip — a <p>, not a heading, so the course title
+                below remains the page's first (and only) h1. */}
+            <p className="font-display text-2xl font-medium leading-snug text-white sm:text-3xl">
               Reserve your seat at the early-registration rate.
-            </h2>
+            </p>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/70">
-              Live patient surgery · {course.ceCredits} CE credits · Veracruz,
-              Mexico. Early-registration pricing is available for a limited
-              time while seats remain.
+              Live patient surgery · {course.ceCredits} CE credits ·{" "}
+              {course.city}, {course.country}. Early-registration pricing is
+              available for a limited time while seats remain.
             </p>
           </div>
 

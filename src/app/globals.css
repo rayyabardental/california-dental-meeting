@@ -84,6 +84,13 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  /* Anchor targets (#curriculum, #included, #faculty, …) clear the sticky
+     navbar (h-24 mobile / h-28 desktop) instead of sliding underneath it. */
+  [id] {
+    scroll-margin-top: 8.5rem;
   }
 
   body {

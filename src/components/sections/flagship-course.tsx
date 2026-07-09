@@ -48,9 +48,9 @@ export function FlagshipCourse({
         <div className="grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:items-start">
           <div>
             <SectionEyebrow tone="gold">{course.topic}</SectionEyebrow>
-            <h2 className="mt-4 font-display text-4xl font-medium tracking-tight text-primary md:text-5xl text-balance">
+            <h1 className="mt-4 font-display text-4xl font-medium tracking-tight text-primary md:text-5xl text-balance">
               {course.title}
-            </h2>
+            </h1>
             <p className="mt-2 text-base font-medium uppercase tracking-[0.2em] text-accent-600">
               {course.subtitle}
             </p>
@@ -95,18 +95,9 @@ export function FlagshipCourse({
             )}
           </div>
 
-          <aside className="lg:sticky lg:top-28">
-            {course.flyerImage && (
-              <div className="mb-6 overflow-hidden rounded-3xl border border-primary/10 bg-white shadow-[0_20px_50px_-30px_rgba(13,35,64,0.35)]">
-                <Image
-                  src={course.flyerImage}
-                  alt={`${course.title} event flyer`}
-                  width={800}
-                  height={1200}
-                  className="h-auto w-full"
-                />
-              </div>
-            )}
+          <aside className="lg:sticky lg:top-32">
+            {/* Enrollment card first — price + CTA stay above the fold; the
+                flyer poster follows below it. */}
             <div className="overflow-hidden rounded-3xl border border-primary/10 bg-white shadow-[0_20px_50px_-30px_rgba(13,35,64,0.35)]">
               <div className="relative h-32 sunset-gradient">
                 <div className="absolute right-5 top-5 grid h-10 w-10 place-items-center rounded-full bg-white/85 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
@@ -155,10 +146,11 @@ export function FlagshipCourse({
                     {course.price}
                   </p>
                 )}
-                <p className="mt-1 text-xs text-ink-muted">
-                  Includes hotel, ground transport, scrubs, materials, lunch
-                  daily, and graduation dinner.
-                </p>
+                {course.tuitionNote && (
+                  <p className="mt-1 text-xs text-ink-muted">
+                    {course.tuitionNote}
+                  </p>
+                )}
 
                 <div className="mt-5 space-y-1.5 border-t border-primary/8 pt-5 text-sm">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-muted">
@@ -205,6 +197,19 @@ export function FlagshipCourse({
                 </div>
               </div>
             </div>
+
+            {course.flyerImage && (
+              <div className="mt-6 overflow-hidden rounded-3xl border border-primary/10 bg-white shadow-[0_20px_50px_-30px_rgba(13,35,64,0.35)]">
+                <Image
+                  src={course.flyerImage}
+                  alt={`${course.title} event flyer`}
+                  width={800}
+                  height={1200}
+                  sizes="(max-width: 1024px) 100vw, 28rem"
+                  className="h-auto w-full"
+                />
+              </div>
+            )}
 
             <p className="mt-4 text-center text-xs text-ink-muted">
               Or call{" "}
