@@ -438,7 +438,7 @@ export const EVENTS: readonly Course[] = [
       },
       {
         name: "Dr. Esteban Peral",
-        topic: "Biomimicry and Biomimetics in Our Rehabilitations",
+        topic: "Biomimicry and Biomimetics in Oral Rehabilitation",
         image: "/courses/california-2026-peral.webp",
         objectives: [
           "Define the concepts of biomimicry and biomimetics in restorative dentistry.",
@@ -487,7 +487,7 @@ export const EVENTS: readonly Course[] = [
           {
             time: "5:00 PM",
             activity:
-              "Dr. Esteban Peral — Biomimicry and Biomimetics in Our Rehabilitations",
+              "Dr. Esteban Peral — Biomimicry and Biomimetics in Oral Rehabilitation",
           },
           { time: "5:45 PM", activity: "Certificates & awards ceremony" },
           { time: "6:00 PM", activity: "Networking BBQ & wine reception" },

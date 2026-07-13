@@ -94,6 +94,10 @@ export function CourseFaculty({
                     <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-muted">
                       Learning objectives
                     </p>
+                    <p className="mt-2 text-sm text-ink-muted">
+                      Upon completion of this course, participants will be
+                      able to:
+                    </p>
                     <ul className="mt-3 grid gap-2.5 sm:grid-cols-2">
                       {f.objectives.map((o) => (
                         <li
