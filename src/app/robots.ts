@@ -8,8 +8,8 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        // Transactional / stateful pages have no SEO value.
-        disallow: ["/api/", "/cart", "/checkout"],
+        // Transactional / stateful / admin-only pages have no SEO value.
+        disallow: ["/api/", "/cart", "/checkout", "/admin"],
       },
     ],
     sitemap: `${base}/sitemap.xml`,

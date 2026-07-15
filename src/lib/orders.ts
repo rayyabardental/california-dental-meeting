@@ -1,6 +1,7 @@
 import {
   isRedisConfigured,
   redisGet,
+  redisMGet,
   redisSet,
   redisIncr,
   redisSetNx,
@@ -153,6 +154,36 @@ export async function ensureOrder(
     if (v && v !== "PENDING") return getOrder(v);
   }
   return null;
+}
+
+/**
+ * Every order ever created, newest first. Order numbers are a dense
+ * sequence (CDM-100001, CDM-100002, …) assigned by the same counter this
+ * reads, so the full set is recovered with one counter GET + one batched
+ * MGET — no key-scanning index to maintain.
+ */
+export async function listOrders(): Promise<OrderRecord[]> {
+  if (!isRedisConfigured()) return [];
+  const raw = await redisGet(COUNTER_KEY);
+  const count = raw ? parseInt(raw, 10) : 0;
+  if (!count || count < 1) return [];
+
+  const keys = Array.from({ length: count }, (_, i) =>
+    orderKey(`CDM-${ORDER_START + i + 1}`),
+  );
+  const values = await redisMGet(keys);
+  if (!values) return [];
+
+  const orders: OrderRecord[] = [];
+  for (const v of values) {
+    if (!v) continue;
+    try {
+      orders.push(JSON.parse(v) as OrderRecord);
+    } catch {
+      // Skip a malformed record rather than fail the whole roster.
+    }
+  }
+  return orders.reverse();
 }
 
 /* -------------------------------------------------------------------------- */

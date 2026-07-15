@@ -39,6 +39,9 @@ export const env = createEnv({
     // to create/capture orders. Environment toggles sandbox vs live hosts.
     PAYPAL_CLIENT_SECRET: z.string().min(1).optional(),
     PAYPAL_ENVIRONMENT: z.enum(["sandbox", "live"]).default("sandbox"),
+    // Shared password gating /admin — the registrant roster. Unset disables
+    // the admin area entirely (every login attempt is rejected).
+    ADMIN_PASSWORD: z.string().min(8).optional(),
   },
   client: {
     // Stripe publishable key — safe to expose; used by Stripe.js in the
@@ -69,6 +72,7 @@ export const env = createEnv({
     REGISTRATION_FROM_EMAIL: process.env.REGISTRATION_FROM_EMAIL,
     PAYPAL_CLIENT_SECRET: process.env.PAYPAL_CLIENT_SECRET,
     PAYPAL_ENVIRONMENT: process.env.PAYPAL_ENVIRONMENT,
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     NEXT_PUBLIC_MAPBOX_TOKEN: process.env.NEXT_PUBLIC_MAPBOX_TOKEN,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:

@@ -51,6 +51,14 @@ export async function redisGet(key: string): Promise<string | null> {
   return command<string>(["GET", key]);
 }
 
+/** Batch GET — one round trip for many keys. Missing keys come back null. */
+export async function redisMGet(
+  keys: string[],
+): Promise<(string | null)[] | null> {
+  if (keys.length === 0) return [];
+  return command<(string | null)[]>(["MGET", ...keys]);
+}
+
 export async function redisSet(
   key: string,
   value: string,
