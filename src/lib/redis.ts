@@ -19,6 +19,54 @@ export function isRedisConfigured(): boolean {
   return Boolean(REST_URL && REST_TOKEN);
 }
 
+/**
+ * Live connectivity check. `isRedisConfigured()` only proves the environment
+ * variables exist — this proves the credentials actually work, by performing a
+ * real write/read/delete round trip. Returns the underlying failure reason so
+ * a broken datastore can't masquerade as "no data yet".
+ */
+export async function redisHealth(): Promise<{
+  configured: boolean;
+  reachable: boolean;
+  error?: string;
+}> {
+  if (!REST_URL || !REST_TOKEN) {
+    return { configured: false, reachable: false, error: "env vars missing" };
+  }
+  const probeKey = `health:probe:${Date.now()}`;
+  try {
+    const res = await fetch(REST_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${REST_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(["SET", probeKey, "ok", "EX", 30]),
+      cache: "no-store",
+    });
+    const text = await res.text();
+    if (!res.ok) {
+      return {
+        configured: true,
+        reachable: false,
+        error: `HTTP ${res.status}: ${text.slice(0, 200)}`,
+      };
+    }
+    const json = JSON.parse(text) as { result?: string; error?: string };
+    if (json.error) {
+      return { configured: true, reachable: false, error: json.error };
+    }
+    await command(["DEL", probeKey]);
+    return { configured: true, reachable: json.result === "OK" };
+  } catch (err) {
+    return {
+      configured: true,
+      reachable: false,
+      error: err instanceof Error ? err.message : "request failed",
+    };
+  }
+}
+
 async function command<T>(args: (string | number)[]): Promise<T | null> {
   if (!REST_URL || !REST_TOKEN) return null;
   try {
