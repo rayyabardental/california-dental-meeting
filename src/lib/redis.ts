@@ -20,6 +20,41 @@ export function isRedisConfigured(): boolean {
 }
 
 /**
+ * Which credential pair is actually in play, plus the host being dialled.
+ * Never returns the token. Exists so a stale fallback (KV_* left over from a
+ * deleted store) can be told apart from a bad new value at a glance.
+ */
+export function redisConfigSource(): {
+  urlSource: string | null;
+  tokenSource: string | null;
+  host: string | null;
+  urlLooksValid: boolean;
+} {
+  const urlSource = env.UPSTASH_REDIS_REST_URL
+    ? "UPSTASH_REDIS_REST_URL"
+    : env.KV_REST_API_URL
+      ? "KV_REST_API_URL"
+      : null;
+  const tokenSource = env.UPSTASH_REDIS_REST_TOKEN
+    ? "UPSTASH_REDIS_REST_TOKEN"
+    : env.KV_REST_API_TOKEN
+      ? "KV_REST_API_TOKEN"
+      : null;
+  let host: string | null = null;
+  let urlLooksValid = false;
+  if (REST_URL) {
+    try {
+      const parsed = new URL(REST_URL);
+      host = parsed.host;
+      urlLooksValid = parsed.protocol === "https:";
+    } catch {
+      host = "unparseable";
+    }
+  }
+  return { urlSource, tokenSource, host, urlLooksValid };
+}
+
+/**
  * Live connectivity check. `isRedisConfigured()` only proves the environment
  * variables exist — this proves the credentials actually work, by performing a
  * real write/read/delete round trip. Returns the underlying failure reason so

@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { ok, fail } from "@/lib/api-response";
 import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "@/lib/admin-auth";
-import { redisHealth } from "@/lib/redis";
+import { redisHealth, redisConfigSource } from "@/lib/redis";
 import { env } from "@/lib/env";
 import {
   isConstantContactConfigured,
@@ -23,7 +23,7 @@ export async function GET(): Promise<Response> {
   );
   if (!authed) return fail("Unauthorized", 401);
 
-  const redis = await redisHealth();
+  const redis = { ...(await redisHealth()), ...redisConfigSource() };
 
   const secretKey = env.STRIPE_SECRET_KEY ?? "";
   const stripe = {
