@@ -12,7 +12,7 @@ import {
 import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "@/lib/admin-auth";
 import { listOrders, type OrderRecord } from "@/lib/orders";
 import { formatMoney } from "@/lib/checkout";
-import { isRedisConfigured } from "@/lib/redis";
+import { redisHealth } from "@/lib/redis";
 
 export const metadata: Metadata = {
   title: "Registrant roster",
@@ -79,7 +79,10 @@ export default async function AdminOrdersPage(): Promise<React.ReactElement> {
 
   // Distinguish "storage unavailable" from "nobody has registered yet" — on a
   // payment roster those two look identical but mean very different things.
-  const storageReady = isRedisConfigured();
+  // Checks real connectivity, not just env presence: credentials can be set
+  // and still fail (deleted database, stale URL), which silently drops orders.
+  const storage = await redisHealth();
+  const storageReady = storage.reachable;
   const orders = storageReady ? await listOrders() : [];
   const groups = groupByCourse(orders);
   const totalPaidCents = orders.reduce((s, o) => s + o.amountPaidCents, 0);
@@ -133,21 +136,27 @@ export default async function AdminOrdersPage(): Promise<React.ReactElement> {
           <div className="mt-10 rounded-3xl border border-red-300 bg-red-50 p-8">
             <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-red-700">
               <AlertTriangle className="h-4 w-4" />
-              Order storage is not configured
+              Order storage is unavailable
             </p>
             <p className="mt-3 text-sm leading-relaxed text-red-900">
               This roster is empty because the order database (Upstash Redis)
-              has no credentials in this environment — <strong>not</strong>{" "}
-              because nobody has registered. Any payments taken while this is
-              unconfigured were still charged by Stripe/PayPal, but no order
-              record or order number was saved.
+              could not be reached — <strong>not</strong> because nobody has
+              registered. Payments taken while storage is down were still
+              charged by Stripe/PayPal, but no order record or order number was
+              saved.
             </p>
             <p className="mt-3 text-sm leading-relaxed text-red-900">
-              Fix: set <code className="font-mono">UPSTASH_REDIS_REST_URL</code>{" "}
-              and <code className="font-mono">UPSTASH_REDIS_REST_TOKEN</code> in
-              the Vercel project environment variables, then redeploy. Existing
-              payments can be found in the Stripe and PayPal dashboards.
+              {storage.configured
+                ? "Credentials are set but the connection failed — the database may have been deleted or the URL/token is stale. Check the Upstash database in Vercel → Storage, update UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN, and redeploy."
+                : "No credentials are set. Add UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN in the Vercel project environment variables, then redeploy."}{" "}
+              Once storage is back, use <strong>Sync from Stripe</strong> above
+              to rebuild any orders that were missed.
             </p>
+            {storage.error && (
+              <p className="mt-3 font-mono text-xs text-red-700">
+                Error: {storage.error}
+              </p>
+            )}
           </div>
         ) : groups.length === 0 ? (
           <div className="mt-10 rounded-3xl border border-primary/10 bg-white p-10 text-center text-ink-muted">
