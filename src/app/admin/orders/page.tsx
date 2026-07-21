@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/container";
 import {
   ExportCsvButton,
   LogoutButton,
+  SyncFromStripeButton,
   type RosterEntry,
 } from "@/components/sections/admin-roster";
 import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "@/lib/admin-auth";
@@ -100,7 +101,8 @@ export default async function AdminOrdersPage(): Promise<React.ReactElement> {
               PayPal — no card data is stored here.
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-start gap-3">
+            <SyncFromStripeButton />
             <ExportCsvButton
               rows={toRosterEntries(orders)}
               filename={`cdm-all-registrants-${new Date().toISOString().slice(0, 10)}.csv`}

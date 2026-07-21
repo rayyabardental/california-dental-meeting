@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Download, LogOut, Loader2 } from "lucide-react";
+import { Download, LogOut, Loader2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatMoney } from "@/lib/checkout";
 import { cn } from "@/lib/utils";
@@ -86,6 +86,64 @@ export function ExportCsvButton({
       <Download className="h-3.5 w-3.5" />
       Export CSV
     </Button>
+  );
+}
+
+/**
+ * Rebuilds order records from succeeded Stripe payments. Safe to run any
+ * time — recording an order is idempotent, so payments already on the roster
+ * are left untouched and never get a second order number.
+ */
+export function SyncFromStripeButton(): React.ReactElement {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<string | null>(null);
+
+  const onSync = async (): Promise<void> => {
+    setLoading(true);
+    setResult(null);
+    try {
+      const res = await fetch("/api/admin/backfill-orders", { method: "POST" });
+      const json = (await res.json()) as {
+        data: {
+          scanned: number;
+          createdCount: number;
+          alreadyRecorded: number;
+        } | null;
+        error: string | null;
+      };
+      if (!res.ok || json.error || !json.data) {
+        setResult(json.error ?? "Sync failed.");
+      } else {
+        const { createdCount, alreadyRecorded, scanned } = json.data;
+        setResult(
+          `Scanned ${scanned} payments — ${createdCount} recovered, ${alreadyRecorded} already recorded.`,
+        );
+        if (createdCount > 0) router.refresh();
+      }
+    } catch {
+      setResult("Network error — please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-end gap-1.5">
+      <Button variant="outline" size="sm" onClick={onSync} disabled={loading}>
+        {loading ? (
+          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+        ) : (
+          <RefreshCw className="h-3.5 w-3.5" />
+        )}
+        Sync from Stripe
+      </Button>
+      {result && (
+        <p className="max-w-xs text-right text-[11px] text-ink-muted">
+          {result}
+        </p>
+      )}
+    </div>
   );
 }
 
