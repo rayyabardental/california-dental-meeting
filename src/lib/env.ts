@@ -1,6 +1,31 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+/**
+ * Clean a value copied from a dashboard or .env file before validating it.
+ *
+ * Dashboard paste artifacts — wrapping quotes, trailing whitespace, or an
+ * empty leftover entry — would otherwise fail a strict `.url()` check and
+ * abort the entire production build. A malformed optional credential should
+ * degrade that one integration, never take the site down, so blanks become
+ * `undefined` and quotes/whitespace are stripped.
+ */
+function cleanedString<T extends z.ZodTypeAny>(schema: T) {
+  return z.preprocess((value) => {
+    if (typeof value !== "string") return value;
+    const trimmed = value.trim().replace(/^["']|["']$/g, "").trim();
+    return trimmed === "" ? undefined : trimmed;
+  }, schema);
+}
+
+/** Optional URL credential — tolerant of paste artifacts. */
+const optionalUrl = (): z.ZodType<string | undefined> =>
+  cleanedString(z.string().url().optional()) as z.ZodType<string | undefined>;
+
+/** Optional secret/token — tolerant of paste artifacts. */
+const optionalSecret = (): z.ZodType<string | undefined> =>
+  cleanedString(z.string().min(1).optional()) as z.ZodType<string | undefined>;
+
 export const env = createEnv({
   server: {
     NODE_ENV: z
@@ -9,12 +34,12 @@ export const env = createEnv({
     DATABASE_URL: z.string().url().optional(),
     RESEND_API_KEY: z.string().min(1).optional(),
     CONTACT_TO_EMAIL: z.string().email().optional(),
-    UPSTASH_REDIS_REST_URL: z.string().url().optional(),
-    UPSTASH_REDIS_REST_TOKEN: z.string().min(1).optional(),
+    UPSTASH_REDIS_REST_URL: optionalUrl(),
+    UPSTASH_REDIS_REST_TOKEN: optionalSecret(),
     // Vercel's Marketplace Upstash integration ships these under the legacy
     // KV_* prefix. Either pair works — redis.ts prefers UPSTASH_*, falls back.
-    KV_REST_API_URL: z.string().url().optional(),
-    KV_REST_API_TOKEN: z.string().min(1).optional(),
+    KV_REST_API_URL: optionalUrl(),
+    KV_REST_API_TOKEN: optionalSecret(),
     // Set automatically by Vercel for scheduled (cron) invocations. When
     // present, the keep-alive route requires it so only Vercel can trigger it.
     CRON_SECRET: z.string().min(1).optional(),
