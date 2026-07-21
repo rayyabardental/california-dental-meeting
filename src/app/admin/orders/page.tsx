@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { Users, DollarSign, Receipt } from "lucide-react";
+import { Users, DollarSign, Receipt, AlertTriangle } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import {
   ExportCsvButton,
@@ -11,6 +11,7 @@ import {
 import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "@/lib/admin-auth";
 import { listOrders, type OrderRecord } from "@/lib/orders";
 import { formatMoney } from "@/lib/checkout";
+import { isRedisConfigured } from "@/lib/redis";
 
 export const metadata: Metadata = {
   title: "Registrant roster",
@@ -75,7 +76,10 @@ export default async function AdminOrdersPage(): Promise<React.ReactElement> {
   );
   if (!authed) redirect("/admin/login");
 
-  const orders = await listOrders();
+  // Distinguish "storage unavailable" from "nobody has registered yet" — on a
+  // payment roster those two look identical but mean very different things.
+  const storageReady = isRedisConfigured();
+  const orders = storageReady ? await listOrders() : [];
   const groups = groupByCourse(orders);
   const totalPaidCents = orders.reduce((s, o) => s + o.amountPaidCents, 0);
   const totalBalanceCents = orders.reduce((s, o) => s + o.balanceDueCents, 0);
@@ -123,7 +127,27 @@ export default async function AdminOrdersPage(): Promise<React.ReactElement> {
           />
         </div>
 
-        {groups.length === 0 ? (
+        {!storageReady ? (
+          <div className="mt-10 rounded-3xl border border-red-300 bg-red-50 p-8">
+            <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-red-700">
+              <AlertTriangle className="h-4 w-4" />
+              Order storage is not configured
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-red-900">
+              This roster is empty because the order database (Upstash Redis)
+              has no credentials in this environment — <strong>not</strong>{" "}
+              because nobody has registered. Any payments taken while this is
+              unconfigured were still charged by Stripe/PayPal, but no order
+              record or order number was saved.
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-red-900">
+              Fix: set <code className="font-mono">UPSTASH_REDIS_REST_URL</code>{" "}
+              and <code className="font-mono">UPSTASH_REDIS_REST_TOKEN</code> in
+              the Vercel project environment variables, then redeploy. Existing
+              payments can be found in the Stripe and PayPal dashboards.
+            </p>
+          </div>
+        ) : groups.length === 0 ? (
           <div className="mt-10 rounded-3xl border border-primary/10 bg-white p-10 text-center text-ink-muted">
             No orders yet. Confirmed registrations will appear here
             automatically as they come in.
