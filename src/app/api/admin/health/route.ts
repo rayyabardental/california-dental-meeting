@@ -40,6 +40,9 @@ export async function GET(): Promise<Response> {
   const constantContact = {
     configured: ccConfigured,
     connected: ccConfigured ? await isConstantContactConnected() : false,
+    // Public OAuth parameter, not a secret. Present here so a missing env var
+    // can be told apart from an undeployed build when the flow rejects a URI.
+    redirectUriOverride: env.CONSTANT_CONTACT_REDIRECT_URI ?? null,
   };
 
   return ok({ redis, stripe, constantContact });
