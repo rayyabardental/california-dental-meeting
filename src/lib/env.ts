@@ -51,6 +51,10 @@ export const env = createEnv({
       .string()
       .min(1)
       .default("CDM Event Announcements"),
+    // Overrides the OAuth redirect URI. Constant Contact rejects any value not
+    // registered on the app, so when the app's settings can't be edited, set
+    // this to a URI that IS already registered instead.
+    CONSTANT_CONTACT_REDIRECT_URI: optionalUrl(),
     // Stripe (server side). Secret key signs PaymentIntent creation; the
     // webhook secret verifies inbound event signatures. Both optional so the
     // app builds and runs without payments configured — checkout degrades to
@@ -96,6 +100,7 @@ export const env = createEnv({
     CONSTANT_CONTACT_API_KEY: process.env.CONSTANT_CONTACT_API_KEY,
     CONSTANT_CONTACT_CLIENT_SECRET: process.env.CONSTANT_CONTACT_CLIENT_SECRET,
     CONSTANT_CONTACT_LIST_NAME: process.env.CONSTANT_CONTACT_LIST_NAME,
+    CONSTANT_CONTACT_REDIRECT_URI: process.env.CONSTANT_CONTACT_REDIRECT_URI,
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
     REGISTRATION_FROM_EMAIL: process.env.REGISTRATION_FROM_EMAIL,

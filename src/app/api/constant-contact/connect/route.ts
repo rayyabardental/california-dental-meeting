@@ -4,6 +4,7 @@ import {
   isConstantContactConfigured,
   saveOAuthState,
 } from "@/lib/constant-contact";
+import { env } from "@/lib/env";
 import { htmlPage } from "../_html";
 
 export const dynamic = "force-dynamic";
@@ -25,8 +26,13 @@ export async function GET(req: Request): Promise<Response> {
     });
   }
 
+  // Constant Contact rejects any redirect_uri not registered on the app. It
+  // normally derives from the host being visited, but CONSTANT_CONTACT_REDIRECT_URI
+  // pins it to an already-registered value when the app's settings are locked.
   const origin = new URL(req.url).origin;
-  const redirectUri = `${origin}/api/constant-contact/callback`;
+  const redirectUri =
+    env.CONSTANT_CONTACT_REDIRECT_URI ??
+    `${origin}/api/constant-contact/callback`;
   const state = crypto.randomUUID();
 
   await saveOAuthState(state, redirectUri);
