@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cinzel, Montserrat } from "next/font/google";
 import { Toaster } from "sonner";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
+import { SiteFrame } from "@/components/layout/site-frame";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
@@ -91,11 +90,7 @@ export default function RootLayout({
           <a href="#main" className="skip-link">
             Skip to main content
           </a>
-          <Navbar />
-          <main id="main" className="flex-1 flex flex-col">
-            {children}
-          </main>
-          <Footer />
+          <SiteFrame>{children}</SiteFrame>
           <Toaster
             position="top-right"
             richColors

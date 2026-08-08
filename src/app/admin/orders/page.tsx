@@ -10,6 +10,7 @@ import {
   SyncFromStripeButton,
   type RosterEntry,
 } from "@/components/sections/admin-roster";
+import { AdminNav } from "@/components/sections/admin-nav";
 import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "@/lib/admin-auth";
 import { listOrders, type OrderRecord } from "@/lib/orders";
 import { formatMoney } from "@/lib/checkout";
@@ -92,6 +93,7 @@ export default async function AdminOrdersPage(): Promise<React.ReactElement> {
   return (
     <section className="relative bg-surface py-12 lg:py-16">
       <Container size="wide">
+        <AdminNav />
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-600">

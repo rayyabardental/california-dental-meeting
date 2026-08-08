@@ -92,6 +92,28 @@ export type Course = {
   }>;
   sponsors?: ReadonlyArray<Sponsor>;
   universityPartner?: string;
+  /**
+   * Official CE certificate metadata. Present only for courses that issue a
+   * Dental Board of California Certificate of Completion — this is what powers
+   * the QR-code certificate-signing flow and the generated PDF. Courses without
+   * it don't offer certificate signing.
+   */
+  certificate?: {
+    /** 11-digit course registration number, e.g. "07-6324-26001". */
+    registrationNumber: string;
+    /** DBC approval number, e.g. "RP6324". */
+    approvalNumber: string;
+    /** Course name exactly as it must appear on the certificate. */
+    courseName: string;
+    /** Date(s) of attendance/completion, formatted for print. */
+    attendanceDateLabel: string;
+    /** Completed CE hours printed on the certificate. */
+    completedHours: number;
+    /** Units earned printed on the certificate. */
+    unitsEarned: number;
+    /** Date printed next to the provider's signature. */
+    providerSignatureDate: string;
+  };
   /** Promotional flyer/poster image used as the course visual on the card,
    * carousel, and detail page. Optional — courses without one fall back to
    * the branded gradient header. */
@@ -452,6 +474,16 @@ export const EVENTS: readonly Course[] = [
     sponsors: [
       { name: "ISADe", note: "International Society of Advanced Dentistry" },
     ],
+    certificate: {
+      registrationNumber: "07-6324-26001",
+      approvalNumber: "RP6324",
+      courseName:
+        "Occlusion vs Desocclusion: Foundations for Predictable Oral Rehabilitation",
+      attendanceDateLabel: "August 8, 2026",
+      completedHours: 7,
+      unitsEarned: 7,
+      providerSignatureDate: "August 8, 2026",
+    },
     flyerImage: "/courses/california-2026-flyer.webp",
     scheduleImage: "/courses/california-2026-schedule.webp",
     schedule: [
