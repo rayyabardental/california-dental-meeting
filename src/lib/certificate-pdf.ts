@@ -1,6 +1,7 @@
 import { PDFDocument, StandardFonts, rgb, type PDFFont } from "pdf-lib";
 import type { CertificateRecord } from "@/lib/certificates";
 import type { Course } from "@/lib/events-data";
+import { CERTIFICATE_TEMPLATES } from "@/lib/certificate-templates";
 
 /**
  * Renders the Dental Board of California "Certification of Completion of
@@ -55,6 +56,70 @@ function wrapLines(
   return lines;
 }
 
+/**
+ * Overlay the participant's fields onto the official provider-signed template
+ * PDF. Coordinates are in PDF points (origin bottom-left) measured from the
+ * template's blank lines:
+ *   • participant name  — line x 60–220, baseline y 562
+ *   • license number    — line x 454–534, baseline y 573
+ *   • licensee date     — line x 312–412, baseline y 322
+ *   • licensee signature— line x 60–295, y 322 (image centered on the line)
+ */
+async function overlayOnTemplate(
+  record: CertificateRecord,
+  templateBase64: string,
+): Promise<Uint8Array> {
+  const doc = await PDFDocument.load(Buffer.from(templateBase64, "base64"));
+  const page = doc.getPage(0);
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  const ink = rgb(0.09, 0.11, 0.16);
+
+  page.drawText(record.participantName, {
+    x: 66,
+    y: 565,
+    size: 11,
+    font,
+    color: ink,
+  });
+  page.drawText(record.licenseNumber, {
+    x: 458,
+    y: 576,
+    size: 9.5,
+    font,
+    color: ink,
+  });
+  page.drawText(fmtDate(record.signedDate), {
+    x: 316,
+    y: 325,
+    size: 10,
+    font,
+    color: ink,
+  });
+
+  // Signature: centered on the signature line (x 60–295 → center 177.5),
+  // resting just above the line (y 322) and fitting under the label (y 345).
+  try {
+    const base64 = record.signature.split(",")[1] ?? "";
+    const png = await doc.embedPng(Buffer.from(base64, "base64"));
+    const lineCenterX = (60 + 295) / 2;
+    const maxW = 228;
+    const maxH = 22;
+    const scale = Math.min(maxW / png.width, maxH / png.height, 1);
+    const w = png.width * scale;
+    const h = png.height * scale;
+    page.drawImage(png, {
+      x: lineCenterX - w / 2,
+      y: 323,
+      width: w,
+      height: h,
+    });
+  } catch {
+    // If the signature can't be decoded, the certificate still issues.
+  }
+
+  return doc.save();
+}
+
 export async function buildCertificatePdf(
   record: CertificateRecord,
   course: Course,
@@ -63,6 +128,11 @@ export async function buildCertificatePdf(
   if (!cert) {
     throw new Error(`Course ${course.id} has no certificate metadata.`);
   }
+
+  // Preferred path: overlay the participant's fields onto the official
+  // provider-signed PDF template for this course.
+  const template = CERTIFICATE_TEMPLATES[course.id];
+  if (template) return overlayOnTemplate(record, template);
 
   const doc = await PDFDocument.create();
   const page = doc.addPage([PAGE_W, PAGE_H]);

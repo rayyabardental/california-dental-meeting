@@ -4,6 +4,50 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Eraser } from "lucide-react";
 
 /**
+ * Export the drawing cropped tightly to its ink (plus small padding). A tall
+ * signature pad otherwise emits a mostly-empty image, which then renders tiny
+ * when placed on the certificate's signature line. Falls back to the full
+ * canvas if nothing is found.
+ */
+function trimmedDataUrl(canvas: HTMLCanvasElement): string {
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return canvas.toDataURL("image/png");
+  const { width, height } = canvas;
+  const data = ctx.getImageData(0, 0, width, height).data;
+  let minX = width;
+  let minY = height;
+  let maxX = 0;
+  let maxY = 0;
+  let found = false;
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      if (data[(y * width + x) * 4 + 3]! > 12) {
+        found = true;
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+      }
+    }
+  }
+  if (!found) return canvas.toDataURL("image/png");
+
+  const pad = Math.round(8 * (window.devicePixelRatio || 1));
+  minX = Math.max(0, minX - pad);
+  minY = Math.max(0, minY - pad);
+  maxX = Math.min(width, maxX + pad);
+  maxY = Math.min(height, maxY + pad);
+  const w = maxX - minX;
+  const h = maxY - minY;
+
+  const out = document.createElement("canvas");
+  out.width = w;
+  out.height = h;
+  out.getContext("2d")?.drawImage(canvas, minX, minY, w, h, 0, 0, w, h);
+  return out.toDataURL("image/png");
+}
+
+/**
  * Finger/stylus/mouse signature pad on an HTML canvas.
  *
  * Uses Pointer Events so touch, pen, and mouse all work with one code path,
@@ -83,7 +127,7 @@ export function SignaturePad({
     drawing.current = false;
     last.current = null;
     const canvas = canvasRef.current;
-    if (canvas && dirty.current) onChange(canvas.toDataURL("image/png"));
+    if (canvas && dirty.current) onChange(trimmedDataUrl(canvas));
   }, [onChange]);
 
   const clear = (): void => {
