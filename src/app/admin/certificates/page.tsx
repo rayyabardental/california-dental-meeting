@@ -10,6 +10,7 @@ import {
   DeleteCertButton,
   ExportCertsCsvButton,
   SendDueCertsButton,
+  TestEmailButton,
   type CertRow,
 } from "@/components/sections/admin-certificates";
 import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "@/lib/admin-auth";
@@ -81,6 +82,7 @@ export default async function AdminCertificatesPage(): Promise<React.ReactElemen
             </p>
           </div>
           <div className="flex flex-wrap items-start gap-3">
+            <TestEmailButton />
             <SendDueCertsButton />
             <ExportCertsCsvButton
               rows={rows}

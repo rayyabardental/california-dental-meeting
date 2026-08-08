@@ -139,6 +139,58 @@ export function SendDueCertsButton(): React.ReactElement {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Send test email                                                            */
+/* -------------------------------------------------------------------------- */
+
+export function TestEmailButton(): React.ReactElement {
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<string | null>(null);
+
+  const onTest = async (): Promise<void> => {
+    const to = window.prompt("Send a test email to which address?");
+    if (!to) return;
+    setLoading(true);
+    setResult(null);
+    try {
+      const res = await fetch("/api/admin/test-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ to }),
+      });
+      const json = (await res.json()) as {
+        data: { to: string } | null;
+        error: string | null;
+      };
+      setResult(
+        res.ok && json.data
+          ? `Sent to ${json.data.to} — check the inbox (and spam).`
+          : (json.error ?? "Send failed."),
+      );
+    } catch {
+      setResult("Network error — please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-end gap-1.5">
+      <Button variant="outline" size="sm" onClick={onTest} disabled={loading}>
+        {loading ? (
+          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+        ) : (
+          <Mail className="h-3.5 w-3.5" />
+        )}
+        Send test email
+      </Button>
+      {result && (
+        <p className="max-w-xs text-right text-[11px] text-ink-muted">{result}</p>
+      )}
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
 /* Delete a pending certificate                                               */
 /* -------------------------------------------------------------------------- */
 

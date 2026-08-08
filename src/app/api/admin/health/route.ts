@@ -36,6 +36,16 @@ export async function GET(): Promise<Response> {
     webhookSecretPresent: Boolean(env.STRIPE_WEBHOOK_SECRET),
   };
 
+  const fromEmail = env.REGISTRATION_FROM_EMAIL;
+  const email = {
+    configured: Boolean(env.RESEND_API_KEY),
+    from: fromEmail,
+    // The domain the sender address uses — must be verified in Resend.
+    domain: fromEmail.includes("@")
+      ? fromEmail.split("@")[1]?.replace(/>$/, "").trim() ?? null
+      : null,
+  };
+
   const ccConfigured = isConstantContactConfigured();
   const constantContact = {
     configured: ccConfigured,
@@ -45,5 +55,5 @@ export async function GET(): Promise<Response> {
     redirectUriOverride: env.CONSTANT_CONTACT_REDIRECT_URI ?? null,
   };
 
-  return ok({ redis, stripe, constantContact });
+  return ok({ redis, stripe, email, constantContact });
 }
