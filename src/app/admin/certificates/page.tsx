@@ -8,6 +8,7 @@ import { LogoutButton } from "@/components/sections/admin-roster";
 import {
   CertQrGenerator,
   DeleteCertButton,
+  EmailNowButton,
   ExportCertsCsvButton,
   SendDueCertsButton,
   TestEmailButton,
@@ -201,6 +202,10 @@ export default async function AdminCertificatesPage(): Promise<React.ReactElemen
                           <Download className="h-3.5 w-3.5" />
                           PDF
                         </a>
+                        <EmailNowButton
+                          certNumber={c.certNumber}
+                          defaultEmail={c.email}
+                        />
                         {c.status === "pending" && (
                           <DeleteCertButton certNumber={c.certNumber} />
                         )}

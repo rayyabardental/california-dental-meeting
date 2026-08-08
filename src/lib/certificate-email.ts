@@ -62,6 +62,7 @@ export function certificateEmailHtml(
 export async function sendCertificateEmail(
   record: CertificateRecord,
   course: Course,
+  toOverride?: string,
 ): Promise<boolean> {
   if (!env.RESEND_API_KEY) return false;
   if (!course.certificate) return false;
@@ -81,7 +82,7 @@ export async function sendCertificateEmail(
   try {
     const { error } = await resend.emails.send({
       from: env.REGISTRATION_FROM_EMAIL,
-      to: record.email,
+      to: (toOverride ?? record.email).trim(),
       subject: `Your Certificate of Completion — ${courseName}`,
       html,
       attachments: [

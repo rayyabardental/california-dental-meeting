@@ -191,6 +191,65 @@ export function TestEmailButton(): React.ReactElement {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Email one certificate now (preview / one-off resend)                       */
+/* -------------------------------------------------------------------------- */
+
+export function EmailNowButton({
+  certNumber,
+  defaultEmail,
+}: {
+  certNumber: string;
+  defaultEmail: string;
+}): React.ReactElement {
+  const [loading, setLoading] = useState(false);
+
+  const onSend = async (): Promise<void> => {
+    const to = window.prompt(
+      `Email ${certNumber} now — send to which address?`,
+      defaultEmail,
+    );
+    if (!to) return;
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/certificates/send-one", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ certNumber, to }),
+      });
+      const json = (await res.json()) as {
+        data: { sent: string } | null;
+        error: string | null;
+      };
+      window.alert(
+        res.ok && json.data
+          ? `Sent to ${json.data.sent}. Check the inbox (and spam).`
+          : (json.error ?? "Send failed."),
+      );
+    } catch {
+      window.alert("Network error — please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={onSend}
+      disabled={loading}
+      className="inline-flex items-center gap-1 text-sm font-medium text-primary underline-offset-4 transition-colors hover:underline disabled:opacity-40"
+    >
+      {loading ? (
+        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+      ) : (
+        <Mail className="h-3.5 w-3.5" />
+      )}
+      Email now
+    </button>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
 /* Delete a pending certificate                                               */
 /* -------------------------------------------------------------------------- */
 
