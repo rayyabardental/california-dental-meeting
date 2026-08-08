@@ -4,6 +4,55 @@ import type { CertificateRecord } from "@/lib/certificates";
 import type { Course } from "@/lib/events-data";
 import { buildCertificatePdf } from "@/lib/certificate-pdf";
 
+/** The HTML body of the certificate email. Exported so previews stay in sync
+ *  with what is actually delivered. */
+export function certificateEmailHtml(
+  record: CertificateRecord,
+  course: Course,
+): string {
+  const cert = course.certificate;
+  const courseName = cert?.courseName ?? course.title;
+  const units = cert?.unitsEarned ?? "";
+  const dateLabel = cert?.attendanceDateLabel ?? "";
+  return `
+  <div style="font-family:Inter,Arial,sans-serif;max-width:560px;margin:0 auto;color:#0d2340">
+    <div style="background:#0d2340;padding:26px 30px;border-radius:16px 16px 0 0">
+      <p style="margin:0;color:#d7a14a;font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:700">
+        California Dental Meeting
+      </p>
+      <h1 style="margin:8px 0 0;color:#fff;font-size:21px;line-height:1.3">
+        Your Certificate of Completion
+      </h1>
+    </div>
+    <div style="border:1px solid #e6ebf1;border-top:none;border-radius:0 0 16px 16px;padding:26px 30px">
+      <p style="margin:0 0 16px">Dear ${record.participantName},</p>
+      <p style="margin:0 0 18px;line-height:1.6;color:#475569">
+        Thank you for attending <strong>${courseName}</strong>. Your official
+        Dental Board of California Certificate of Completion is attached to this
+        email as a PDF. Please retain it for your continuing-education records.
+      </p>
+      <table style="width:100%;border-collapse:collapse;font-size:14px">
+        <tr>
+          <td style="padding:9px 0;color:#64748B">CE units</td>
+          <td style="padding:9px 0;text-align:right;font-weight:600">${units}</td>
+        </tr>
+        <tr>
+          <td style="padding:9px 0;color:#64748B;border-top:1px solid #eef2f6">Date of completion</td>
+          <td style="padding:9px 0;text-align:right;font-weight:600;border-top:1px solid #eef2f6">${dateLabel}</td>
+        </tr>
+        <tr>
+          <td style="padding:9px 0;color:#64748B;border-top:1px solid #eef2f6">Certificate no.</td>
+          <td style="padding:9px 0;text-align:right;font-weight:600;border-top:1px solid #eef2f6">${record.certNumber}</td>
+        </tr>
+      </table>
+      <p style="margin:22px 0 0;font-size:13px;color:#94a3b8">
+        Questions? Reply to this email or contact California Dental Meeting at
+        ray.yabardental@gmail.com.
+      </p>
+    </div>
+  </div>`;
+}
+
 /**
  * Emails a signed Certificate of Completion as a PDF attachment. Returns true
  * on success. Fails soft (returns false) if Resend isn't configured or the
@@ -27,44 +76,7 @@ export async function sendCertificateEmail(
   const resend = new Resend(env.RESEND_API_KEY);
   const courseName = course.certificate.courseName;
   const filename = `CDM-Certificate-${record.certNumber}.pdf`;
-
-  const html = `
-  <div style="font-family:Inter,Arial,sans-serif;max-width:560px;margin:0 auto;color:#0d2340">
-    <div style="background:#0d2340;padding:26px 30px;border-radius:16px 16px 0 0">
-      <p style="margin:0;color:#d7a14a;font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:700">
-        California Dental Meeting
-      </p>
-      <h1 style="margin:8px 0 0;color:#fff;font-size:21px;line-height:1.3">
-        Your Certificate of Completion
-      </h1>
-    </div>
-    <div style="border:1px solid #e6ebf1;border-top:none;border-radius:0 0 16px 16px;padding:26px 30px">
-      <p style="margin:0 0 16px">Dear ${record.participantName},</p>
-      <p style="margin:0 0 18px;line-height:1.6;color:#475569">
-        Thank you for attending <strong>${courseName}</strong>. Your official
-        Dental Board of California Certificate of Completion is attached to this
-        email as a PDF. Please retain it for your continuing-education records.
-      </p>
-      <table style="width:100%;border-collapse:collapse;font-size:14px">
-        <tr>
-          <td style="padding:9px 0;color:#64748B">CE units</td>
-          <td style="padding:9px 0;text-align:right;font-weight:600">${course.certificate.unitsEarned}</td>
-        </tr>
-        <tr>
-          <td style="padding:9px 0;color:#64748B;border-top:1px solid #eef2f6">Date of completion</td>
-          <td style="padding:9px 0;text-align:right;font-weight:600;border-top:1px solid #eef2f6">${course.certificate.attendanceDateLabel}</td>
-        </tr>
-        <tr>
-          <td style="padding:9px 0;color:#64748B;border-top:1px solid #eef2f6">Certificate no.</td>
-          <td style="padding:9px 0;text-align:right;font-weight:600;border-top:1px solid #eef2f6">${record.certNumber}</td>
-        </tr>
-      </table>
-      <p style="margin:22px 0 0;font-size:13px;color:#94a3b8">
-        Questions? Reply to this email or contact California Dental Meeting at
-        ray.yabardental@gmail.com.
-      </p>
-    </div>
-  </div>`;
+  const html = certificateEmailHtml(record, course);
 
   try {
     const { error } = await resend.emails.send({
