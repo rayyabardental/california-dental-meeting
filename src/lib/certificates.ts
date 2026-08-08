@@ -4,6 +4,7 @@ import {
   redisMGet,
   redisSet,
   redisIncr,
+  redisDel,
 } from "@/lib/redis";
 
 /**
@@ -106,4 +107,31 @@ export async function saveCertificate(
 ): Promise<boolean> {
   if (!isRedisConfigured()) return false;
   return redisSet(certKey(record.certNumber), JSON.stringify(record));
+}
+
+export type DeleteResult =
+  | { ok: true }
+  | { ok: false; reason: "not_found" | "already_sent" | "unavailable" };
+
+/**
+ * Delete a certificate that has NOT yet been issued (status "pending"). Issued
+ * ("sent") certificates are retained — the DBC requires providers to keep every
+ * issued certificate for six years — so those are refused. When the store is
+ * emptied by the deletion, the numbering counter is reset so the next
+ * certificate starts cleanly at CERT-100001 (used to clear test data).
+ */
+export async function deletePendingCertificate(
+  certNumber: string,
+): Promise<DeleteResult> {
+  if (!isRedisConfigured()) return { ok: false, reason: "unavailable" };
+  const record = await getCertificate(certNumber);
+  if (!record) return { ok: false, reason: "not_found" };
+  if (record.status === "sent") return { ok: false, reason: "already_sent" };
+
+  await redisDel(certKey(record.certNumber));
+
+  const remaining = await listCertificates();
+  if (remaining.length === 0) await redisSet(COUNTER_KEY, "0");
+
+  return { ok: true };
 }

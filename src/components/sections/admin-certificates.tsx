@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import QRCode from "qrcode";
-import { Download, Loader2, Mail, Printer, QrCode } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Download, Loader2, Mail, Printer, QrCode, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EVENTS } from "@/lib/events-data";
 
@@ -134,6 +135,59 @@ export function SendDueCertsButton(): React.ReactElement {
         <p className="max-w-xs text-right text-[11px] text-ink-muted">{result}</p>
       )}
     </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Delete a pending certificate                                               */
+/* -------------------------------------------------------------------------- */
+
+export function DeleteCertButton({
+  certNumber,
+}: {
+  certNumber: string;
+}): React.ReactElement {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const onDelete = async (): Promise<void> => {
+    if (
+      !window.confirm(
+        `Delete ${certNumber}? This is only for test or erroneous entries and can't be undone.`,
+      )
+    )
+      return;
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/certificates/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ certNumber }),
+      });
+      const json = (await res.json()) as { error: string | null };
+      if (!res.ok) window.alert(json.error ?? "Delete failed.");
+      else router.refresh();
+    } catch {
+      window.alert("Network error — please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={onDelete}
+      disabled={loading}
+      aria-label={`Delete ${certNumber}`}
+      className="inline-flex items-center gap-1 text-xs text-ink-muted transition-colors hover:text-red-600 disabled:opacity-40"
+    >
+      {loading ? (
+        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+      ) : (
+        <Trash2 className="h-3.5 w-3.5" />
+      )}
+    </button>
   );
 }
 

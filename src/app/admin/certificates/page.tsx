@@ -7,6 +7,7 @@ import { AdminNav } from "@/components/sections/admin-nav";
 import { LogoutButton } from "@/components/sections/admin-roster";
 import {
   CertQrGenerator,
+  DeleteCertButton,
   ExportCertsCsvButton,
   SendDueCertsButton,
   type CertRow,
@@ -190,13 +191,18 @@ export default async function AdminCertificatesPage(): Promise<React.ReactElemen
                       )}
                     </td>
                     <td className="px-5 py-3">
-                      <a
-                        href={`/api/admin/certificates/pdf?cert=${encodeURIComponent(c.certNumber)}`}
-                        className="inline-flex items-center gap-1.5 text-sm font-medium text-primary underline-offset-4 hover:underline"
-                      >
-                        <Download className="h-3.5 w-3.5" />
-                        PDF
-                      </a>
+                      <div className="flex items-center gap-3">
+                        <a
+                          href={`/api/admin/certificates/pdf?cert=${encodeURIComponent(c.certNumber)}`}
+                          className="inline-flex items-center gap-1.5 text-sm font-medium text-primary underline-offset-4 hover:underline"
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          PDF
+                        </a>
+                        {c.status === "pending" && (
+                          <DeleteCertButton certNumber={c.certNumber} />
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}
