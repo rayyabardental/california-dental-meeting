@@ -3,6 +3,8 @@ import {
   type PurchasableCourse,
   type PayMode,
   amountDueTodayCents,
+  isCustomAmount,
+  clampCustomAmount,
 } from "@/lib/checkout";
 
 /**
@@ -53,9 +55,15 @@ export type PayPalRegistrant = {
 export async function createPayPalOrder(
   course: PurchasableCourse,
   payMode: PayMode,
+  customCents?: number,
 ): Promise<string> {
   const token = await accessToken();
-  const cents = amountDueTodayCents(course, payMode);
+  // Pay-what-you-want courses use the registrant's (clamped) amount; all
+  // others recompute server-side. Either way the client can't set the value.
+  const cents = isCustomAmount(course)
+    ? (clampCustomAmount(course, customCents ?? 0) ?? 0)
+    : amountDueTodayCents(course, payMode);
+  if (cents <= 0) throw new Error("Invalid custom amount");
   const value = (cents / 100).toFixed(2);
 
   const res = await fetch(`${apiBase()}/v2/checkout/orders`, {

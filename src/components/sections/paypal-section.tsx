@@ -25,10 +25,13 @@ export function PayPalSection({
   course,
   payMode,
   registrant,
+  amountCents,
 }: {
   course: PurchasableCourse;
   payMode: PayMode;
   registrant: Registrant;
+  /** Registrant-chosen amount, for pay-what-you-want courses. */
+  amountCents?: number;
 }): React.ReactElement | null {
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
   const router = useRouter();
@@ -58,7 +61,7 @@ export function PayPalSection({
             const res = await fetch("/api/checkout/paypal/create-order", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ courseId: course.id, payMode }),
+              body: JSON.stringify({ courseId: course.id, payMode, amountCents }),
             });
             const json = (await res.json()) as {
               data: { orderId: string } | null;

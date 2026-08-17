@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -19,6 +19,9 @@ import { SectionEyebrow } from "@/components/ui/section-eyebrow";
 import { findEvent, ceLabel } from "@/lib/events-data";
 import {
   isPurchasable,
+  isCustomAmount,
+  isValidCustomAmount,
+  customBounds,
   allowsDeposit,
   amountDueTodayCents,
   balanceDueCents,
@@ -36,6 +39,8 @@ export function CartView(): React.ReactElement {
   const courseId = useCartStore((s) => s.courseId);
   const payMode = useCartStore((s) => s.payMode);
   const setPayMode = useCartStore((s) => s.setPayMode);
+  const amountCents = useCartStore((s) => s.amountCents);
+  const setAmount = useCartStore((s) => s.setAmount);
 
   const course = courseId ? findEvent(courseId) : undefined;
 
@@ -57,6 +62,8 @@ export function CartView(): React.ReactElement {
             course={course}
             payMode={payMode}
             onPayModeChange={setPayMode}
+            amountCents={amountCents}
+            onAmountChange={setAmount}
           />
         )}
       </Container>
@@ -89,20 +96,33 @@ function FilledCart({
   course,
   payMode,
   onPayModeChange,
+  amountCents,
+  onAmountChange,
 }: {
   course: PurchasableCourse;
   payMode: PayMode;
   onPayModeChange: (mode: PayMode) => void;
+  amountCents: number | null;
+  onAmountChange: (cents: number | null) => void;
 }): React.ReactElement {
   const currency = course.purchase.currency;
   const fullAmount = fullAmountCents(course);
   const discount = discountCents(course);
-  const canDeposit = allowsDeposit(course);
+  const isCustom = isCustomAmount(course);
+  const bounds = isCustom ? customBounds(course) : null;
+  const canDeposit = !isCustom && allowsDeposit(course);
   // Single-price courses (deposit == full) can't be paid by deposit; force full.
   const mode: PayMode = canDeposit ? payMode : "full";
-  const dueToday = amountDueTodayCents(course, mode);
-  const balance = balanceDueCents(course, mode);
   const earlyActive = course.earlyRegistrationActive && discount > 0;
+
+  // Pay-what-you-want: the amount comes from the registrant (within bounds);
+  // otherwise it's the computed tuition.
+  const customValid = isCustom && isValidCustomAmount(course, amountCents);
+  const dueToday = isCustom
+    ? (amountCents ?? 0)
+    : amountDueTodayCents(course, mode);
+  const balance = isCustom ? 0 : balanceDueCents(course, mode);
+  const canCheckout = isCustom ? customValid : true;
 
   useEffect(() => {
     if (!canDeposit && payMode !== "full") onPayModeChange("full");
@@ -196,6 +216,16 @@ function FilledCart({
             </div>
           </div>
         )}
+
+        {isCustom && bounds && (
+          <CustomAmount
+            currency={currency}
+            amountCents={amountCents}
+            minCents={bounds.minCents}
+            maxCents={bounds.maxCents}
+            onChange={onAmountChange}
+          />
+        )}
       </div>
 
       {/* Order summary */}
@@ -205,35 +235,37 @@ function FilledCart({
             Order summary
           </h2>
 
-          <dl className="mt-5 space-y-3 text-sm">
-            <SummaryRow
-              label={earlyActive ? "Tuition (regular)" : "Tuition"}
-              value={formatMoney(
-                earlyActive ? course.purchase.regularCents : fullAmount,
-                currency,
+          {!isCustom && (
+            <dl className="mt-5 space-y-3 text-sm">
+              <SummaryRow
+                label={earlyActive ? "Tuition (regular)" : "Tuition"}
+                value={formatMoney(
+                  earlyActive ? course.purchase.regularCents : fullAmount,
+                  currency,
+                )}
+              />
+              {earlyActive && (
+                <SummaryRow
+                  label="Early-registration discount"
+                  value={`– ${formatMoney(discount, currency)}`}
+                  accent
+                />
               )}
-            />
-            {earlyActive && (
-              <SummaryRow
-                label="Early-registration discount"
-                value={`– ${formatMoney(discount, currency)}`}
-                accent
-              />
-            )}
-            {mode === "deposit" && (
-              <SummaryRow
-                label="Reservation deposit"
-                value={formatMoney(course.purchase.depositCents, currency)}
-              />
-            )}
-          </dl>
+              {mode === "deposit" && (
+                <SummaryRow
+                  label="Reservation deposit"
+                  value={formatMoney(course.purchase.depositCents, currency)}
+                />
+              )}
+            </dl>
+          )}
 
           <div className="mt-5 flex items-baseline justify-between border-t border-primary/10 pt-5">
             <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-muted">
-              Due today
+              {isCustom ? "Your amount" : "Due today"}
             </span>
             <span className="font-display text-3xl font-medium text-primary">
-              {formatMoney(dueToday, currency)}
+              {isCustom && !canCheckout ? "—" : formatMoney(dueToday, currency)}
             </span>
           </div>
           {balance > 0 && (
@@ -242,15 +274,26 @@ function FilledCart({
             </p>
           )}
 
-          <Button
-            href="/checkout"
-            variant="primary"
-            size="lg"
-            className="mt-6 w-full"
-          >
-            <Lock className="h-4 w-4" />
-            Proceed to secure payment
-          </Button>
+          {canCheckout ? (
+            <Button
+              href="/checkout"
+              variant="primary"
+              size="lg"
+              className="mt-6 w-full"
+            >
+              <Lock className="h-4 w-4" />
+              Proceed to secure payment
+            </Button>
+          ) : (
+            <button
+              type="button"
+              disabled
+              className="mt-6 inline-flex h-13 w-full items-center justify-center gap-2 rounded-full bg-primary/40 text-base font-semibold text-white"
+            >
+              <Lock className="h-4 w-4" />
+              Enter an amount to continue
+            </button>
+          )}
           <Link
             href="/courses"
             className="mt-3 block text-center text-sm font-medium text-ink-muted underline-offset-4 hover:text-primary hover:underline"
@@ -267,6 +310,76 @@ function FilledCart({
           </ul>
         </div>
       </aside>
+    </div>
+  );
+}
+
+/** Pay-what-you-want amount input. Stores the amount in whole-cent form. */
+function CustomAmount({
+  currency,
+  amountCents,
+  minCents,
+  maxCents,
+  onChange,
+}: {
+  currency: string;
+  amountCents: number | null;
+  minCents: number;
+  maxCents: number;
+  onChange: (cents: number | null) => void;
+}): React.ReactElement {
+  const [raw, setRaw] = useState<string>(
+    amountCents !== null ? (amountCents / 100).toString() : "",
+  );
+
+  const handle = (value: string): void => {
+    // Allow digits and a single decimal point, up to 2 decimals.
+    const cleaned = value.replace(/[^0-9.]/g, "");
+    setRaw(cleaned);
+    const dollars = parseFloat(cleaned);
+    if (!Number.isFinite(dollars) || dollars <= 0) {
+      onChange(null);
+      return;
+    }
+    onChange(Math.round(dollars * 100));
+  };
+
+  const belowMin =
+    amountCents !== null && amountCents > 0 && amountCents < minCents;
+
+  return (
+    <div className="rounded-3xl border border-primary/10 bg-white p-6 sm:p-7">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-muted">
+        Name your price
+      </p>
+      <p className="mt-2 text-sm text-ink-muted text-pretty">
+        Enter the amount you&apos;d like to pay to register for this event.
+      </p>
+      <div className="mt-4 flex items-center gap-2 rounded-2xl border border-primary/15 bg-surface px-4 focus-within:border-accent focus-within:ring-4 focus-within:ring-accent/15">
+        <span className="font-display text-2xl text-ink-muted">$</span>
+        <input
+          type="text"
+          inputMode="decimal"
+          value={raw}
+          onChange={(e) => handle(e.target.value)}
+          placeholder="0"
+          aria-label="Amount to pay in US dollars"
+          className="w-full bg-transparent py-3.5 font-display text-2xl text-primary outline-none placeholder:text-ink-muted/40"
+        />
+        <span className="text-sm font-medium uppercase text-ink-muted">
+          {currency}
+        </span>
+      </div>
+      {belowMin ? (
+        <p className="mt-2 text-xs text-red-600">
+          Minimum {formatMoney(minCents, currency)}.
+        </p>
+      ) : (
+        <p className="mt-2 text-xs text-ink-muted">
+          Minimum {formatMoney(minCents, currency)} · maximum{" "}
+          {formatMoney(maxCents, currency)}.
+        </p>
+      )}
     </div>
   );
 }

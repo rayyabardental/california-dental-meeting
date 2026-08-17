@@ -73,6 +73,16 @@ export type Course = {
     earlyCents: number;
     /** Reservation deposit to hold a seat; balance collected later. */
     depositCents: number;
+    /**
+     * Pay-what-you-want: the registrant enters the amount they pay (validated
+     * server-side within [minCents, maxCents]). When true the fixed cents
+     * above are ignored and deposits are not offered.
+     */
+    custom?: boolean;
+    /** Lowest amount a registrant may enter (custom mode). Default 100 ($1). */
+    minCents?: number;
+    /** Highest amount a registrant may enter (custom mode). */
+    maxCents?: number;
   };
   status: "OPEN" | "WAITLIST" | "ANNOUNCING_SOON" | "CONCLUDED";
   /**
@@ -677,8 +687,19 @@ export const EVENTS: readonly Course[] = [
     spotsRemaining: 300,
     ceCredits: 0,
     topic: "International Summit",
-    price: "Coming soon",
-    status: "ANNOUNCING_SOON",
+    price: "Name your price",
+    // Open for registration with pay-what-you-want pricing — the registrant
+    // chooses the amount they pay at checkout (validated $1–$50,000).
+    purchase: {
+      currency: "usd",
+      regularCents: 0,
+      earlyCents: 0,
+      depositCents: 0,
+      custom: true,
+      minCents: 100,
+      maxCents: 5_000_000,
+    },
+    status: "OPEN",
     highlights: [
       "Tri-organizational hosting: SIDHE × ISADe × FDILA",
       "Dental innovation & high-tech focus",

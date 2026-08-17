@@ -20,6 +20,8 @@ import { SectionEyebrow } from "@/components/ui/section-eyebrow";
 import { findEvent } from "@/lib/events-data";
 import {
   isPurchasable,
+  isCustomAmount,
+  isValidCustomAmount,
   allowsDeposit,
   amountDueTodayCents,
   balanceDueCents,
@@ -57,8 +59,15 @@ export function CheckoutFlow(): React.ReactElement {
   const hydrated = useCartHydrated();
   const courseId = useCartStore((s) => s.courseId);
   const payMode = useCartStore((s) => s.payMode);
+  const amountCents = useCartStore((s) => s.amountCents);
   const course = courseId ? findEvent(courseId) : undefined;
   const stripePromise = useMemo(() => getStripePromise(), []);
+
+  // Pay-what-you-want courses require a valid amount chosen on the cart page.
+  const needsAmount =
+    course !== undefined &&
+    isCustomAmount(course) &&
+    !isValidCustomAmount(course, amountCents);
 
   return (
     <section className="relative min-h-[70vh] bg-surface py-16 lg:py-24">
@@ -73,12 +82,15 @@ export function CheckoutFlow(): React.ReactElement {
           <div className="mt-12 h-80 animate-pulse rounded-3xl border border-primary/8 bg-white" />
         ) : !course || !isPurchasable(course) ? (
           <NothingToCheckOut />
+        ) : needsAmount ? (
+          <NeedsAmount />
         ) : !stripePromise ? (
           <PaymentUnavailable />
         ) : (
           <Inner
             course={course}
             payMode={payMode}
+            amountCents={amountCents}
             stripePromise={stripePromise}
           />
         )}
@@ -90,18 +102,23 @@ export function CheckoutFlow(): React.ReactElement {
 function Inner({
   course,
   payMode,
+  amountCents,
   stripePromise,
 }: {
   course: PurchasableCourse;
   payMode: PayMode;
+  amountCents: number | null;
   stripePromise: NonNullable<ReturnType<typeof getStripePromise>>;
 }): React.ReactElement {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [registrant, setRegistrant] = useState<DetailsInput | null>(null);
+  const custom = isCustomAmount(course);
   // Single-price courses (deposit == full) can only be paid in full.
-  const mode: PayMode = allowsDeposit(course) ? payMode : "full";
-  const dueToday = amountDueTodayCents(course, mode);
-  const balance = balanceDueCents(course, mode);
+  const mode: PayMode = !custom && allowsDeposit(course) ? payMode : "full";
+  const dueToday = custom
+    ? (amountCents ?? 0)
+    : amountDueTodayCents(course, mode);
+  const balance = custom ? 0 : balanceDueCents(course, mode);
   const currency = course.purchase.currency;
 
   const onReady = (cs: string, values: DetailsInput): void => {
@@ -121,12 +138,18 @@ function Inner({
               course={course}
               payMode={mode}
               registrant={registrant}
+              amountCents={amountCents ?? undefined}
               amountLabel={formatMoney(dueToday, currency)}
               onBack={() => setClientSecret(null)}
             />
           </Elements>
         ) : (
-          <DetailsStage course={course} payMode={mode} onReady={onReady} />
+          <DetailsStage
+            course={course}
+            payMode={mode}
+            amountCents={amountCents ?? undefined}
+            onReady={onReady}
+          />
         )}
       </div>
 
@@ -148,10 +171,12 @@ function Inner({
 function DetailsStage({
   course,
   payMode,
+  amountCents,
   onReady,
 }: {
   course: PurchasableCourse;
   payMode: PayMode;
+  amountCents?: number;
   onReady: (clientSecret: string, registrant: DetailsInput) => void;
 }): React.ReactElement {
   const [serverError, setServerError] = useState<string | null>(null);
@@ -167,7 +192,12 @@ function DetailsStage({
       const res = await fetch("/api/checkout/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...values, courseId: course.id, payMode }),
+        body: JSON.stringify({
+          ...values,
+          courseId: course.id,
+          payMode,
+          amountCents,
+        }),
       });
       const json = (await res.json()) as {
         data: { clientSecret: string } | null;
@@ -243,12 +273,14 @@ function PaymentStage({
   course,
   payMode,
   registrant,
+  amountCents,
   amountLabel,
   onBack,
 }: {
   course: PurchasableCourse;
   payMode: PayMode;
   registrant: DetailsInput;
+  amountCents?: number;
   amountLabel: string;
   onBack: () => void;
 }): React.ReactElement {
@@ -340,6 +372,7 @@ function PaymentStage({
         course={course}
         payMode={payMode}
         registrant={registrant}
+        amountCents={amountCents}
       />
     </form>
   );
@@ -453,6 +486,23 @@ function NothingToCheckOut(): React.ReactElement {
       </p>
       <Button href="/courses" variant="primary" size="lg" className="mt-8">
         Explore courses
+      </Button>
+    </div>
+  );
+}
+
+function NeedsAmount(): React.ReactElement {
+  return (
+    <div className="mt-12 rounded-3xl border border-primary/10 bg-white px-6 py-16 text-center">
+      <h2 className="font-display text-2xl font-medium text-primary">
+        Choose your amount first
+      </h2>
+      <p className="mx-auto mt-2 max-w-md text-ink-muted text-pretty">
+        This event is pay-what-you-want. Head back to your cart to enter the
+        amount you&apos;d like to pay, then continue to checkout.
+      </p>
+      <Button href="/cart" variant="primary" size="lg" className="mt-8">
+        Back to cart
       </Button>
     </div>
   );

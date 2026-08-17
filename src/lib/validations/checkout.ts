@@ -12,6 +12,9 @@ export const CheckoutSchema = z.object({
   lastName: z.string().trim().min(1, "Last name is required").max(80),
   email: z.string().trim().email("Enter a valid email"),
   license: z.string().trim().max(80).optional().or(z.literal("")),
+  // Registrant-chosen amount in cents (pay-what-you-want courses only). For
+  // fixed-price courses this is ignored and the amount is recomputed server-side.
+  amountCents: z.number().int().positive().max(100_000_000).optional(),
 });
 
 export type CheckoutInput = z.infer<typeof CheckoutSchema>;

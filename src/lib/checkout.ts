@@ -20,6 +20,48 @@ export function isPurchasable(course: Course): course is PurchasableCourse {
   return course.status === "OPEN" && course.purchase !== undefined;
 }
 
+/** True when the registrant sets their own amount (pay-what-you-want). Returns
+ *  a plain boolean (not a type guard) so a `!isCustomAmount()` branch never
+ *  narrows an already-purchasable course to `never`. */
+export function isCustomAmount(course: Course): boolean {
+  return isPurchasable(course) && course.purchase.custom === true;
+}
+
+/** Allowed amount range for a custom-price course, in integer cents. */
+export function customBounds(course: PurchasableCourse): {
+  minCents: number;
+  maxCents: number;
+} {
+  return {
+    minCents: Math.max(50, course.purchase.minCents ?? 100),
+    maxCents: course.purchase.maxCents ?? 5_000_000,
+  };
+}
+
+/** Whether a chosen custom amount is present and within the allowed range. */
+export function isValidCustomAmount(
+  course: Course,
+  cents: number | null,
+): boolean {
+  if (!isPurchasable(course)) return false;
+  if (cents === null || !Number.isFinite(cents)) return false;
+  const { minCents, maxCents } = customBounds(course);
+  return cents >= minCents && cents <= maxCents;
+}
+
+/** Clamp a proposed custom amount into the course's allowed range. Returns
+ *  null when the input isn't a usable positive integer. */
+export function clampCustomAmount(
+  course: PurchasableCourse,
+  cents: number,
+): number | null {
+  if (!Number.isFinite(cents)) return null;
+  const rounded = Math.round(cents);
+  if (rounded <= 0) return null;
+  const { minCents, maxCents } = customBounds(course);
+  return Math.min(maxCents, Math.max(minCents, rounded));
+}
+
 /** The full tuition due for the course (early rate when the early-reg
  *  window is active, otherwise the regular rate). */
 export function fullAmountCents(course: PurchasableCourse): number {

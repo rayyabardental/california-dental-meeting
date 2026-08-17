@@ -15,8 +15,11 @@ import { isPurchasable, type PayMode } from "@/lib/checkout";
 type CartState = {
   courseId: string | null;
   payMode: PayMode;
+  /** Registrant-chosen amount in cents, for pay-what-you-want courses. */
+  amountCents: number | null;
   setItem: (courseId: string, payMode?: PayMode) => void;
   setPayMode: (payMode: PayMode) => void;
+  setAmount: (amountCents: number | null) => void;
   clear: () => void;
 };
 
@@ -25,9 +28,13 @@ export const useCartStore = create<CartState>()(
     (set) => ({
       courseId: null,
       payMode: "full",
-      setItem: (courseId, payMode = "full") => set({ courseId, payMode }),
+      amountCents: null,
+      // A new item clears any previous custom amount.
+      setItem: (courseId, payMode = "full") =>
+        set({ courseId, payMode, amountCents: null }),
       setPayMode: (payMode) => set({ payMode }),
-      clear: () => set({ courseId: null, payMode: "full" }),
+      setAmount: (amountCents) => set({ amountCents }),
+      clear: () => set({ courseId: null, payMode: "full", amountCents: null }),
     }),
     {
       name: "cdm-cart",
@@ -36,7 +43,11 @@ export const useCartStore = create<CartState>()(
           ? window.localStorage
           : { getItem: () => null, setItem: () => {}, removeItem: () => {} },
       ),
-      partialize: (s) => ({ courseId: s.courseId, payMode: s.payMode }),
+      partialize: (s) => ({
+        courseId: s.courseId,
+        payMode: s.payMode,
+        amountCents: s.amountCents,
+      }),
     },
   ),
 );

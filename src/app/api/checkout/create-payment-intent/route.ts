@@ -2,6 +2,8 @@ import { ok, fail } from "@/lib/api-response";
 import { findEvent } from "@/lib/events-data";
 import {
   isPurchasable,
+  isCustomAmount,
+  clampCustomAmount,
   amountDueTodayCents,
   balanceDueCents,
   fullAmountCents,
@@ -37,7 +39,7 @@ export async function POST(req: Request): Promise<Response> {
   if (!parsed.success) {
     return fail(parsed.error.issues[0]?.message ?? "Invalid input", 422);
   }
-  const { courseId, payMode, firstName, lastName, email, license } =
+  const { courseId, payMode, firstName, lastName, email, license, amountCents } =
     parsed.data;
 
   const course = findEvent(courseId);
@@ -46,8 +48,22 @@ export async function POST(req: Request): Promise<Response> {
     return fail("This course is not available for online purchase.", 409);
   }
 
-  const amount = amountDueTodayCents(course, payMode);
-  const balance = balanceDueCents(course, payMode);
+  // Pay-what-you-want: use the registrant's amount, clamped into the allowed
+  // range. Fixed-price courses ignore any client amount and recompute here.
+  let amount: number;
+  let balance: number;
+  if (isCustomAmount(course)) {
+    const clamped =
+      amountCents === undefined ? null : clampCustomAmount(course, amountCents);
+    if (clamped === null) {
+      return fail("Please enter the amount you'd like to pay.", 422);
+    }
+    amount = clamped;
+    balance = 0;
+  } else {
+    amount = amountDueTodayCents(course, payMode);
+    balance = balanceDueCents(course, payMode);
+  }
 
   try {
     const intent = await stripe.paymentIntents.create({
@@ -72,7 +88,9 @@ export async function POST(req: Request): Promise<Response> {
         license: license || "",
         amountDueCents: String(amount),
         balanceDueCents: String(balance),
-        fullAmountCents: String(fullAmountCents(course)),
+        fullAmountCents: String(
+          isCustomAmount(course) ? amount : fullAmountCents(course),
+        ),
       },
     });
 
