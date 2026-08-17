@@ -17,6 +17,7 @@ import { FlagshipCourse } from "@/components/sections/flagship-course";
 import { CourseFaculty } from "@/components/sections/course-faculty";
 import { Curriculum } from "@/components/sections/curriculum";
 import { Included } from "@/components/sections/included";
+import { CourseRecap } from "@/components/sections/course-recap";
 import { RegistrationModal } from "@/components/shared/registration-modal";
 import { ceLabel, type Course } from "@/lib/events-data";
 import { isPurchasable } from "@/lib/checkout";
@@ -36,6 +37,9 @@ export function CourseDetail({
   const [registering, setRegistering] = useState(false);
   const openRegister = (): void => setRegistering(true);
   const closeRegister = (): void => setRegistering(false);
+
+  // Concluded events render a recap — no registration, pricing, or payment.
+  if (course.status === "CONCLUDED") return <CourseRecap course={course} />;
 
   return (
     <>

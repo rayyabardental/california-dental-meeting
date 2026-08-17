@@ -87,6 +87,7 @@ function CourseCard({
   onRegister: () => void;
 }): React.ReactElement {
   const isOpen = course.status === "OPEN";
+  const isConcluded = course.status === "CONCLUDED";
   const isFlagship = course.id === "cdm_veracruz_2026";
   const purchasable = isPurchasable(course);
   const enroll = useEnroll();
@@ -181,25 +182,40 @@ function CourseCard({
             />
             {isOpen
               ? "Enrolling now"
-              : course.status === "ANNOUNCING_SOON"
-                ? "Announcing soon"
-                : "Waitlist open"}
+              : isConcluded
+                ? "Event concluded"
+                : course.status === "ANNOUNCING_SOON"
+                  ? "Announcing soon"
+                  : "Waitlist open"}
           </span>
 
           {/*
             Register button is layered above the stretched-link overlay
             (`relative z-10`). Clicking it triggers onRegister(); the link
-            click is suppressed because the button is on top.
+            click is suppressed because the button is on top. Concluded events
+            link to their recap instead of any registration action.
           */}
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={purchasable ? () => enroll(course) : onRegister}
-            className="relative z-10"
-          >
-            {purchasable ? "Enroll" : isOpen ? "Register" : "Join waitlist"}
-            <ArrowUpRight className="h-3.5 w-3.5" />
-          </Button>
+          {isConcluded ? (
+            <Button
+              href={href}
+              variant="ghost"
+              size="sm"
+              className="relative z-10"
+            >
+              View recap
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </Button>
+          ) : (
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={purchasable ? () => enroll(course) : onRegister}
+              className="relative z-10"
+            >
+              {purchasable ? "Enroll" : isOpen ? "Register" : "Join waitlist"}
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </Button>
+          )}
         </div>
 
         {/*

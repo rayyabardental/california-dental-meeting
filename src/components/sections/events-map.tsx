@@ -146,9 +146,11 @@ function EventDetailPanel({ event }: { event: Event }): React.ReactElement {
             text={
               event.status === "OPEN"
                 ? "Enrolling now"
-                : event.status === "ANNOUNCING_SOON"
-                  ? "Announcing soon"
-                  : "Waitlist open"
+                : event.status === "CONCLUDED"
+                  ? "Event concluded"
+                  : event.status === "ANNOUNCING_SOON"
+                    ? "Announcing soon"
+                    : "Waitlist open"
             }
           />
         </dl>

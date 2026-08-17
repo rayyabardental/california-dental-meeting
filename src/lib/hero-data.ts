@@ -33,7 +33,7 @@ export type CarouselSlide = {
   ctaText: string;
   ctaHref: string;
   instructor: string;
-  status: "OPEN" | "WAITLIST" | "ANNOUNCING_SOON";
+  status: "OPEN" | "WAITLIST" | "ANNOUNCING_SOON" | "CONCLUDED";
   /**
    * How the image fills the slide frame.
    *  - "cover" (default): fills the frame, may crop edges.
@@ -73,29 +73,8 @@ const flagshipStatus = FLAGSHIP_COURSE.status;
 
 const IDES = findEvent("ides_kerala_2026")!;
 const SIDHE = findEvent("sidhe_shenzhen_2026")!;
-const CALIFORNIA = findEvent("cdm_california_2026")!;
-
-/** Build the carousel slide for the California full-day CE program. */
-function californiaSlide(course: typeof CALIFORNIA): CarouselSlide {
-  return {
-    id: course.id,
-    image: course.flyerImage!,
-    alt: `${course.title} — full-day continuing-education program with ISADe, ${course.dateLabel}, ${course.city}, ${course.country}. 7 hours of CE approved by the DBC.`,
-    headline: `${course.city}, ${course.country}.`,
-    courseTitle: course.title,
-    courseType: course.type,
-    location: `${course.city}, ${course.country}`,
-    dates: course.dateLabel,
-    ceCredits: ceLabel(course),
-    description: course.summary,
-    ctaText: "View course",
-    ctaHref: `/courses/${course.slug}`,
-    instructor: course.speaker.name,
-    status: course.status,
-    // Full poster artwork — contain keeps the whole schedule visible.
-    imageFit: "contain",
-  };
-}
+// The California program (Aug 8, 2026) has concluded and no longer appears in
+// the hero carousel — its page is now a recap.
 
 export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
   {
@@ -189,5 +168,4 @@ export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
     // Save-the-date poster — contain preserves the full layout & logos.
     imageFit: "contain",
   },
-  californiaSlide(CALIFORNIA),
 ];

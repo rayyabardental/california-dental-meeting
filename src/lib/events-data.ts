@@ -74,7 +74,21 @@ export type Course = {
     /** Reservation deposit to hold a seat; balance collected later. */
     depositCents: number;
   };
-  status: "OPEN" | "WAITLIST" | "ANNOUNCING_SOON";
+  status: "OPEN" | "WAITLIST" | "ANNOUNCING_SOON" | "CONCLUDED";
+  /**
+   * Post-event recap content. Present only for concluded events — the detail
+   * page renders a retrospective (photos + founder's message) instead of the
+   * registration layout, and no payment is possible.
+   */
+  recap?: {
+    /** Retrospective headline, e.g. "1st ISADe International Dental Meeting". */
+    headline: string;
+    /** Founder's / organizer's closing message. */
+    messageEn: string;
+    messageEs: string;
+    messageAttribution: string;
+    photos: ReadonlyArray<{ src: string; alt: string; w: number; h: number }>;
+  };
   highlights: ReadonlyArray<string>;
   whatsIncluded: ReadonlyArray<string>;
   idealParticipant: ReadonlyArray<string>;
@@ -392,15 +406,10 @@ export const EVENTS: readonly Course[] = [
     ceCredits: 7,
     topic: "Continuing Education · Multi-Speaker Program",
     price: "$500",
-    tuitionNote:
-      "Includes 7 hours of DBC-approved CE, lunch, coffee breaks, and the closing BBQ & wine reception.",
-    purchase: {
-      currency: "usd",
-      regularCents: 50000,
-      earlyCents: 50000,
-      depositCents: 50000,
-    },
-    status: "OPEN",
+    // Event concluded on August 8, 2026 — registration and online payment are
+    // permanently closed (no `purchase` block; CONCLUDED status also makes
+    // isPurchasable() false everywhere). The page now serves as a recap.
+    status: "CONCLUDED",
     highlights: [
       "7 hours of CE, approved by the Dental Board of California (DBC)",
       "Dr. Aníbal Alonso — Occlusion and Disocclusion (5-hour session)",
@@ -486,6 +495,64 @@ export const EVENTS: readonly Course[] = [
     },
     flyerImage: "/courses/california-2026-flyer.webp",
     scheduleImage: "/courses/california-2026-schedule.webp",
+    recap: {
+      headline: "1st ISADe International Dental Meeting",
+      messageEn:
+        "Thank you to all our distinguished speakers and attendees who joined us for the 1st ISADe International Dental Meeting. We are proud of the special moments we shared, bringing together science, education, collaboration, and friendship. Together, we continue building a stronger global dental community.",
+      messageEs:
+        "Gracias a todos nuestros distinguidos conferencistas y asistentes que nos acompañaron en el 1.er Encuentro Dental Internacional de ISADe. Nos sentimos orgullosos de los momentos especiales que compartimos, unidos por la ciencia, la educación, la colaboración y la amistad. Juntos, continuamos construyendo una comunidad odontológica global más fuerte.",
+      messageAttribution: "ISADe — International Society of Advanced Dentistry",
+      photos: [
+        {
+          src: "/events/california-2026/photo-6.webp",
+          alt: "Attendees seated during a session at the ISADe International Dental Meeting.",
+          w: 1600,
+          h: 1200,
+        },
+        {
+          src: "/events/california-2026/photo-2.webp",
+          alt: "A Certificate of Appreciation being presented to a distinguished speaker.",
+          w: 1600,
+          h: 739,
+        },
+        {
+          src: "/events/california-2026/photo-1.webp",
+          alt: "A speaker beside the ISADe USA banner and the United States flag.",
+          w: 1210,
+          h: 2000,
+        },
+        {
+          src: "/events/california-2026/photo-7.webp",
+          alt: "A speaker receiving an ISADe Certificate of Appreciation.",
+          w: 1280,
+          h: 960,
+        },
+        {
+          src: "/events/california-2026/photo-5.webp",
+          alt: "A faculty member introduced during the program, with a speaker featured on screen.",
+          w: 1024,
+          h: 768,
+        },
+        {
+          src: "/events/california-2026/photo-4.webp",
+          alt: "Colleagues together at the ISADe photo backdrop.",
+          w: 1024,
+          h: 768,
+        },
+        {
+          src: "/events/california-2026/photo-3.webp",
+          alt: "Two colleagues in conversation at the ISADe backdrop.",
+          w: 1024,
+          h: 768,
+        },
+        {
+          src: "/events/california-2026/photo-8.webp",
+          alt: "Faculty networking at the ISADe backdrop.",
+          w: 1024,
+          h: 474,
+        },
+      ],
+    },
     schedule: [
       {
         date: "Aug 8, 2026",
