@@ -43,7 +43,6 @@ export const metadata: Metadata = {
     "IDES Kerala",
     "SIDHE Shenzhen",
     "ISADe",
-    "FDILA",
     "continuing dental education",
     "implantology training",
   ],
