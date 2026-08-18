@@ -105,12 +105,6 @@ const PARTNERSHIPS: ReadonlyArray<{
       "Host organization for SIDHE 2026. Convening clinicians and innovators in the Pearl River Delta around dental technology and high-tech practice.",
   },
   {
-    name: "FDILA — Federación Dental Ibero Latino Americana",
-    region: "Ibero-Latin America",
-    description:
-      "Ibero-Latin American dental federation. Co-host of SIDHE 2026 and ongoing partner across the CDM live-patient and international summit programs.",
-  },
-  {
     name: "IDII",
     region: "International",
     description:
