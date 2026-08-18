@@ -152,7 +152,7 @@ export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
   {
     id: "sidhe-shenzhen-2026",
     image: "/carousel/sidhe-2026.webp",
-    alt: "SIDHE 2026 save-the-date — Shenzhen International Dental High-Tech, December 9–11, 2026, Shenzhen, China. Co-hosted by SIDHE, ISADe, and FDILA.",
+    alt: "SIDHE 2026 save-the-date — Shenzhen International Dental High-Tech, December 9–11, 2026, Shenzhen, China. Co-hosted by SIDHE and ISADe.",
     headline: "Shenzhen, China.",
     courseTitle: SIDHE.title,
     courseType: SIDHE.type,
@@ -160,7 +160,7 @@ export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
     dates: SIDHE.dateLabel,
     ceCredits: ceLabel(SIDHE),
     description:
-      "Dental innovation meets the Pearl River Delta — co-presented by SIDHE, ISADe, and the Federación Dental Ibero Latino Americana (FDILA). More details coming soon.",
+      "Dental innovation meets the Pearl River Delta — co-presented by SIDHE and the International Society of Advanced Dentistry (ISADe). More details coming soon.",
     ctaText: "SIDHE 2026 details",
     ctaHref: `/courses/${SIDHE.slug}`,
     instructor: SIDHE.speaker.name,

@@ -669,9 +669,9 @@ export const EVENTS: readonly Course[] = [
     title: "Shenzhen International Dental High-Tech",
     subtitle: "SIDHE 2026 · Shenzhen, China",
     summary:
-      "Three-day international dental high-tech summit co-hosted by SIDHE, ISADe, and FDILA in Shenzhen, China.",
+      "Three-day international dental high-tech summit co-hosted by SIDHE and ISADe in Shenzhen, China.",
     description:
-      "A high-tech international dental summit convening clinicians and innovators in Shenzhen. Co-presented by Shenzhen International Dental High-Tech (SIDHE), the International Society of Advanced Dentistry (ISADe), and the Federación Dental Ibero Latino Americana (FDILA). More details coming soon.",
+      "A high-tech international dental summit convening clinicians and innovators in Shenzhen. Co-presented by Shenzhen International Dental High-Tech (SIDHE) and the International Society of Advanced Dentistry (ISADe). More details coming soon.",
     date: "2026-12-09T00:00:00.000Z",
     endDate: "2026-12-11T00:00:00.000Z",
     dateLabel: "Dec 9–11, 2026",
@@ -701,7 +701,7 @@ export const EVENTS: readonly Course[] = [
     },
     status: "OPEN",
     highlights: [
-      "Tri-organizational hosting: SIDHE × ISADe × FDILA",
+      "Co-hosted by SIDHE and ISADe",
       "Dental innovation & high-tech focus",
       "Three days in Shenzhen, China",
     ],
@@ -710,7 +710,7 @@ export const EVENTS: readonly Course[] = [
     ],
     idealParticipant: [
       "Clinicians focused on dental technology and innovation",
-      "Members of SIDHE, ISADe, and FDILA",
+      "Members of SIDHE and ISADe",
       "International continuing-education participants",
     ],
     learningObjectives: [
@@ -719,10 +719,9 @@ export const EVENTS: readonly Course[] = [
     sponsors: [
       { name: "SIDHE", note: "Shenzhen International Dental High-Tech" },
       { name: "ISADe", note: "International Society of Advanced Dentistry" },
-      { name: "FDILA", note: "Federación Dental Ibero Latino Americana" },
     ],
     speaker: {
-      name: "SIDHE × ISADe × FDILA",
+      name: "SIDHE × ISADe",
       title: "Joint Host Organizations",
       specialty: "International Dental Education",
       org: "Faculty to be announced",
