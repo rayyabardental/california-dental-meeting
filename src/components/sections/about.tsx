@@ -186,7 +186,11 @@ export function About(): React.ReactElement {
                   Industry partners
                 </h3>
                 <ul className="mt-4 space-y-2.5">
-                  {FLAGSHIP_COURSE.sponsors?.map((s) => (
+                  {FLAGSHIP_COURSE.sponsors
+                    // FDILA is associated only with the Veracruz course, so it
+                    // is excluded from this general sponsors showcase.
+                    ?.filter((s) => !s.name.includes("FDILA"))
+                    .map((s) => (
                     <li
                       key={s.name}
                       className="flex items-center justify-between gap-3 rounded-xl border border-primary/8 bg-sand-100 px-4 py-2.5 text-sm"
