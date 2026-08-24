@@ -515,7 +515,7 @@ export const EVENTS: readonly Course[] = [
     flyerImage: "/courses/california-2026-flyer.webp",
     scheduleImage: "/courses/california-2026-schedule.webp",
     recap: {
-      headline: "The Meeting in August",
+      headline: "Occlusion, Periodontal Therapy & Biomimetic Approaches",
       messageEn:
         "Thank you to all our distinguished speakers and attendees who joined us for the meeting in August. We are proud of the special moments we shared, bringing together science, education, collaboration, and friendship. Together, we continue building a stronger global dental community.",
       messageEs:
