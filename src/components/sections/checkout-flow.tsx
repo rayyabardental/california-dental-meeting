@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -288,6 +288,7 @@ function PaymentStage({
   const elements = useElements();
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const onSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
@@ -305,13 +306,26 @@ function PaymentStage({
     // We only reach here if confirmation failed immediately (e.g. card
     // declined). On success, Stripe redirects to the return_url.
     if (submitError) {
-      setError(submitError.message ?? "Payment could not be completed.");
+      // A validation error means a required field above (commonly the billing
+      // address) is incomplete. Stripe flags it inline inside its own iframe,
+      // which can sit off-screen above the Pay button — so say what's wrong
+      // and scroll back to it instead of leaving the payer stuck.
+      const isValidation = submitError.type === "validation_error";
+      setError(
+        isValidation
+          ? (submitError.message ??
+              "Please complete the highlighted fields above — including your full billing address — then try again.")
+          : (submitError.message ?? "Payment could not be completed."),
+      );
+      if (isValidation) {
+        formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
       setProcessing(false);
     }
   };
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} ref={formRef}>
       <button
         type="button"
         onClick={onBack}

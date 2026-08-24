@@ -314,6 +314,41 @@ function FilledCart({
   );
 }
 
+/**
+ * Parse a typed money amount into integer cents, tolerating the formats an
+ * international audience actually types:
+ *   "584.75" → 58475   "584,75" (decimal comma) → 58475
+ *   "1,000"  → 100000  "1.000,50" → 100050
+ * Returns null when the input isn't a usable positive amount.
+ */
+export function parseAmountToCents(input: string): number | null {
+  const s = input.trim();
+  if (!s) return null;
+
+  const lastComma = s.lastIndexOf(",");
+  const lastDot = s.lastIndexOf(".");
+  let normalized: string;
+
+  if (lastComma === -1 && lastDot === -1) {
+    normalized = s;
+  } else if (lastComma > lastDot) {
+    // Comma is the decimal separator (e.g. "1.000,50" / "584,75").
+    normalized = s.replace(/\./g, "").replace(",", ".");
+  } else if (lastDot > lastComma) {
+    // Dot is the decimal separator (e.g. "1,000.50" / "584.75").
+    normalized = s.replace(/,/g, "");
+  } else {
+    normalized = s;
+  }
+
+  // A lone separator used as a thousands grouping ("1,000" / "1.000").
+  if (/^\d{1,3}([.,]\d{3})+$/.test(s)) normalized = s.replace(/[.,]/g, "");
+
+  const dollars = parseFloat(normalized);
+  if (!Number.isFinite(dollars) || dollars <= 0) return null;
+  return Math.round(dollars * 100);
+}
+
 /** Pay-what-you-want amount input. Stores the amount in whole-cent form. */
 function CustomAmount({
   currency,
@@ -333,15 +368,10 @@ function CustomAmount({
   );
 
   const handle = (value: string): void => {
-    // Allow digits and a single decimal point, up to 2 decimals.
-    const cleaned = value.replace(/[^0-9.]/g, "");
+    // Keep digits plus separators so international formats survive typing.
+    const cleaned = value.replace(/[^0-9.,]/g, "");
     setRaw(cleaned);
-    const dollars = parseFloat(cleaned);
-    if (!Number.isFinite(dollars) || dollars <= 0) {
-      onChange(null);
-      return;
-    }
-    onChange(Math.round(dollars * 100));
+    onChange(parseAmountToCents(cleaned));
   };
 
   const belowMin =
