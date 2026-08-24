@@ -91,7 +91,7 @@ export type Course = {
    * registration layout, and no payment is possible.
    */
   recap?: {
-    /** Retrospective headline, e.g. "1st ISADe International Dental Meeting". */
+    /** Retrospective headline, e.g. "The Meeting in August". */
     headline: string;
     /** Founder's / organizer's closing message. */
     messageEn: string;
@@ -515,11 +515,11 @@ export const EVENTS: readonly Course[] = [
     flyerImage: "/courses/california-2026-flyer.webp",
     scheduleImage: "/courses/california-2026-schedule.webp",
     recap: {
-      headline: "1st ISADe International Dental Meeting",
+      headline: "The Meeting in August",
       messageEn:
-        "Thank you to all our distinguished speakers and attendees who joined us for the 1st ISADe International Dental Meeting. We are proud of the special moments we shared, bringing together science, education, collaboration, and friendship. Together, we continue building a stronger global dental community.",
+        "Thank you to all our distinguished speakers and attendees who joined us for the meeting in August. We are proud of the special moments we shared, bringing together science, education, collaboration, and friendship. Together, we continue building a stronger global dental community.",
       messageEs:
-        "Gracias a todos nuestros distinguidos conferencistas y asistentes que nos acompañaron en el 1.er Encuentro Dental Internacional de ISADe. Nos sentimos orgullosos de los momentos especiales que compartimos, unidos por la ciencia, la educación, la colaboración y la amistad. Juntos, continuamos construyendo una comunidad odontológica global más fuerte.",
+        "Gracias a todos nuestros distinguidos conferencistas y asistentes que nos acompañaron en la reunión de agosto. Nos sentimos orgullosos de los momentos especiales que compartimos, unidos por la ciencia, la educación, la colaboración y la amistad. Juntos, continuamos construyendo una comunidad odontológica global más fuerte.",
       messageAttribution: "ISADe — International Society of Advanced Dentistry",
       video: {
         featured: "/events/california-2026/videos/recap-featured.mp4",
@@ -534,7 +534,7 @@ export const EVENTS: readonly Course[] = [
       photos: [
         {
           src: "/events/california-2026/photo-6.webp",
-          alt: "Attendees seated during a session at the ISADe International Dental Meeting.",
+          alt: "Attendees seated during a session at the meeting in August.",
           w: 1600,
           h: 1200,
         },

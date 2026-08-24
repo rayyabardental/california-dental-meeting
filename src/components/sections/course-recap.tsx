@@ -160,15 +160,12 @@ export function CourseRecap({
               </figure>
 
               {/* Supplementary auto-looping silent clips */}
-              <figure className="w-full max-w-[220px]">
+              <div className="w-full max-w-[220px]">
                 <SilentVideoCarousel
                   clips={recap.video.clips}
                   aspect={recap.video.aspect}
                 />
-                <figcaption className="mt-3 text-center text-[11px] uppercase tracking-[0.16em] text-ink-muted">
-                  Highlights · muted
-                </figcaption>
-              </figure>
+              </div>
             </div>
           </Container>
         </section>
