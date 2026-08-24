@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Receipt, Award } from "lucide-react";
+import { Receipt, Award, CreditCard } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TABS = [
   { label: "Orders", href: "/admin/orders", icon: Receipt },
   { label: "Certificates", href: "/admin/certificates", icon: Award },
+  { label: "Payments", href: "/admin/payments", icon: CreditCard },
 ] as const;
 
 /** Tab strip shared by the admin pages. */
