@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Download, LogOut, Loader2, RefreshCw, Mail } from "lucide-react";
+import {
+  Download,
+  LogOut,
+  Loader2,
+  RefreshCw,
+  Mail,
+  ChevronRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatMoney } from "@/lib/checkout";
 import { cn } from "@/lib/utils";
@@ -19,6 +26,108 @@ export type RosterEntry = {
   currency: string;
   purchaseDate: string;
 };
+
+/* -------------------------------------------------------------------------- */
+/* Collapsible registrant row                                                 */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * One registrant, collapsed to a summary line (name · order # · amount) that
+ * expands to reveal the full details. Keeps a long roster scannable.
+ */
+export function RegistrantRow({
+  entry,
+}: {
+  entry: RosterEntry;
+}): React.ReactElement {
+  const [open, setOpen] = useState(false);
+  const paid = formatMoney(entry.amountPaidCents, entry.currency);
+  const balance =
+    entry.balanceDueCents > 0
+      ? formatMoney(entry.balanceDueCents, entry.currency)
+      : null;
+  const purchaseDate = new Date(entry.purchaseDate).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+
+  return (
+    <li>
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="flex w-full items-center gap-3 px-6 py-3.5 text-left transition-colors hover:bg-sand-100/60"
+      >
+        <ChevronRight
+          className={cn(
+            "h-4 w-4 flex-none text-ink-muted transition-transform",
+            open && "rotate-90",
+          )}
+        />
+        <span className="min-w-0 flex-1 truncate">
+          <span className="font-medium text-primary">
+            {entry.firstName} {entry.lastName}
+          </span>
+          <span className="ml-2 text-xs text-ink-muted">
+            {entry.orderNumber}
+          </span>
+        </span>
+        <span className="flex-none text-sm font-medium text-ink">
+          {paid}
+          {entry.payMode === "deposit" && (
+            <span className="ml-1.5 text-xs text-gold-600">(deposit)</span>
+          )}
+        </span>
+      </button>
+
+      {open && (
+        <dl className="grid grid-cols-1 gap-x-8 gap-y-3 px-6 pb-4 pl-[3.25rem] text-sm sm:grid-cols-2">
+          <Detail label="Order number" value={entry.orderNumber} />
+          <Detail
+            label="Name"
+            value={`${entry.firstName} ${entry.lastName}`}
+          />
+          <Detail
+            label="Email"
+            value={
+              <a
+                href={`mailto:${entry.email}`}
+                className="text-primary underline-offset-4 hover:underline"
+              >
+                {entry.email}
+              </a>
+            }
+          />
+          <Detail
+            label="Amount paid"
+            value={`${paid}${entry.payMode === "deposit" ? " (deposit)" : ""}`}
+          />
+          <Detail label="Balance due" value={balance ?? "—"} />
+          <Detail label="Purchase date" value={purchaseDate} />
+        </dl>
+      )}
+    </li>
+  );
+}
+
+function Detail({
+  label,
+  value,
+}: {
+  label: string;
+  value: React.ReactNode;
+}): React.ReactElement {
+  return (
+    <div className="min-w-0">
+      <dt className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
+        {label}
+      </dt>
+      <dd className="mt-0.5 break-words text-ink">{value}</dd>
+    </div>
+  );
+}
 
 function csvEscape(value: string): string {
   if (/[",\n]/.test(value)) return `"${value.replace(/"/g, '""')}"`;

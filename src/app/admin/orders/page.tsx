@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/container";
 import {
   ExportCsvButton,
   LogoutButton,
+  RegistrantRow,
   SyncContactsButton,
   SyncFromStripeButton,
   type RosterEntry,
@@ -14,6 +15,7 @@ import { AdminNav } from "@/components/sections/admin-nav";
 import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "@/lib/admin-auth";
 import { listOrders, type OrderRecord } from "@/lib/orders";
 import { formatMoney } from "@/lib/checkout";
+import { findEvent } from "@/lib/events-data";
 import { redisHealth } from "@/lib/redis";
 
 export const metadata: Metadata = {
@@ -27,13 +29,27 @@ export const dynamic = "force-dynamic";
 type CourseGroup = {
   courseId: string;
   courseTitle: string;
+  /** Event start/end dates (from the current course data, falling back to the
+   *  order's snapshot) — used to sort upcoming events above past ones. */
+  startDate: string;
+  endDate?: string;
+  dateLabel: string;
+  /** Whether the event's end date is still in the future. */
+  upcoming: boolean;
   orders: OrderRecord[];
   totalPaidCents: number;
   totalBalanceCents: number;
   currency: string;
 };
 
+/** Parse an ISO date to a timestamp; invalid dates sort as long-past. */
+function ts(iso: string | undefined): number {
+  const t = iso ? new Date(iso).getTime() : NaN;
+  return Number.isNaN(t) ? 0 : t;
+}
+
 function groupByCourse(orders: OrderRecord[]): CourseGroup[] {
+  const now = Date.now();
   const map = new Map<string, CourseGroup>();
   for (const o of orders) {
     const existing = map.get(o.courseId);
@@ -42,9 +58,18 @@ function groupByCourse(orders: OrderRecord[]): CourseGroup[] {
       existing.totalPaidCents += o.amountPaidCents;
       existing.totalBalanceCents += o.balanceDueCents;
     } else {
+      // Prefer the live course dates (reflect reschedules); fall back to the
+      // dates captured on the order when the course is no longer listed.
+      const course = findEvent(o.courseId);
+      const startDate = course?.date ?? o.startDate;
+      const endDate = course?.endDate ?? o.endDate;
       map.set(o.courseId, {
         courseId: o.courseId,
         courseTitle: o.courseTitle,
+        startDate,
+        endDate,
+        dateLabel: course?.dateLabel ?? o.dateLabel,
+        upcoming: ts(endDate ?? startDate) >= now,
         orders: [o],
         totalPaidCents: o.amountPaidCents,
         totalBalanceCents: o.balanceDueCents,
@@ -52,9 +77,14 @@ function groupByCourse(orders: OrderRecord[]): CourseGroup[] {
       });
     }
   }
-  return Array.from(map.values()).sort(
-    (a, b) => b.orders.length - a.orders.length,
-  );
+
+  // Upcoming events first (soonest at the top), then past events (most recently
+  // concluded first) toward the bottom.
+  return Array.from(map.values()).sort((a, b) => {
+    if (a.upcoming !== b.upcoming) return a.upcoming ? -1 : 1;
+    if (a.upcoming) return ts(a.startDate) - ts(b.startDate);
+    return ts(b.endDate ?? b.startDate) - ts(a.endDate ?? a.startDate);
+  });
 }
 
 function toRosterEntries(orders: OrderRecord[]): RosterEntry[] {
@@ -206,15 +236,29 @@ function StatCard({
 }
 
 function CourseTable({ group }: { group: CourseGroup }): React.ReactElement {
+  const entries = toRosterEntries(group.orders);
+  const upcoming = group.upcoming;
+
   return (
     <div className="overflow-hidden rounded-3xl border border-primary/10 bg-white">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-primary/8 bg-sand-100 px-6 py-4">
         <div>
-          <h2 className="font-display text-lg font-medium text-primary">
-            {group.courseTitle}
-          </h2>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h2 className="font-display text-lg font-medium text-primary">
+              {group.courseTitle}
+            </h2>
+            <span
+              className={
+                upcoming
+                  ? "rounded-full bg-accent/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-accent-700"
+                  : "rounded-full bg-primary/8 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-muted"
+              }
+            >
+              {upcoming ? "Upcoming" : "Past"}
+            </span>
+          </div>
           <p className="mt-0.5 text-xs text-ink-muted">
-            {group.orders.length}{" "}
+            {group.dateLabel} · {group.orders.length}{" "}
             {group.orders.length === 1 ? "registrant" : "registrants"} ·{" "}
             {formatMoney(group.totalPaidCents, group.currency)} collected
             {group.totalBalanceCents > 0 &&
@@ -222,68 +266,16 @@ function CourseTable({ group }: { group: CourseGroup }): React.ReactElement {
           </p>
         </div>
         <ExportCsvButton
-          rows={toRosterEntries(group.orders)}
+          rows={entries}
           filename={`cdm-${group.courseId}-registrants.csv`}
         />
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[720px] text-left text-sm">
-          <thead>
-            <tr className="border-b border-primary/8 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
-              <th className="px-6 py-3 font-semibold">Order</th>
-              <th className="px-6 py-3 font-semibold">Name</th>
-              <th className="px-6 py-3 font-semibold">Email</th>
-              <th className="px-6 py-3 font-semibold">Paid</th>
-              <th className="px-6 py-3 font-semibold">Balance</th>
-              <th className="px-6 py-3 font-semibold">Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {group.orders.map((o) => (
-              <tr
-                key={o.orderNumber}
-                className="border-b border-primary/6 last:border-0"
-              >
-                <td className="whitespace-nowrap px-6 py-3 font-medium text-primary">
-                  {o.orderNumber}
-                </td>
-                <td className="whitespace-nowrap px-6 py-3 text-ink">
-                  {o.firstName} {o.lastName}
-                </td>
-                <td className="px-6 py-3 text-ink-muted">
-                  <a
-                    href={`mailto:${o.email}`}
-                    className="hover:text-primary hover:underline"
-                  >
-                    {o.email}
-                  </a>
-                </td>
-                <td className="whitespace-nowrap px-6 py-3 text-ink">
-                  {formatMoney(o.amountPaidCents, o.currency)}
-                  {o.payMode === "deposit" && (
-                    <span className="ml-1.5 text-xs text-gold-600">
-                      (deposit)
-                    </span>
-                  )}
-                </td>
-                <td className="whitespace-nowrap px-6 py-3 text-ink-muted">
-                  {o.balanceDueCents > 0
-                    ? formatMoney(o.balanceDueCents, o.currency)
-                    : "—"}
-                </td>
-                <td className="whitespace-nowrap px-6 py-3 text-ink-muted">
-                  {new Date(o.purchaseDate).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <ul className="divide-y divide-primary/6">
+        {entries.map((entry) => (
+          <RegistrantRow key={entry.orderNumber} entry={entry} />
+        ))}
+      </ul>
     </div>
   );
 }
