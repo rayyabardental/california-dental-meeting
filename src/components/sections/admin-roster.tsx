@@ -28,6 +28,98 @@ export type RosterEntry = {
 };
 
 /* -------------------------------------------------------------------------- */
+/* Collapsible event group                                                    */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * One event, collapsed to its name + a one-line summary. Expanding reveals the
+ * list of registrants (each of which is itself individually collapsible).
+ */
+export function CourseGroupCard({
+  courseId,
+  courseTitle,
+  dateLabel,
+  upcoming,
+  totalPaidCents,
+  totalBalanceCents,
+  currency,
+  entries,
+}: {
+  courseId: string;
+  courseTitle: string;
+  dateLabel: string;
+  upcoming: boolean;
+  totalPaidCents: number;
+  totalBalanceCents: number;
+  currency: string;
+  entries: RosterEntry[];
+}): React.ReactElement {
+  const [open, setOpen] = useState(false);
+  const count = entries.length;
+
+  return (
+    <div className="overflow-hidden rounded-3xl border border-primary/10 bg-white">
+      <div
+        className={cn(
+          "flex items-center gap-3 bg-sand-100 px-6 py-4",
+          open && "border-b border-primary/8",
+        )}
+      >
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-expanded={open}
+          className="flex min-w-0 flex-1 items-center gap-3 text-left"
+        >
+          <ChevronRight
+            className={cn(
+              "h-5 w-5 flex-none text-ink-muted transition-transform",
+              open && "rotate-90",
+            )}
+          />
+          <span className="min-w-0">
+            <span className="flex flex-wrap items-center gap-2.5">
+              <span className="font-display text-lg font-medium text-primary">
+                {courseTitle}
+              </span>
+              <span
+                className={cn(
+                  "rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em]",
+                  upcoming
+                    ? "bg-accent/10 text-accent-700"
+                    : "bg-primary/8 text-ink-muted",
+                )}
+              >
+                {upcoming ? "Upcoming" : "Past"}
+              </span>
+            </span>
+            <span className="mt-0.5 block text-xs text-ink-muted">
+              {dateLabel} · {count}{" "}
+              {count === 1 ? "registrant" : "registrants"} ·{" "}
+              {formatMoney(totalPaidCents, currency)} collected
+              {totalBalanceCents > 0 &&
+                ` · ${formatMoney(totalBalanceCents, currency)} outstanding`}
+            </span>
+          </span>
+        </button>
+        <ExportCsvButton
+          rows={entries}
+          filename={`cdm-${courseId}-registrants.csv`}
+        />
+      </div>
+
+      {open && (
+        <ul className="divide-y divide-primary/6">
+          {entries.map((entry) => (
+            <RegistrantRow key={entry.orderNumber} entry={entry} />
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
 /* Collapsible registrant row                                                 */
 /* -------------------------------------------------------------------------- */
 

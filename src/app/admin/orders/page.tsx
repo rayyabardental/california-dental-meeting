@@ -4,9 +4,9 @@ import { redirect } from "next/navigation";
 import { Users, DollarSign, Receipt, AlertTriangle } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import {
+  CourseGroupCard,
   ExportCsvButton,
   LogoutButton,
-  RegistrantRow,
   SyncContactsButton,
   SyncFromStripeButton,
   type RosterEntry,
@@ -198,9 +198,19 @@ export default async function AdminOrdersPage(): Promise<React.ReactElement> {
             automatically as they come in.
           </div>
         ) : (
-          <div className="mt-10 space-y-10">
+          <div className="mt-10 space-y-4">
             {groups.map((g) => (
-              <CourseTable key={g.courseId} group={g} />
+              <CourseGroupCard
+                key={g.courseId}
+                courseId={g.courseId}
+                courseTitle={g.courseTitle}
+                dateLabel={g.dateLabel}
+                upcoming={g.upcoming}
+                totalPaidCents={g.totalPaidCents}
+                totalBalanceCents={g.totalBalanceCents}
+                currency={g.currency}
+                entries={toRosterEntries(g.orders)}
+              />
             ))}
           </div>
         )}
@@ -235,47 +245,3 @@ function StatCard({
   );
 }
 
-function CourseTable({ group }: { group: CourseGroup }): React.ReactElement {
-  const entries = toRosterEntries(group.orders);
-  const upcoming = group.upcoming;
-
-  return (
-    <div className="overflow-hidden rounded-3xl border border-primary/10 bg-white">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-primary/8 bg-sand-100 px-6 py-4">
-        <div>
-          <div className="flex flex-wrap items-center gap-2.5">
-            <h2 className="font-display text-lg font-medium text-primary">
-              {group.courseTitle}
-            </h2>
-            <span
-              className={
-                upcoming
-                  ? "rounded-full bg-accent/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-accent-700"
-                  : "rounded-full bg-primary/8 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-muted"
-              }
-            >
-              {upcoming ? "Upcoming" : "Past"}
-            </span>
-          </div>
-          <p className="mt-0.5 text-xs text-ink-muted">
-            {group.dateLabel} · {group.orders.length}{" "}
-            {group.orders.length === 1 ? "registrant" : "registrants"} ·{" "}
-            {formatMoney(group.totalPaidCents, group.currency)} collected
-            {group.totalBalanceCents > 0 &&
-              ` · ${formatMoney(group.totalBalanceCents, group.currency)} outstanding`}
-          </p>
-        </div>
-        <ExportCsvButton
-          rows={entries}
-          filename={`cdm-${group.courseId}-registrants.csv`}
-        />
-      </div>
-
-      <ul className="divide-y divide-primary/6">
-        {entries.map((entry) => (
-          <RegistrantRow key={entry.orderNumber} entry={entry} />
-        ))}
-      </ul>
-    </div>
-  );
-}
