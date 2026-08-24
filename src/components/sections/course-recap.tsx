@@ -1,13 +1,22 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Calendar, MapPin, GraduationCap, Quote, CheckCircle2 } from "lucide-react";
+import {
+  Calendar,
+  MapPin,
+  GraduationCap,
+  Quote,
+  CheckCircle2,
+  Play,
+} from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { SectionEyebrow } from "@/components/ui/section-eyebrow";
 import { CourseFaculty } from "@/components/sections/course-faculty";
 import { Curriculum } from "@/components/sections/curriculum";
 import { ceLabel, type Course } from "@/lib/events-data";
+import { cn } from "@/lib/utils";
 
 /**
  * Retrospective view for a concluded event. Replaces the registration layout
@@ -121,6 +130,50 @@ export function CourseRecap({
         </section>
       )}
 
+      {/* ── Event video (supplementary) ──────────────────────────────────── */}
+      {recap?.video && (
+        <section
+          aria-label="Event video"
+          className="relative bg-surface py-20 lg:py-24"
+        >
+          <Container size="wide">
+            <div className="mx-auto max-w-2xl text-center">
+              <SectionEyebrow tone="accent" className="justify-center">
+                In motion
+              </SectionEyebrow>
+              <h2 className="mt-4 font-display text-3xl font-medium tracking-tight text-primary md:text-4xl text-balance">
+                A look at the day.
+              </h2>
+            </div>
+
+            <div className="mt-12 flex flex-col items-center justify-center gap-10 sm:flex-row sm:items-start sm:gap-14">
+              {/* Featured clip — click to play, with sound */}
+              <figure className="w-full max-w-[320px]">
+                <FeaturedVideo
+                  src={recap.video.featured}
+                  poster={recap.video.poster}
+                  aspect={recap.video.aspect}
+                />
+                <figcaption className="mt-3 text-center text-xs text-ink-muted">
+                  Tap to play with sound
+                </figcaption>
+              </figure>
+
+              {/* Supplementary auto-looping silent clips */}
+              <figure className="w-full max-w-[220px]">
+                <SilentVideoCarousel
+                  clips={recap.video.clips}
+                  aspect={recap.video.aspect}
+                />
+                <figcaption className="mt-3 text-center text-[11px] uppercase tracking-[0.16em] text-ink-muted">
+                  Highlights · muted
+                </figcaption>
+              </figure>
+            </div>
+          </Container>
+        </section>
+      )}
+
       {/* ── Speakers (retrospective) ─────────────────────────────────────── */}
       <CourseFaculty course={course} />
 
@@ -145,5 +198,107 @@ export function CourseRecap({
         </section>
       )}
     </>
+  );
+}
+
+/**
+ * Click-to-play featured clip. Shows a poster with a play button; on click it
+ * swaps in the real <video> (autoplays with sound because the click is a user
+ * gesture) with native controls. Never autoplays on load.
+ */
+function FeaturedVideo({
+  src,
+  poster,
+  aspect,
+}: {
+  src: string;
+  poster: string;
+  aspect: string;
+}): React.ReactElement {
+  const [playing, setPlaying] = useState(false);
+  return (
+    <div
+      className="relative overflow-hidden rounded-3xl border border-primary/10 bg-primary shadow-[0_24px_60px_-30px_rgba(13,35,64,0.5)]"
+      style={{ aspectRatio: aspect }}
+    >
+      {playing ? (
+        <video
+          src={src}
+          controls
+          autoPlay
+          playsInline
+          className="h-full w-full object-cover"
+        />
+      ) : (
+        <button
+          type="button"
+          onClick={() => setPlaying(true)}
+          aria-label="Play the event video with sound"
+          className="group absolute inset-0 h-full w-full"
+        >
+          <Image src={poster} alt="" fill sizes="320px" className="object-cover" />
+          <span className="absolute inset-0 bg-primary/25 transition-colors group-hover:bg-primary/10" />
+          <span className="absolute inset-0 grid place-items-center">
+            <span className="grid h-16 w-16 place-items-center rounded-full bg-white/90 text-primary shadow-lg transition-transform group-hover:scale-105">
+              <Play className="h-7 w-7 translate-x-0.5 fill-current" />
+            </span>
+          </span>
+        </button>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Auto-advancing loop of short silent clips. The current clip plays muted (so
+ * autoplay is permitted) and, when it ends, advances to the next — wrapping
+ * around so the sequence loops continuously. `key` remounts each clip so it
+ * restarts and autoplays.
+ */
+function SilentVideoCarousel({
+  clips,
+  aspect,
+}: {
+  clips: ReadonlyArray<string>;
+  aspect: string;
+}): React.ReactElement {
+  const [index, setIndex] = useState(0);
+  const advance = (): void => setIndex((i) => (i + 1) % clips.length);
+
+  return (
+    <div>
+      <div
+        className="relative overflow-hidden rounded-2xl border border-primary/10 bg-primary/5"
+        style={{ aspectRatio: aspect }}
+      >
+        <video
+          key={index}
+          src={clips[index]}
+          autoPlay
+          muted
+          playsInline
+          onEnded={advance}
+          aria-label={`Event highlight clip ${index + 1} of ${clips.length}`}
+          className="h-full w-full object-cover"
+        />
+      </div>
+      {clips.length > 1 && (
+        <div className="mt-3 flex justify-center gap-1.5">
+          {clips.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setIndex(i)}
+              aria-label={`Show clip ${i + 1}`}
+              aria-current={i === index ? "true" : undefined}
+              className={cn(
+                "h-1.5 rounded-full transition-all",
+                i === index ? "w-5 bg-primary" : "w-1.5 bg-primary/25",
+              )}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

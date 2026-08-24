@@ -98,6 +98,15 @@ export type Course = {
     messageEs: string;
     messageAttribution: string;
     photos: ReadonlyArray<{ src: string; alt: string; w: number; h: number }>;
+    /** Optional event video: one click-to-play featured clip (with sound) and
+     *  a set of short silent clips shown in an auto-advancing loop. */
+    video?: {
+      featured: string;
+      poster: string;
+      /** Portrait aspect ratio "w / h" for the video frames. */
+      aspect: string;
+      clips: ReadonlyArray<string>;
+    };
   };
   highlights: ReadonlyArray<string>;
   whatsIncluded: ReadonlyArray<string>;
@@ -512,6 +521,16 @@ export const EVENTS: readonly Course[] = [
       messageEs:
         "Gracias a todos nuestros distinguidos conferencistas y asistentes que nos acompañaron en el 1.er Encuentro Dental Internacional de ISADe. Nos sentimos orgullosos de los momentos especiales que compartimos, unidos por la ciencia, la educación, la colaboración y la amistad. Juntos, continuamos construyendo una comunidad odontológica global más fuerte.",
       messageAttribution: "ISADe — International Society of Advanced Dentistry",
+      video: {
+        featured: "/events/california-2026/videos/recap-featured.mp4",
+        poster: "/events/california-2026/videos/recap-poster.webp",
+        aspect: "464 / 832",
+        clips: [
+          "/events/california-2026/videos/clip-1.mp4",
+          "/events/california-2026/videos/clip-2.mp4",
+          "/events/california-2026/videos/clip-3.mp4",
+        ],
+      },
       photos: [
         {
           src: "/events/california-2026/photo-6.webp",
