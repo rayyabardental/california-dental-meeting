@@ -37,6 +37,8 @@ export const metadata: Metadata = {
     "dental implant course",
     "live patient surgery",
     "Veracruz dental course",
+    "SIDHE 2026",
+    "Shenzhen dental summit",
     "Universidad CEYESOV",
     "Dr. Wilmer Yabar",
     "Dr. Jaime Franco",
@@ -51,7 +53,7 @@ export const metadata: Metadata = {
     siteName: "California Dental Meeting",
     title: "California Dental Meeting",
     description:
-      "Live-patient implant surgery training in Veracruz, Mexico. 35 CE credits, 15–20 implants placed per participant.",
+      "SIDHE 2026 — Shenzhen, China, December 9–11. Registration open. International continuing education and live-patient surgical training.",
     url: SITE_URL,
     locale: "en_US",
     images: [{ url: "/cdm-logo.jpg", width: 1024, height: 1024 }],
@@ -60,7 +62,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "California Dental Meeting",
     description:
-      "Live-patient implant surgery training in Veracruz, Mexico. 35 CE credits.",
+      "SIDHE 2026 — Shenzhen, China, December 9–11. Registration open.",
     images: ["/cdm-logo.jpg"],
   },
   robots: { index: true, follow: true },

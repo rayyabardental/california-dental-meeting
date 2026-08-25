@@ -4,13 +4,13 @@ import { EventsMap } from "@/components/sections/events-map";
 
 export const metadata: Metadata = {
   title: "Courses",
-  description:
-    "California Dental Meeting's course catalogue — flagship Veracruz program and upcoming California and international cohorts. Live-patient surgical training, hands-on workshops, and academic-partner certificates.",
+    description:
+    "California Dental Meeting's course catalogue — SIDHE 2026 in Shenzhen (December 9–11, registration open), the flagship Veracruz live-patient program, and IDES 2026 in Kerala.",
   alternates: { canonical: "/courses" },
   openGraph: {
     title: "Courses · California Dental Meeting",
     description:
-      "Live-patient implant surgery training. Flagship Veracruz plus upcoming California and international cohorts.",
+      "SIDHE 2026 in Shenzhen, December 9–11 — registration open. Plus the flagship Veracruz live-patient program and IDES 2026 in Kerala.",
     url: "/courses",
   },
 };

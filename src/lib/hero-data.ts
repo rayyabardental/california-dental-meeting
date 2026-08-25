@@ -76,7 +76,28 @@ const SIDHE = findEvent("sidhe_shenzhen_2026")!;
 // The California program (Aug 8, 2026) has concluded and no longer appears in
 // the hero carousel — its page is now a recap.
 
+// Shenzhen (Dec 9–11, 2026) leads: it is the next event with confirmed dates
+// and open registration, so it heads the carousel.
 export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
+  {
+    id: "sidhe-shenzhen-2026",
+    image: "/carousel/sidhe-2026.webp",
+    alt: "SIDHE 2026 save-the-date — Shenzhen International Dental High-Tech, December 9–11, 2026, Shenzhen, China. Co-hosted by SIDHE and ISADe.",
+    headline: "Shenzhen, China.",
+    courseTitle: SIDHE.title,
+    courseType: SIDHE.type,
+    location: `${SIDHE.city}, ${SIDHE.country}`,
+    dates: SIDHE.dateLabel,
+    ceCredits: ceLabel(SIDHE),
+    description:
+      "Our next meeting — three days where dental innovation meets the Pearl River Delta, co-presented by SIDHE and the International Society of Advanced Dentistry (ISADe). Registration is open.",
+    ctaText: "Register for Shenzhen",
+    ctaHref: `/courses/${SIDHE.slug}`,
+    instructor: SIDHE.speaker.name,
+    status: SIDHE.status,
+    // Save-the-date poster — contain preserves the full layout & logos.
+    imageFit: "contain",
+  },
   {
     id: "veracruz-aerial",
     image: "/carousel/veracruz-aerial.webp",
@@ -147,25 +168,6 @@ export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
     instructor: IDES.speaker.name,
     status: IDES.status,
     // Save-the-date poster has text near the edges — contain keeps it readable.
-    imageFit: "contain",
-  },
-  {
-    id: "sidhe-shenzhen-2026",
-    image: "/carousel/sidhe-2026.webp",
-    alt: "SIDHE 2026 save-the-date — Shenzhen International Dental High-Tech, December 9–11, 2026, Shenzhen, China. Co-hosted by SIDHE and ISADe.",
-    headline: "Shenzhen, China.",
-    courseTitle: SIDHE.title,
-    courseType: SIDHE.type,
-    location: `${SIDHE.city}, ${SIDHE.country}`,
-    dates: SIDHE.dateLabel,
-    ceCredits: ceLabel(SIDHE),
-    description:
-      "Dental innovation meets the Pearl River Delta — co-presented by SIDHE and the International Society of Advanced Dentistry (ISADe). More details coming soon.",
-    ctaText: "SIDHE 2026 details",
-    ctaHref: `/courses/${SIDHE.slug}`,
-    instructor: SIDHE.speaker.name,
-    status: SIDHE.status,
-    // Save-the-date poster — contain preserves the full layout & logos.
     imageFit: "contain",
   },
 ];

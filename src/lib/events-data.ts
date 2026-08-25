@@ -690,7 +690,7 @@ export const EVENTS: readonly Course[] = [
     summary:
       "Three-day international dental high-tech summit co-hosted by SIDHE and ISADe in Shenzhen, China.",
     description:
-      "A high-tech international dental summit convening clinicians and innovators in Shenzhen. Co-presented by Shenzhen International Dental High-Tech (SIDHE) and the International Society of Advanced Dentistry (ISADe). More details coming soon.",
+      "California Dental Meeting's next event: a three-day international summit convening clinicians and innovators in Shenzhen, co-presented by Shenzhen International Dental High-Tech (SIDHE) and the International Society of Advanced Dentistry (ISADe). Registration is open now — the full program, faculty, and venue will be announced as the dates approach.",
     date: "2026-12-09T00:00:00.000Z",
     endDate: "2026-12-11T00:00:00.000Z",
     dateLabel: "Dec 9–11, 2026",
@@ -748,10 +748,45 @@ export const EVENTS: readonly Course[] = [
   },
 ] as const;
 
-export const FLAGSHIP_COURSE: Course = EVENTS[0]!;
+/**
+ * The flagship program — CDM's signature live-patient course. Pinned by id
+ * rather than array position so reordering `EVENTS` for display can never
+ * silently reassign which course is treated as the flagship.
+ */
+export const FLAGSHIP_COURSE: Course = EVENTS.find(
+  (e) => e.id === "cdm_veracruz_2026",
+)!;
 
 export function findEvent(idOrSlug: string): Course | undefined {
   return EVENTS.find((e) => e.id === idOrSlug || e.slug === idOrSlug);
+}
+
+/** Rank used to order courses for visitors: what they can register for now,
+ *  soonest first; then upcoming announcements; concluded events last. */
+function displayRank(course: Course): number {
+  if (course.status === "CONCLUDED") return 3;
+  if (course.status === "ANNOUNCING_SOON") return 2;
+  return 1; // OPEN / WAITLIST — registrable
+}
+
+/**
+ * Courses ordered for public listings: open events by soonest date, then
+ * announcing-soon, then concluded (most recent first). Keeps the next event
+ * a visitor can actually book at the top of the page.
+ */
+export function eventsForDisplay(): readonly Course[] {
+  const time = (iso: string): number => {
+    const t = new Date(iso).getTime();
+    return Number.isNaN(t) ? 0 : t;
+  };
+  return [...EVENTS].sort((a, b) => {
+    const rank = displayRank(a) - displayRank(b);
+    if (rank !== 0) return rank;
+    if (a.status === "CONCLUDED") {
+      return time(b.endDate ?? b.date) - time(a.endDate ?? a.date);
+    }
+    return time(a.date) - time(b.date);
+  });
 }
 
 export function eventsByRegion(region?: EventTypeValue): readonly Course[] {

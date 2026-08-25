@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title:
     "California Dental Meeting — International Education · Clinical Excellence",
   description:
-    "California Dental Meeting — founded and directed by Dr. Wilmer Yabar. Flagship Veracruz live-patient implant program (Course Director Dr. Jaime Franco), plus international summits in Kerala (IDES 2026) and Shenzhen (SIDHE 2026).",
+    "California Dental Meeting — founded and directed by Dr. Wilmer Yabar. Next up: SIDHE 2026 in Shenzhen, China, December 9–11 — registration open. Plus the flagship Veracruz live-patient implant program and IDES 2026 in Kerala.",
   alternates: { canonical: "/" },
 };
 

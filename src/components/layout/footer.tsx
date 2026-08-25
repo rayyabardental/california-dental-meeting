@@ -15,12 +15,12 @@ const FOOTER_LINKS: ReadonlyArray<{
     title: "Programs",
     links: [
       {
-        label: "Veracruz (flagship)",
-        href: "/courses/basic-dental-implant-course-veracruz-2026",
+        label: "Shenzhen · Dec 2026",
+        href: "/courses/shenzhen-international-dental-high-tech-2026",
       },
       {
-        label: "Curriculum & schedule",
-        href: "/courses/basic-dental-implant-course-veracruz-2026#curriculum",
+        label: "Veracruz (flagship)",
+        href: "/courses/basic-dental-implant-course-veracruz-2026",
       },
       {
         label: "What's included",

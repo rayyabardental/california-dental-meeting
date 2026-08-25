@@ -14,7 +14,7 @@ import {
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { SectionEyebrow } from "@/components/ui/section-eyebrow";
-import { EVENTS, ceLabel, type Course } from "@/lib/events-data";
+import { eventsForDisplay, ceLabel, type Course } from "@/lib/events-data";
 import { isPurchasable } from "@/lib/checkout";
 import { useEnroll } from "@/lib/cart-store";
 import { RegistrationModal } from "@/components/shared/registration-modal";
@@ -37,16 +37,16 @@ export function Courses(): React.ReactElement {
               All California Dental Meeting programs.
             </h1>
             <p className="mt-5 text-lg text-ink-muted text-pretty">
-              Our flagship live-patient program in Veracruz, a full-day CE
-              program in California with ISADe, and two international summits —
-              IDES 2026 in Kerala and SIDHE 2026 in Shenzhen. Open any card to
-              view that course&apos;s full details.
+              Next up is SIDHE 2026 in Shenzhen, China this December —
+              registration is open. Alongside it: our flagship live-patient
+              program in Veracruz, IDES 2026 in Kerala, and a look back at the
+              August meeting in California. Open any card for full details.
             </p>
           </div>
         </div>
 
         <div className="mt-14 grid gap-6 lg:grid-cols-3">
-          {EVENTS.map((course, idx) => (
+          {eventsForDisplay().map((course, idx) => (
             <CourseCard
               key={course.id}
               course={course}

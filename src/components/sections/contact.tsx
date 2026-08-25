@@ -87,9 +87,9 @@ export function Contact(): React.ReactElement {
               Space is limited to ensure quality hands-on training.
             </h1>
             <p className="mt-5 max-w-lg text-lg text-white/75 text-pretty">
-              Contact our enrollment team to confirm your seat for the
-              Veracruz cohort. We&apos;ll follow up with registration
-              materials and the tuition schedule.
+              Contact our enrollment team to confirm your seat for SIDHE 2026
+              in Shenzhen this December — or any upcoming program. We&apos;ll
+              follow up with registration materials and the tuition schedule.
             </p>
 
             <div className="mt-10 space-y-4">
@@ -193,7 +193,7 @@ export function Contact(): React.ReactElement {
                 rows={4}
                 aria-invalid={Boolean(errors.message)}
                 {...register("message")}
-                placeholder="I'd like to reserve a seat for the Veracruz cohort…"
+                placeholder="I'd like to reserve a seat for SIDHE 2026 in Shenzhen…"
                 className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-3 text-sm text-white outline-none placeholder:text-white/40 transition-all focus:border-gold focus:bg-white/15 focus:ring-4 focus:ring-gold/15"
               />
               {errors.message && (

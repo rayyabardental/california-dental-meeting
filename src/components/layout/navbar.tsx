@@ -14,8 +14,8 @@ import { cn } from "@/lib/utils";
  */
 const NAV_ITEMS = [
   {
-    label: "Veracruz",
-    href: "/courses/basic-dental-implant-course-veracruz-2026",
+    label: "Shenzhen",
+    href: "/courses/shenzhen-international-dental-high-tech-2026",
   },
   { label: "Courses", href: "/courses" },
   { label: "About", href: "/about" },

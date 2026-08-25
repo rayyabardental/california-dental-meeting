@@ -82,11 +82,11 @@ export function HeroSplit({
                 <ArrowRight className="h-4 w-4" />
               </Button>
               <Button
-                href="/courses/basic-dental-implant-course-veracruz-2026"
+                href="/courses/shenzhen-international-dental-high-tech-2026"
                 variant="ghost"
                 size="lg"
               >
-                Veracruz — flagship
+                Shenzhen · Dec 2026
               </Button>
             </div>
           </motion.div>
