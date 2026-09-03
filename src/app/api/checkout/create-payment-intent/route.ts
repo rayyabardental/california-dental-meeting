@@ -10,6 +10,7 @@ import {
 } from "@/lib/checkout";
 import { getStripe } from "@/lib/stripe";
 import { CheckoutSchema } from "@/lib/validations/checkout";
+import { rateLimit, tooManyRequests, clientIp } from "@/lib/rate-limit";
 
 // Stripe's Node SDK requires the Node.js runtime (not Edge).
 export const runtime = "nodejs";
@@ -23,6 +24,11 @@ export const runtime = "nodejs";
  * of record per the Stripe-Dashboard approach); no card data is handled here.
  */
 export async function POST(req: Request): Promise<Response> {
+  // Rate limit: must survive legitimate card retries. Keyed by IP, fails open so a Redis outage
+  // can never block a real customer.
+  const rl = await rateLimit("checkout", clientIp(req), 20, 600);
+  if (!rl.allowed) return tooManyRequests(rl.retryAfterSeconds);
+
   const stripe = getStripe();
   if (!stripe) {
     return fail("Online payment is not available yet. Please contact enrollment.", 503);

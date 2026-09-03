@@ -7,6 +7,7 @@ import { CheckoutSchema } from "@/lib/validations/checkout";
 import { sendRegistrationConfirmation } from "@/lib/resend";
 import { addContactToList } from "@/lib/constant-contact";
 import { ensureOrder, orderInputFromCourse } from "@/lib/orders";
+import { rateLimit, tooManyRequests, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -16,6 +17,11 @@ const Schema = CheckoutSchema.extend({ orderId: z.string().min(1) });
 
 /** Capture an approved PayPal order, then trigger the confirmation email. */
 export async function POST(req: Request): Promise<Response> {
+  // Rate limit: must survive legitimate retries. Keyed by IP, fails open so a Redis outage
+  // can never block a real customer.
+  const rl = await rateLimit("paypal-capture", clientIp(req), 20, 600);
+  if (!rl.allowed) return tooManyRequests(rl.retryAfterSeconds);
+
   if (!isPayPalConfigured()) {
     return fail("PayPal is not available yet.", 503);
   }

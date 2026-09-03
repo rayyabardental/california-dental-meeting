@@ -3,6 +3,7 @@ import { findEvent } from "@/lib/events-data";
 import { createCertificate } from "@/lib/certificates";
 import { isRedisConfigured } from "@/lib/redis";
 import { CertificateSubmissionSchema } from "@/lib/validations/certificate";
+import { rateLimit, tooManyRequests, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,6 +14,11 @@ export const dynamic = "force-dynamic";
  * concludes (see /api/cron/send-certificates). No payment data is involved.
  */
 export async function POST(req: Request): Promise<Response> {
+  // Rate limit: shared venue WiFi must not block a cohort. Keyed by IP, fails open so a Redis outage
+  // can never block a real customer.
+  const rl = await rateLimit("certificates", clientIp(req), 80, 3600);
+  if (!rl.allowed) return tooManyRequests(rl.retryAfterSeconds);
+
   let body: unknown;
   try {
     body = await req.json();

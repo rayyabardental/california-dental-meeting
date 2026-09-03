@@ -3,6 +3,7 @@ import { ok, fail } from "@/lib/api-response";
 import { findEvent } from "@/lib/events-data";
 import { isPurchasable } from "@/lib/checkout";
 import { createPayPalOrder, isPayPalConfigured } from "@/lib/paypal";
+import { rateLimit, tooManyRequests, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -14,6 +15,11 @@ const Schema = z.object({
 
 /** Create a PayPal order. Amount is computed server-side from course data. */
 export async function POST(req: Request): Promise<Response> {
+  // Rate limit: must survive legitimate retries. Keyed by IP, fails open so a Redis outage
+  // can never block a real customer.
+  const rl = await rateLimit("paypal-create", clientIp(req), 20, 600);
+  if (!rl.allowed) return tooManyRequests(rl.retryAfterSeconds);
+
   if (!isPayPalConfigured()) {
     return fail("PayPal is not available yet.", 503);
   }

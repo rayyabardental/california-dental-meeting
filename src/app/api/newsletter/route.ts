@@ -1,7 +1,13 @@
 import { ok, fail } from "@/lib/api-response";
 import { NewsletterSchema } from "@/lib/validations/event";
+import { rateLimit, tooManyRequests, clientIp } from "@/lib/rate-limit";
 
 export async function POST(req: Request): Promise<Response> {
+  // Rate limit: blocks list-stuffing. Keyed by IP, fails open so a Redis outage
+  // can never block a real customer.
+  const rl = await rateLimit("newsletter", clientIp(req), 5, 600);
+  if (!rl.allowed) return tooManyRequests(rl.retryAfterSeconds);
+
   let body: unknown;
   try {
     body = await req.json();

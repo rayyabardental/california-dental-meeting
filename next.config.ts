@@ -1,31 +1,29 @@
 import type { NextConfig } from "next";
 
 /**
- * Content-Security-Policy, shipped in REPORT-ONLY mode first.
+ * Content-Security-Policy — ENFORCING.
  *
- * The site loads third-party scripts from Stripe, PayPal and Mapbox, each of
- * which pulls further subresources at runtime. Enforcing a policy without
- * first observing real traffic risks silently breaking checkout, so this is
- * deployed report-only: violations surface in the browser console while
- * nothing is blocked. Promote to `Content-Security-Policy` only after the
- * console is clean across checkout (card + PayPal), the map, and the
- * certificate page.
+ * Staged: shipped report-only first and verified against real traffic
+ * (checkout mounting Stripe Elements + the PayPal SDK produced zero
+ * violations) before promotion. If a third party is added later, put the
+ * policy back to `Content-Security-Policy-Report-Only`, confirm the console
+ * is clean, then re-enforce.
  *
- * 'unsafe-inline'/'unsafe-eval' are present because Next's hydration inlines
- * bootstrap script and Mapbox GL compiles shaders at runtime; tightening
- * those requires nonce plumbing and is tracked separately.
+ * 'unsafe-inline'/'unsafe-eval' are present because Next inlines its
+ * hydration bootstrap and Mapbox GL compiles shaders at runtime; removing
+ * them requires nonce plumbing and is tracked separately.
  */
-const CSP_REPORT_ONLY = [
+const CSP = [
   "default-src 'self'",
   "base-uri 'self'",
   "object-src 'none'",
   "frame-ancestors 'none'",
   "form-action 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://*.paypal.com https://api.mapbox.com",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://*.paypal.com https://*.paypalobjects.com https://api.mapbox.com",
   "style-src 'self' 'unsafe-inline' https://api.mapbox.com",
-  "img-src 'self' data: blob: https://*.stripe.com https://*.paypal.com https://*.mapbox.com",
+  "img-src 'self' data: blob: https://*.stripe.com https://*.paypal.com https://*.paypalobjects.com https://*.mapbox.com",
   "font-src 'self' data:",
-  "connect-src 'self' https://api.stripe.com https://*.stripe.com https://*.paypal.com https://*.mapbox.com https://events.mapbox.com",
+  "connect-src 'self' https://api.stripe.com https://*.stripe.com https://*.paypal.com https://*.paypalobjects.com https://*.mapbox.com https://events.mapbox.com",
   "frame-src https://js.stripe.com https://hooks.stripe.com https://*.paypal.com",
   "media-src 'self'",
   "worker-src 'self' blob:",
@@ -66,7 +64,7 @@ const nextConfig: NextConfig = {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
           },
-          { key: "Content-Security-Policy-Report-Only", value: CSP_REPORT_ONLY },
+          { key: "Content-Security-Policy", value: CSP },
         ],
       },
       {

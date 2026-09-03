@@ -2,8 +2,14 @@ import { ok, fail } from "@/lib/api-response";
 import { addContactToList } from "@/lib/constant-contact";
 import { findEvent } from "@/lib/events-data";
 import { RegistrationSchema } from "@/lib/validations/event";
+import { rateLimit, tooManyRequests, clientIp } from "@/lib/rate-limit";
 
 export async function POST(req: Request): Promise<Response> {
+  // Rate limit: front-desk staff may register several people. Keyed by IP, fails open so a Redis outage
+  // can never block a real customer.
+  const rl = await rateLimit("register", clientIp(req), 15, 600);
+  if (!rl.allowed) return tooManyRequests(rl.retryAfterSeconds);
+
   let body: unknown;
   try {
     body = await req.json();
