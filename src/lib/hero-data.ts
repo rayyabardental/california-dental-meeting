@@ -136,7 +136,7 @@ export const HERO_SLIDES: ReadonlyArray<CarouselSlide> = [
   },
   {
     id: "veracruz-zocalo",
-    image: "/carousel/b4f995c3-d0cb-4f33-9e96-32ad91e92beb.jpg",
+    image: "/carousel/veracruz-zocalo.webp",
     alt: "Veracruz historic Zócalo plaza at dusk, illuminated by red, white, and green 'Viva México' lights with the cathedral tower in the background.",
     headline: "More than a course.",
     courseTitle: FLAGSHIP_COURSE.title,

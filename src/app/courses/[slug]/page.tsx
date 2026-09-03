@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CourseDetail } from "@/components/sections/course-detail";
 import { EVENTS, findEvent } from "@/lib/events-data";
+import { EventJsonLd } from "@/components/seo/event-jsonld";
 
 /** Pre-render every course detail page at build time. */
 export function generateStaticParams(): Array<{ slug: string }> {
@@ -39,5 +40,10 @@ export default async function CourseDetailPage({
   const { slug } = await params;
   const course = findEvent(slug);
   if (!course) notFound();
-  return <CourseDetail course={course} />;
+  return (
+    <>
+      <EventJsonLd course={course} />
+      <CourseDetail course={course} />
+    </>
+  );
 }

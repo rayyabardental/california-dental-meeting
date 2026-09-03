@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import {
@@ -260,24 +260,56 @@ function SilentVideoCarousel({
   aspect: string;
 }): React.ReactElement {
   const [index, setIndex] = useState(0);
+  const [inView, setInView] = useState(false);
+  const frameRef = useRef<HTMLDivElement>(null);
   const advance = (): void => setIndex((i) => (i + 1) % clips.length);
+
+  // These clips sit well below the fold. Without this gate the browser starts
+  // fetching them on page load (~4 MB total) even for visitors who never
+  // scroll this far — a real cost on mobile data. Loading is deferred until
+  // the carousel is near the viewport; playback behaviour is unchanged.
+  useEffect(() => {
+    const node = frameRef.current;
+    if (!node) return;
+    if (typeof IntersectionObserver === "undefined") {
+      // No observer support: load right away, deferred a tick so the state
+      // update happens outside the effect body.
+      const t = window.setTimeout(() => setInView(true), 0);
+      return () => window.clearTimeout(t);
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div>
       <div
+        ref={frameRef}
         className="relative overflow-hidden rounded-2xl border border-primary/10 bg-primary/5"
         style={{ aspectRatio: aspect }}
       >
-        <video
-          key={index}
-          src={clips[index]}
-          autoPlay
-          muted
-          playsInline
-          onEnded={advance}
-          aria-label={`Event highlight clip ${index + 1} of ${clips.length}`}
-          className="h-full w-full object-cover"
-        />
+        {inView && (
+          <video
+            key={index}
+            src={clips[index]}
+            autoPlay
+            muted
+            playsInline
+            preload="metadata"
+            onEnded={advance}
+            aria-label={`Event highlight clip ${index + 1} of ${clips.length}`}
+            className="h-full w-full object-cover"
+          />
+        )}
       </div>
       {clips.length > 1 && (
         <div className="mt-3 flex justify-center gap-1.5">

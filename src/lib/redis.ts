@@ -176,3 +176,11 @@ export async function redisSetNx(
   const result = await command<string>(args);
   return result === "OK";
 }
+
+/** Set a key's TTL in seconds. Used by the rate limiter's fixed windows. */
+export async function redisExpire(
+  key: string,
+  ttlSeconds: number,
+): Promise<void> {
+  await command(["EXPIRE", key, ttlSeconds]);
+}

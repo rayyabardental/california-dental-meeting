@@ -86,9 +86,12 @@ export async function POST(req: Request): Promise<Response> {
       200,
     );
   } catch (err) {
+    console.error("[paypal] request failed:", err);
     console.error(
       "[paypal/capture-order]",
-      err instanceof Error ? err.message : String(err),
+      // Internal PayPal/SDK error text is not surfaced to the browser; it can
+      // carry request ids and upstream detail. Logged server-side instead.
+      "Payment could not be processed. Please try again.",
     );
     return fail("Could not complete PayPal payment. Please try again.", 502);
   }
