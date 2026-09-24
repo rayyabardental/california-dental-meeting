@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/social-icons";
 import { CdmLogo } from "@/components/ui/cdm-logo";
 import { Container } from "@/components/ui/container";
+import Image from "next/image";
 
 const FOOTER_LINKS: ReadonlyArray<{
   title: string;
@@ -35,6 +36,7 @@ const FOOTER_LINKS: ReadonlyArray<{
       { label: "About CDM", href: "/about" },
       { label: "Team", href: "/about#team" },
       { label: "Credentials", href: "/about#credentials" },
+      { label: "Parent organization (ISADe)", href: "/about#parent-organization" },
       { label: "International partnerships", href: "/about#partnerships" },
     ],
   },
@@ -74,6 +76,30 @@ export function Footer(): React.ReactElement {
               live-patient surgical training in partnership with academic
               institutions across the Americas.
             </p>
+
+            {/* Parent-organization attribution. The logo is a transparent
+                circular WebP so it sits cleanly on the navy footer. */}
+            <a
+              href="/about#parent-organization"
+              className="mt-7 inline-flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 transition-colors hover:border-gold/40 hover:bg-white/10"
+            >
+              <Image
+                src="/isade-logo.webp"
+                alt="ISADe — International Society of Advanced Dentistry"
+                width={512}
+                height={512}
+                sizes="44px"
+                className="h-11 w-11 flex-none"
+              />
+              <span>
+                <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-gold">
+                  A member organization of
+                </span>
+                <span className="mt-0.5 block text-sm text-white/85">
+                  International Society of Advanced Dentistry
+                </span>
+              </span>
+            </a>
 
             <div className="mt-7 space-y-2 text-sm text-white/80">
               <p className="inline-flex items-center gap-2">

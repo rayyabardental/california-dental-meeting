@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   Award,
@@ -85,12 +86,6 @@ const PARTNERSHIPS: ReadonlyArray<{
     region: "Veracruz, Mexico",
     description:
       "Academic host of the flagship Veracruz program. Provides clinical facilities, resident faculty, and patient cases.",
-  },
-  {
-    name: "ISADe — International Society of Advanced Dentistry",
-    region: "International",
-    description:
-      "Co-host of IDES 2026 (Kerala) and SIDHE 2026 (Shenzhen). Shared faculty and continuing-education infrastructure across the CDM international summit calendar.",
   },
   {
     name: "Indian Dentist Research & Review",
@@ -211,6 +206,61 @@ export function AboutExtended(): React.ReactElement {
               ))}
             </div>
           </div>
+        </Container>
+      </section>
+
+      {/* Parent organization — ISADe owns and governs CDM. Placed ahead of the
+          partnerships grid so the ownership relationship reads before the list
+          of peer collaborators. */}
+      <section
+        id="parent-organization"
+        aria-label="Parent organization"
+        className="relative bg-primary py-24 lg:py-32"
+      >
+        <div className="pointer-events-none absolute inset-0 -z-10 gradient-mesh-dark" />
+        <Container size="wide">
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.5 }}
+            className="grid items-center gap-12 lg:grid-cols-[auto_1fr] lg:gap-16"
+          >
+            <div className="mx-auto lg:mx-0">
+              <Image
+                src="/isade-logo.webp"
+                alt="Seal of ISADe — the International Society of Advanced Dentistry: a gold-rimmed navy medallion with a gold world map above the ISADe wordmark."
+                width={512}
+                height={512}
+                sizes="(max-width: 1024px) 200px, 240px"
+                className="h-[200px] w-[200px] lg:h-[240px] lg:w-[240px]"
+              />
+            </div>
+
+            <div className="text-center lg:text-left">
+              <SectionEyebrow
+                tone="gold"
+                className="justify-center lg:justify-start"
+              >
+                Parent organization
+              </SectionEyebrow>
+              <h2 className="mt-4 font-display text-4xl font-medium tracking-tight text-white md:text-5xl text-balance">
+                Part of the International Society of Advanced Dentistry.
+              </h2>
+              <p className="mt-5 max-w-2xl text-lg text-white/75 text-pretty">
+                California Dental Meeting is owned and governed by ISADe — the
+                International Society of Advanced Dentistry. ISADe sets the
+                academic standards our programs are built on and connects our
+                faculty, member clinicians, and continuing-education framework
+                across the Americas, Europe, and the Indo-Pacific.
+              </p>
+              <p className="mt-4 max-w-2xl text-base text-white/60 text-pretty">
+                Every CDM program — from the flagship Veracruz live-patient
+                course to our international summits in Kerala and Shenzhen — is
+                delivered under the ISADe banner.
+              </p>
+            </div>
+          </motion.div>
         </Container>
       </section>
 
