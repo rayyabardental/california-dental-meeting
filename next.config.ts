@@ -24,7 +24,8 @@ const CSP = [
   "img-src 'self' data: blob: https://*.stripe.com https://*.paypal.com https://*.paypalobjects.com https://*.mapbox.com",
   "font-src 'self' data:",
   "connect-src 'self' https://api.stripe.com https://*.stripe.com https://*.paypal.com https://*.paypalobjects.com https://*.mapbox.com https://events.mapbox.com",
-  "frame-src https://js.stripe.com https://hooks.stripe.com https://*.paypal.com",
+  // youtube-nocookie.com: faculty interview embeds (privacy-enhanced mode).
+  "frame-src https://js.stripe.com https://hooks.stripe.com https://*.paypal.com https://www.youtube-nocookie.com",
   "media-src 'self'",
   "worker-src 'self' blob:",
 ].join("; ");
@@ -36,10 +37,13 @@ const nextConfig: NextConfig = {
   // module fixes outbound requests.
   serverExternalPackages: ["stripe"],
   images: {
-    // Only hosts actually referenced by the app. An unused entry lets the
-    // built-in image optimizer be used as an open fetch/resize proxy for
-    // that host, so the list is kept empty until a remote source is needed.
-    remotePatterns: [],
+    // Only hosts actually referenced by the app, scoped as tightly as
+    // possible: an entry lets the built-in optimizer fetch and resize from
+    // that host, so an over-broad one turns it into an open proxy.
+    remotePatterns: [
+      // YouTube thumbnails for the faculty interview carousel.
+      { protocol: "https", hostname: "i.ytimg.com", pathname: "/vi/**" },
+    ],
   },
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],

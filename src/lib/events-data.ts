@@ -42,10 +42,14 @@ export type FacultyInterview = {
   photo: string;
   /** 2–4 sentences: the presenter's background and what their lecture covers. */
   summary: string;
-  /** Interview video (MP4) path under /public. A remote host (Vercel Blob,
-   *  Mux, etc.) would first need adding to the CSP media-src in next.config.ts. */
-  video: string;
-  /** Optional still shown before playback. Falls back to the portrait. */
+  /**
+   * The interview on YouTube: paste the share URL (youtu.be/… or
+   * youtube.com/watch?v=…) or the 11-character video ID. Unlisted videos
+   * work; "Allow embedding" must be on in YouTube Studio.
+   */
+  youtube: string;
+  /** Optional still (path under /public) shown before playback. Falls back to
+   *  YouTube's own thumbnail for the video. */
   poster?: string;
 };
 

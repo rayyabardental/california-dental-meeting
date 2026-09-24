@@ -20,8 +20,10 @@ const pad = (n: number): string => String(n).padStart(2, "0");
  * out and in together.
  *
  * Auto-advances every 5 minutes, but holds while:
- *   - a video has been started and hasn't finished (an interview is usually
- *     longer than the interval, so advancing would cut the viewer off),
+ *   - the viewer has started the interview on this slide. Interviews run
+ *     longer than the interval, and a YouTube embed can't report that it has
+ *     finished without loading YouTube's API script, so the hold lasts until
+ *     they move to another presenter,
  *   - the pointer is over it or keyboard focus is inside it (WAI carousel
  *     pattern), or
  *   - the viewer has paused auto-advance (WCAG 2.2.2 Pause, Stop, Hide).
@@ -139,7 +141,6 @@ export function FacultyInterviews({
                   interview={current}
                   playing={engaged}
                   onStart={() => setEngaged(true)}
-                  onEnded={() => setEngaged(false)}
                 />
               </motion.div>
             </AnimatePresence>
@@ -279,31 +280,67 @@ function PresenterPanel({
 }
 
 /**
- * Click-to-play player. Nothing is fetched until the viewer presses play, and
- * only the current slide's video is ever mounted.
+ * Accepts a YouTube share URL (youtu.be/…, youtube.com/watch?v=…, /embed/…,
+ * /shorts/…) or a bare video ID and returns the 11-character ID, or null if
+ * it isn't recognisable. The result is interpolated into an iframe URL, so it
+ * is validated against YouTube's ID alphabet rather than trusted.
+ */
+function youtubeId(input: string): string | null {
+  const raw = input.trim();
+  const valid = (id: string | null | undefined): string | null =>
+    id && /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
+  if (valid(raw)) return raw;
+  try {
+    const url = new URL(raw);
+    const host = url.hostname.replace(/^(www\.|m\.)/, "");
+    if (host === "youtu.be") return valid(url.pathname.slice(1));
+    if (host === "youtube.com" || host === "youtube-nocookie.com") {
+      if (url.pathname === "/watch") return valid(url.searchParams.get("v"));
+      const match = url.pathname.match(/^\/(?:embed|shorts|live)\/([^/?#]+)/);
+      return valid(match?.[1]);
+    }
+  } catch {
+    // Not a URL; fall through.
+  }
+  return null;
+}
+
+/**
+ * Click-to-play YouTube player. Until the viewer presses play this is just a
+ * thumbnail: no YouTube script, iframe, or cookies load, which keeps the page
+ * light. The embed uses youtube-nocookie.com (privacy-enhanced mode), and only
+ * the current slide's player is ever mounted.
  */
 function InterviewPlayer({
   interview,
   playing,
   onStart,
-  onEnded,
 }: {
   interview: FacultyInterview;
   playing: boolean;
   onStart: () => void;
-  onEnded: () => void;
 }): React.ReactElement {
+  const id = youtubeId(interview.youtube);
+  const thumbnail =
+    interview.poster ?? (id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : null);
+
   return (
     <div className="relative aspect-video overflow-hidden rounded-3xl bg-primary shadow-[0_24px_60px_-30px_rgba(13,35,64,0.5)]">
-      {playing ? (
-        <video
-          src={interview.video}
-          controls
-          autoPlay
-          playsInline
-          onEnded={onEnded}
-          aria-label={`Interview with ${interview.name}`}
-          className="h-full w-full bg-black object-contain"
+      {!id ? (
+        // Misconfigured link: fail visibly but gracefully, never a broken embed.
+        <div className="absolute inset-0 grid place-items-center gradient-mesh-dark p-6 text-center">
+          <p className="text-sm text-white/70">
+            Interview with {interview.name} coming soon.
+          </p>
+        </div>
+      ) : playing ? (
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1`}
+          title={`Interview with ${interview.name}`}
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+          allowFullScreen
+          referrerPolicy="strict-origin-when-cross-origin"
+          className="absolute inset-0 h-full w-full border-0"
         />
       ) : (
         <button
@@ -312,9 +349,9 @@ function InterviewPlayer({
           aria-label={`Play interview with ${interview.name}`}
           className="group absolute inset-0 h-full w-full"
         >
-          {interview.poster ? (
+          {thumbnail ? (
             <Image
-              src={interview.poster}
+              src={thumbnail}
               alt=""
               fill
               sizes="(max-width: 1024px) 100vw, 60vw"
