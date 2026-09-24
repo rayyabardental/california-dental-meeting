@@ -85,6 +85,7 @@ export function FacultyInterviews({
       className="relative bg-white py-20 lg:py-28"
     >
       <Container size="wide">
+        <div className="mx-auto max-w-5xl">
         <div className="max-w-2xl">
           <SectionEyebrow tone="accent">Faculty interviews</SectionEyebrow>
           <h2
@@ -130,7 +131,12 @@ export function FacultyInterviews({
                 animate={{ opacity: 1 }}
                 exit={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
                 transition={{ duration: reduceMotion ? 0 : 0.35, ease: "easeOut" }}
-                className="grid gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center lg:gap-12"
+                className={cn(
+                  "grid gap-8 lg:items-center lg:gap-12",
+                  current.orientation === "portrait"
+                    ? "lg:grid-cols-[minmax(0,1fr)_18rem]"
+                    : "lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]",
+                )}
               >
                 <PresenterPanel
                   interview={current}
@@ -225,6 +231,7 @@ export function FacultyInterviews({
             </div>
           )}
         </div>
+        </div>
       </Container>
     </section>
   );
@@ -239,6 +246,9 @@ function PresenterPanel({
   position: number;
   count: number;
 }): React.ReactElement {
+  const byline = [interview.credentials, interview.country]
+    .filter(Boolean)
+    .join(" · ");
   return (
     <div>
       <div className="flex items-start gap-5">
@@ -258,23 +268,25 @@ function PresenterPanel({
           <h3 className="mt-1 font-display text-2xl font-medium text-primary text-balance">
             {interview.name}
           </h3>
-          <p className="mt-1 text-sm text-ink-muted text-pretty">
-            {interview.credentials}
-          </p>
+          {byline && (
+            <p className="mt-1 text-sm text-ink-muted text-pretty">{byline}</p>
+          )}
           <p className="mt-3 text-sm font-medium text-ink text-pretty">
             {interview.topic}
           </p>
         </div>
       </div>
 
-      <div className="mt-6 border-t border-primary/8 pt-5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-muted">
-          About the presenter
-        </p>
-        <p className="mt-2 text-sm leading-relaxed text-ink-muted text-pretty">
-          {interview.summary}
-        </p>
-      </div>
+      {interview.summary && (
+        <div className="mt-6 border-t border-primary/8 pt-5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-muted">
+            About the presenter
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-ink-muted text-pretty">
+            {interview.summary}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
@@ -285,7 +297,8 @@ function PresenterPanel({
  * it isn't recognisable. The result is interpolated into an iframe URL, so it
  * is validated against YouTube's ID alphabet rather than trusted.
  */
-function youtubeId(input: string): string | null {
+function youtubeId(input: string | undefined): string | null {
+  if (!input) return null;
   const raw = input.trim();
   const valid = (id: string | null | undefined): string | null =>
     id && /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
@@ -321,17 +334,44 @@ function InterviewPlayer({
   onStart: () => void;
 }): React.ReactElement {
   const id = youtubeId(interview.youtube);
+  const portrait = interview.orientation === "portrait";
   const thumbnail =
     interview.poster ?? (id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : null);
+  const imageSizes = portrait ? "288px" : "(max-width: 1024px) 100vw, 60vw";
 
   return (
-    <div className="relative aspect-video overflow-hidden rounded-3xl bg-primary shadow-[0_24px_60px_-30px_rgba(13,35,64,0.5)]">
+    <div
+      className={cn(
+        "relative overflow-hidden rounded-3xl bg-primary shadow-[0_24px_60px_-30px_rgba(13,35,64,0.5)]",
+        // Vertical phone video: a 9:16 frame capped at 18rem, rather than a
+        // 16:9 frame that would pillarbox it into a thin strip.
+        portrait ? "mx-auto aspect-[9/16] w-full max-w-[18rem]" : "aspect-video",
+      )}
+    >
       {!id ? (
-        // Misconfigured link: fail visibly but gracefully, never a broken embed.
-        <div className="absolute inset-0 grid place-items-center gradient-mesh-dark p-6 text-center">
-          <p className="text-sm text-white/70">
-            Interview with {interview.name} coming soon.
-          </p>
+        // No link yet (or an unrecognisable one): show the still, clearly
+        // marked, rather than a play button that leads nowhere.
+        <div className="absolute inset-0">
+          {thumbnail ? (
+            <Image
+              src={thumbnail}
+              alt=""
+              fill
+              sizes={imageSizes}
+              className="object-cover opacity-60"
+            />
+          ) : (
+            <span className="absolute inset-0 gradient-mesh-dark" />
+          )}
+          <span className="absolute inset-0 bg-gradient-to-t from-primary/85 via-primary/30 to-primary/10" />
+          <span className="absolute bottom-5 left-5 right-5 text-left text-white">
+            <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-gold">
+              Interview coming soon
+            </span>
+            <span className="mt-0.5 block text-sm font-medium">
+              {interview.name}
+            </span>
+          </span>
         </div>
       ) : playing ? (
         <iframe
@@ -354,7 +394,7 @@ function InterviewPlayer({
               src={thumbnail}
               alt=""
               fill
-              sizes="(max-width: 1024px) 100vw, 60vw"
+              sizes={imageSizes}
               className="object-cover"
             />
           ) : (
