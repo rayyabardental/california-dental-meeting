@@ -213,6 +213,16 @@
   .pulse-ring {
     animation: pulseRing 2.4s cubic-bezier(0.66, 0, 0, 1) infinite;
   }
+  /* Faculty-interview carousel: fills over the auto-advance interval. The
+     300s must match ADVANCE_MS in faculty-interviews.tsx. */
+  @keyframes carouselProgress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+  .carousel-progress {
+    transform-origin: left;
+    animation: carouselProgress 300s linear forwards;
+  }
   @keyframes shimmer {
     from { background-position: -200% 0; }
     to { background-position: 200% 0; }

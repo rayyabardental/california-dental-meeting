@@ -26,6 +26,29 @@ export type ScheduleDay = {
   blocks: ReadonlyArray<ScheduleBlock>;
 };
 
+/**
+ * A recorded faculty interview shown in the course page's interview carousel.
+ * Mirrors the August presenter fields (name, topic, portrait) and adds what an
+ * interview needs: a credentials line, a short summary, and the video itself.
+ */
+export type FacultyInterview = {
+  name: string;
+  /** Specialty and institution, e.g. "Periodontics · Universidad de Chile". */
+  credentials: string;
+  /** Title of the lecture they are giving at the event. */
+  topic: string;
+  /** Portrait photo path under /public. (A remote host would first need adding
+   *  to images.remotePatterns in next.config.ts.) */
+  photo: string;
+  /** 2–4 sentences: the presenter's background and what their lecture covers. */
+  summary: string;
+  /** Interview video (MP4) path under /public. A remote host (Vercel Blob,
+   *  Mux, etc.) would first need adding to the CSP media-src in next.config.ts. */
+  video: string;
+  /** Optional still shown before playback. Falls back to the portrait. */
+  poster?: string;
+};
+
 export type Course = {
   id: string;
   slug: string;
@@ -123,6 +146,11 @@ export type Course = {
     /** Promotional speaker flyer shown alongside the session card. */
     image?: string;
   }>;
+  /**
+   * Faculty interview carousel. The section renders only when this has at
+   * least one entry, so a course without recorded interviews shows nothing.
+   */
+  facultyInterviews?: ReadonlyArray<FacultyInterview>;
   sponsors?: ReadonlyArray<Sponsor>;
   universityPartner?: string;
   /**

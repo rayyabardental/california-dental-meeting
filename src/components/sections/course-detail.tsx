@@ -23,6 +23,7 @@ import { ceLabel, type Course } from "@/lib/events-data";
 import { isPurchasable } from "@/lib/checkout";
 import { useEnroll } from "@/lib/cart-store";
 import { cn } from "@/lib/utils";
+import { FacultyInterviews } from "@/components/sections/faculty-interviews";
 
 /**
  * Course detail page — single template used by every course's
@@ -48,6 +49,12 @@ export function CourseDetail({
       <CourseFaculty course={course} />
       <Curriculum course={course} />
       <Included course={course} />
+      {course.facultyInterviews && course.facultyInterviews.length > 0 && (
+        <FacultyInterviews
+          interviews={course.facultyInterviews}
+          courseTitle={course.title}
+        />
+      )}
       <BottomRegisterCta course={course} onRegister={openRegister} />
 
       <RegistrationModal

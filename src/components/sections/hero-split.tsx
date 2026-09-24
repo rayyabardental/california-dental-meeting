@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
@@ -89,6 +90,31 @@ export function HeroSplit({
                 Shenzhen · Dec 2026
               </Button>
             </div>
+
+            {/* Parent-organization mark. The seal is decorative here (alt="")
+                because the adjacent text already names ISADe for screen
+                readers; the link's accessible name comes from that text. */}
+            <Link
+              href="/about#parent-organization"
+              className="group mt-8 inline-flex items-center gap-3 rounded-2xl border border-primary/10 bg-white/70 py-1.5 pl-1.5 pr-5 backdrop-blur-sm transition-colors hover:border-gold/50 hover:bg-white sm:rounded-full"
+            >
+              <Image
+                src="/isade-logo.webp"
+                alt=""
+                width={512}
+                height={512}
+                sizes="40px"
+                className="h-10 w-10 flex-none"
+              />
+              <span className="text-left leading-tight">
+                <span className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-accent-600">
+                  A member organization of
+                </span>
+                <span className="mt-0.5 block text-sm font-medium text-primary">
+                  International Society of Advanced Dentistry
+                </span>
+              </span>
+            </Link>
           </motion.div>
 
           {/* ───────────────────── Right: carousel ──────────────────────── */}
