@@ -30,8 +30,8 @@ export type ScheduleDay = {
  * A recorded faculty interview shown in the course page's interview carousel.
  * Mirrors the August presenter fields (name, topic, portrait) and adds what an
  * interview needs. Only name, topic and photo are required, so presenters can
- * be listed before their bio or video link is ready; missing pieces are simply
- * not shown (the player reads "Interview coming soon" until a link exists).
+ * be listed before their bio or video is ready; missing pieces are simply not
+ * shown (the player reads "Interview coming soon" until a video exists).
  */
 export type FacultyInterview = {
   name: string;
@@ -45,15 +45,9 @@ export type FacultyInterview = {
   country?: string;
   /** 2–4 sentences: the presenter's background and what their lecture covers. */
   summary?: string;
-  /**
-   * The interview on YouTube: paste the share URL (youtu.be/…, a Shorts link,
-   * or youtube.com/watch?v=…) or the 11-character video ID. Unlisted videos
-   * work; "Allow embedding" must be on in YouTube Studio.
-   */
-  youtube?: string;
-  /** Still (path under /public) shown before playback. Falls back to YouTube's
-   *  own thumbnail, which is letterboxed for vertical videos — so set this for
-   *  portrait interviews. */
+  /** Interview video: an MP4 path under /public, served by the site itself. */
+  video?: string;
+  /** Still (path under /public) shown before playback. */
   poster?: string;
   /** "portrait" for vertical (9:16) phone-style videos. Default "landscape". */
   orientation?: "portrait" | "landscape";
@@ -779,9 +773,9 @@ export const EVENTS: readonly Course[] = [
     ],
     // Faculty interview carousel. Names, lecture titles and countries are taken
     // from each video's opening flyer; portraits are cropped from those flyers
-    // and posters are stills from the videos. Credentials, summaries and the
-    // YouTube (unlisted) links are still to come — each renders as soon as
-    // it's added.
+    // and posters are stills from the videos, which are hosted as-is under
+    // /public. Credentials and summaries are still to come — each renders as
+    // soon as it's added.
     facultyInterviews: [
       {
         name: "Dr. Carlos Mendonça",
@@ -789,6 +783,7 @@ export const EVENTS: readonly Course[] = [
         topic:
           "Surgical Strategies for Total Rehabilitation of the Atrophic Maxilla: From All-on-4 to the Palatal Approach",
         photo: "/courses/shenzhen-2026/carlos-mendonca-portrait.webp",
+        video: "/courses/shenzhen-2026/carlos-mendonca.mp4",
         poster: "/courses/shenzhen-2026/carlos-mendonca-poster.webp",
         orientation: "portrait",
       },
@@ -797,6 +792,7 @@ export const EVENTS: readonly Course[] = [
         country: "USA",
         topic: "The Art of Immediate Implant Placement on the Esthetic Zone",
         photo: "/courses/shenzhen-2026/jose-eduardo-lara-portrait.webp",
+        video: "/courses/shenzhen-2026/jose-eduardo-lara.mp4",
         poster: "/courses/shenzhen-2026/jose-eduardo-lara-poster.webp",
         orientation: "portrait",
       },
@@ -806,6 +802,7 @@ export const EVENTS: readonly Course[] = [
         topic:
           "Zygomatic Implants: A Journey Through Their Technique and Complications",
         photo: "/courses/shenzhen-2026/matheus-belarmino-portrait.webp",
+        video: "/courses/shenzhen-2026/matheus-belarmino.mp4",
         poster: "/courses/shenzhen-2026/matheus-belarmino-poster.webp",
         orientation: "portrait",
       },
@@ -815,6 +812,7 @@ export const EVENTS: readonly Course[] = [
         topic:
           "From Stomatological Suspicion to Neural Diagnosis: Glossopharyngeal Neuralgia After SARS-CoV-2",
         photo: "/courses/shenzhen-2026/manuel-guillen-galarza-portrait.webp",
+        video: "/courses/shenzhen-2026/manuel-guillen-galarza.mp4",
         poster: "/courses/shenzhen-2026/manuel-guillen-galarza-poster.webp",
         orientation: "portrait",
       },
@@ -823,6 +821,7 @@ export const EVENTS: readonly Course[] = [
         country: "Italy",
         topic: "Digital Workflow: From Planning to Clinical Execution",
         photo: "/courses/shenzhen-2026/ludovica-oreglia-portrait.webp",
+        video: "/courses/shenzhen-2026/ludovica-oreglia.mp4",
         poster: "/courses/shenzhen-2026/ludovica-oreglia-poster.webp",
         orientation: "portrait",
       },

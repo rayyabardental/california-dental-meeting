@@ -20,10 +20,8 @@ const pad = (n: number): string => String(n).padStart(2, "0");
  * out and in together.
  *
  * Auto-advances every 5 minutes, but holds while:
- *   - the viewer has started the interview on this slide. Interviews run
- *     longer than the interval, and a YouTube embed can't report that it has
- *     finished without loading YouTube's API script, so the hold lasts until
- *     they move to another presenter,
+ *   - a video has been started and hasn't finished, so a viewer is never
+ *     cut off mid-interview,
  *   - the pointer is over it or keyboard focus is inside it (WAI carousel
  *     pattern), or
  *   - the viewer has paused auto-advance (WCAG 2.2.2 Pause, Stop, Hide).
@@ -147,6 +145,7 @@ export function FacultyInterviews({
                   interview={current}
                   playing={engaged}
                   onStart={() => setEngaged(true)}
+                  onEnded={() => setEngaged(false)}
                 />
               </motion.div>
             </AnimatePresence>
@@ -292,51 +291,22 @@ function PresenterPanel({
 }
 
 /**
- * Accepts a YouTube share URL (youtu.be/…, youtube.com/watch?v=…, /embed/…,
- * /shorts/…) or a bare video ID and returns the 11-character ID, or null if
- * it isn't recognisable. The result is interpolated into an iframe URL, so it
- * is validated against YouTube's ID alphabet rather than trusted.
- */
-function youtubeId(input: string | undefined): string | null {
-  if (!input) return null;
-  const raw = input.trim();
-  const valid = (id: string | null | undefined): string | null =>
-    id && /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
-  if (valid(raw)) return raw;
-  try {
-    const url = new URL(raw);
-    const host = url.hostname.replace(/^(www\.|m\.)/, "");
-    if (host === "youtu.be") return valid(url.pathname.slice(1));
-    if (host === "youtube.com" || host === "youtube-nocookie.com") {
-      if (url.pathname === "/watch") return valid(url.searchParams.get("v"));
-      const match = url.pathname.match(/^\/(?:embed|shorts|live)\/([^/?#]+)/);
-      return valid(match?.[1]);
-    }
-  } catch {
-    // Not a URL; fall through.
-  }
-  return null;
-}
-
-/**
- * Click-to-play YouTube player. Until the viewer presses play this is just a
- * thumbnail: no YouTube script, iframe, or cookies load, which keeps the page
- * light. The embed uses youtube-nocookie.com (privacy-enhanced mode), and only
- * the current slide's player is ever mounted.
+ * Click-to-play player for a self-hosted MP4. Until the viewer presses play
+ * this is only the poster image: the <video> element isn't mounted, so no
+ * video bytes are fetched, and only the current slide's video ever exists.
  */
 function InterviewPlayer({
   interview,
   playing,
   onStart,
+  onEnded,
 }: {
   interview: FacultyInterview;
   playing: boolean;
   onStart: () => void;
+  onEnded: () => void;
 }): React.ReactElement {
-  const id = youtubeId(interview.youtube);
   const portrait = interview.orientation === "portrait";
-  const thumbnail =
-    interview.poster ?? (id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : null);
   const imageSizes = portrait ? "288px" : "(max-width: 1024px) 100vw, 60vw";
 
   return (
@@ -348,13 +318,13 @@ function InterviewPlayer({
         portrait ? "mx-auto aspect-[9/16] w-full max-w-[18rem]" : "aspect-video",
       )}
     >
-      {!id ? (
-        // No link yet (or an unrecognisable one): show the still, clearly
-        // marked, rather than a play button that leads nowhere.
+      {!interview.video ? (
+        // No video yet: show the still, clearly marked, rather than a play
+        // button that leads nowhere.
         <div className="absolute inset-0">
-          {thumbnail ? (
+          {interview.poster ? (
             <Image
-              src={thumbnail}
+              src={interview.poster}
               alt=""
               fill
               sizes={imageSizes}
@@ -374,13 +344,15 @@ function InterviewPlayer({
           </span>
         </div>
       ) : playing ? (
-        <iframe
-          src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1`}
-          title={`Interview with ${interview.name}`}
-          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-          allowFullScreen
-          referrerPolicy="strict-origin-when-cross-origin"
-          className="absolute inset-0 h-full w-full border-0"
+        <video
+          src={interview.video}
+          poster={interview.poster}
+          controls
+          autoPlay
+          playsInline
+          onEnded={onEnded}
+          aria-label={`Interview with ${interview.name}`}
+          className="absolute inset-0 h-full w-full bg-black object-contain"
         />
       ) : (
         <button
@@ -389,9 +361,9 @@ function InterviewPlayer({
           aria-label={`Play interview with ${interview.name}`}
           className="group absolute inset-0 h-full w-full"
         >
-          {thumbnail ? (
+          {interview.poster ? (
             <Image
-              src={thumbnail}
+              src={interview.poster}
               alt=""
               fill
               sizes={imageSizes}
